@@ -1,10 +1,9 @@
-import { model, Schema } from "mongoose";
-import HookNextFunction from "mongoose";
+import { Schema, model, Model } from "mongoose";
 import bcrypt from "bcrypt";
 
 import { IUser } from "../interfaces/userInterface";
 
-const userSchema = new Schema<IUser>(
+const userSchema: Schema = new Schema<IUser>(
   {
     name: {
       type: String,
@@ -39,4 +38,4 @@ userSchema.pre("save", async function (next: (err?: Error) => void) {
   this.password = await bcrypt.hash(this.password, SALT);
 });
 
-export const User = model<IUser>("User", userSchema);
+export const User: Model<IUser> = model<IUser>("User", userSchema);
