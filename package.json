@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/lior-ashkenazi/ProgCom#readme",
   "dependencies": {
+    "@dicebear/collection": "^6.0.3",
+    "@dicebear/core": "^6.0.3",
     "@types/bcrypt": "^5.0.0",
     "@types/colors": "^1.2.1",
     "@types/dotenv": "^8.2.0",
@@ -31,6 +33,7 @@
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.1.0",
+    "normalize-url": "^8.0.0",
     "socket.io": "^4.6.1",
     "typescript": "^5.0.4"
   },

@@ -12,11 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
 const mongoose_1 = require("mongoose");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const saltRounds = 10;
 const userSchema = new mongoose_1.Schema({
-    name: {
+    username: {
         type: String,
         required: true,
     },
@@ -42,10 +42,12 @@ userSchema.methods.matchPassword = function (password) {
 };
 userSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!this.isModified)
-            next();
-        const SALT = yield bcrypt_1.default.genSalt(10);
-        this.password = yield bcrypt_1.default.hash(this.password, SALT);
+        if (this.isModified("password")) {
+            const SALT = yield bcrypt_1.default.genSalt(saltRounds);
+            this.password = yield bcrypt_1.default.hash(this.password, SALT);
+        }
+        next();
     });
 });
-exports.User = (0, mongoose_1.model)("User", userSchema);
+const User = (0, mongoose_1.model)("User", userSchema);
+exports.default = User;

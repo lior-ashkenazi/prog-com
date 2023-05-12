@@ -6,9 +6,9 @@ import path from "path";
 import { Server } from "socket.io";
 
 // Routers
-import usersRouter from "./routes/usersRouter";
-import chatsRouter from "./routes/chatsRouter";
-import messagesRouter from "./messagesRouter";
+import usersRouter from "./routers/api/usersRouter";
+import chatsRouter from "./routers/chatsRouter";
+import messagesRouter from "./routers/api/messagesRouter";
 
 dotenv.config();
 

@@ -1,11 +1,18 @@
-import { Schema, model, Model } from "mongoose";
+import { Document, Schema, model, Model } from "mongoose";
 import bcrypt from "bcrypt";
 
-import { IUser } from "../interfaces/userInterface";
+export interface IUser extends Document {
+  username: string;
+  email: string;
+  password: string;
+  avatar: string;
+}
+
+const saltRounds = 10;
 
 const userSchema: Schema = new Schema<IUser>(
   {
-    name: {
+    username: {
       type: String,
       required: true,
     },
@@ -32,10 +39,12 @@ userSchema.methods.matchPassword = async function (password: string): Promise<bo
 };
 
 userSchema.pre("save", async function (next: (err?: Error) => void) {
-  if (!this.isModified) next();
-
-  const SALT = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, SALT);
+  if (this.isModified("password")) {
+    const SALT = await bcrypt.genSalt(saltRounds);
+    this.password = await bcrypt.hash(this.password, SALT);
+  }
+  next();
 });
 
-export const User: Model<IUser> = model<IUser>("User", userSchema);
+const User: Model<IUser> = model<IUser>("User", userSchema);
+export default User;

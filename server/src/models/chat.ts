@@ -1,6 +1,11 @@
-import { Schema, Types, model, Model } from "mongoose";
+import { Document, Schema, Types, model, Model } from "mongoose";
 
-import { IChat } from "../interfaces/chatInterface";
+export interface IChat extends Document {
+  name: string;
+  isGroupChat: boolean;
+  users: string[];
+  groupAdmin: Schema.Types.ObjectId;
+}
 
 const chatSchema: Schema = new Schema<IChat>(
   {
@@ -27,4 +32,5 @@ const chatSchema: Schema = new Schema<IChat>(
   { timestamps: true }
 );
 
-export const Chat: Model<IChat> = model<IChat>("Chat", chatSchema);
+const Chat: Model<IChat> = model<IChat>("Chat", chatSchema);
+export default Chat;

@@ -9,9 +9,9 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 const socket_io_1 = require("socket.io");
 // Routers
-const usersRouter_1 = __importDefault(require("./routes/usersRouter"));
-const chatsRouter_1 = __importDefault(require("./routes/chatsRouter"));
-const messagesRouter_1 = __importDefault(require("./messagesRouter"));
+const usersRouter_1 = __importDefault(require("./routers/api/usersRouter"));
+const chatsRouter_1 = __importDefault(require("./routers/chatsRouter"));
+const messagesRouter_1 = __importDefault(require("./routers/api/messagesRouter"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 (0, db_1.default)();
