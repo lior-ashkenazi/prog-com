@@ -8,6 +8,29 @@ export interface IMessage extends Document {
   chatId: Schema.Types.ObjectId;
 }
 
+export enum EMode {
+  text,
+  math,
+  code,
+}
+
+export enum ELanguage {
+  cpp,
+  java,
+  python,
+  c,
+  csharp,
+  javascript,
+  ruby,
+  swift,
+  go,
+  scala,
+  kotlin,
+  rust,
+  php,
+  typescript,
+}
+
 const messageSchema: Schema = new Schema<IMessage>(
   {
     sender: {
@@ -17,7 +40,7 @@ const messageSchema: Schema = new Schema<IMessage>(
     mode: {
       type: String,
       required: true,
-      enum: ["text", "math", "code"],
+      enum: Object.values(EMode),
     },
     content: {
       type: String,

@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { verify, VerifyOptions } from "jsonwebtoken";
 import { ITokenPayload } from "../utils/generateToken";
 
-interface IUserRequest extends Request {
+export interface IAuthenticatedRequest extends Request {
   user: { _id: number };
 }
 
-export default function (req: IUserRequest, res: Response, next: NextFunction) {
+export default function (req: Request, res: Response, next: NextFunction) {
   // Get token from header
   const token = req!.header("Authorization")!.replace("Bearer ", "");
 
@@ -30,7 +30,9 @@ export default function (req: IUserRequest, res: Response, next: NextFunction) {
         return res.status(401).json({ msg: "Token is not valid" });
       }
       decoded = decoded as ITokenPayload;
-      req.user = decoded.user;
+      // we can't create new property on a defined interface
+      // thus we did here type-casting
+      (req as IAuthenticatedRequest).user = decoded.user;
       next();
     });
   } catch (err) {

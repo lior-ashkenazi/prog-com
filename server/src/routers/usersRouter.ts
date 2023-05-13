@@ -21,7 +21,7 @@ router.post(
 
 // @desc		  Login user
 // @route		  /api/users/login
-// @access		Public
+// @access    Public
 router.post(
   "/login",
   check("email", "Please include a valid email").isEmail(),
@@ -31,5 +31,5 @@ router.post(
 
 // @desc		  Fetch users
 // @route		  /api/users?search=
-// @access		Public
+// @access		Private
 router.get("/", auth, fetchUsers);

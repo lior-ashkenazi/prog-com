@@ -11,18 +11,18 @@ import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 export async function registerUser(req: Request, res: Response): Promise<Response | void> {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json();
+    return res.status(400).json({ errors: errors.array() });
   }
 
-  const { username, email, password } = req.body;
+  const { userName, email, password } = req.body;
 
   try {
     const user: IUser | null = await User.findOne({
-      $or: [{ username }, { email }],
+      $or: [{ userName }, { email }],
     });
 
     if (user) {
-      const invalidField: string = user.username === username ? "Username" : "Email";
+      const invalidField: string = user.userName === userName ? "Username" : "Email";
       return res.status(400).json({ errors: [{ msg: `${invalidField} already exists` }] });
     }
 
@@ -31,7 +31,7 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
     const normalizedDataUri: string = normalize(dataUri);
 
     const newUser: IUser = new User({
-      username,
+      userName,
       email,
       avatar: normalizedDataUri,
       password,
@@ -54,6 +54,11 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
 
 export async function loginUser(req: Request, res: Response): Promise<Response | void> {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const { email, password } = req.body;
     const user: IUser | null = await User.findOne({ email });
 
@@ -84,7 +89,7 @@ export async function fetchUsers(req: Request, res: Response): Promise<Response 
   try {
     const keyword = req.query.search
       ? {
-          username: { $regex: req.query.search, $options: "i" },
+          userName: { $regex: req.query.search, $options: "i" },
         }
       : {};
 

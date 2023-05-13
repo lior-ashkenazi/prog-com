@@ -1,15 +1,16 @@
 import { Document, Schema, Types, model, Model } from "mongoose";
 
 export interface IChat extends Document {
-  name: string;
+  chatName: string;
   isGroupChat: boolean;
   users: string[];
   groupAdmin: Schema.Types.ObjectId;
+  // TODO - maybe notification of last message
 }
 
 const chatSchema: Schema = new Schema<IChat>(
   {
-    name: {
+    chatName: {
       type: String,
       required: true,
       maxLength: 200,
