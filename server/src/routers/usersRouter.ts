@@ -1,12 +1,13 @@
 import express, { Router } from "express";
 import { check } from "express-validator";
 
-import { registerUser } from "../controllers/usersController";
+import { loginUser, registerUser, fetchUsers } from "../controllers/usersController";
+import auth from "../middleware/authMiddleware";
 
 const router: Router = express.Router();
 
-// @desc		Register new user
-// @route		/api/users
+// @desc		  Register new user
+// @route		  /api/users
 // @access		Public
 router.post(
   "/",
@@ -17,3 +18,18 @@ router.post(
   ],
   registerUser
 );
+
+// @desc		  Login user
+// @route		  /api/users/login
+// @access		Public
+router.post(
+  "/login",
+  check("email", "Please include a valid email").isEmail(),
+  check("password", "Password is required").exists(),
+  loginUser
+);
+
+// @desc		  Fetch users
+// @route		  /api/users?search=
+// @access		Public
+router.get("/", auth, fetchUsers);

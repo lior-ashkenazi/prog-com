@@ -6,6 +6,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   avatar: string;
+  matchPassword(password: string): Promise<boolean>;
 }
 
 const saltRounds = 10;

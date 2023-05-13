@@ -1,11 +1,12 @@
-import express, { Request, Response, Router } from "express";
-import { check, validationResult } from "express-validator";
+import { Request, Response } from "express";
+import { validationResult } from "express-validator";
 import normalize from "normalize-url";
 import { createAvatar } from "@dicebear/core";
 import { bottts } from "@dicebear/collection";
 
 import User, { IUser } from "../models/user";
 import { generateToken } from "../utils/generateToken";
+import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
 export async function registerUser(req: Request, res: Response): Promise<Response | void> {
   const errors = validationResult(req);
@@ -16,7 +17,7 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
   const { username, email, password } = req.body;
 
   try {
-    let user: IUser | null = await User.findOne({
+    const user: IUser | null = await User.findOne({
       $or: [{ username }, { email }],
     });
 
@@ -29,7 +30,7 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
     const dataUri: string = await avatar.toDataUri();
     const normalizedDataUri: string = normalize(dataUri);
 
-    const newUser = new User({
+    const newUser: IUser = new User({
       username,
       email,
       avatar: normalizedDataUri,
@@ -45,7 +46,54 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
     };
 
     const token: string = generateToken(payload);
-    res.json({ token });
+    res.status(200).json({ token });
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+}
+
+export async function loginUser(req: Request, res: Response): Promise<Response | void> {
+  try {
+    const { email, password } = req.body;
+    const user: IUser | null = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
+    }
+
+    const isMatchedPassword = await user.matchPassword(password);
+
+    if (!isMatchedPassword) {
+      return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
+    }
+
+    const payload = {
+      user: {
+        _id: user._id,
+      },
+    };
+
+    const token: string = generateToken(payload);
+    res.status(200).json({ token });
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+}
+
+export async function fetchUsers(req: Request, res: Response): Promise<Response | void> {
+  try {
+    const keyword = req.query.search
+      ? {
+          username: { $regex: req.query.search, $options: "i" },
+        }
+      : {};
+
+    // we reach this code after authentication
+    // thus req.user._id is well defined
+    const fetchedUsersData = await User.find(keyword).find({
+      _id: { $ne: (req as IAuthenticatedRequest).user._id },
+    });
+    res.status(200).json({ users: fetchedUsersData });
   } catch (err) {
     res.status(500).send("Server error");
   }
