@@ -20,7 +20,7 @@ router.post(
   [
     check("content", "Include content").notEmpty(),
     check("mode")
-      .notEmpty()
+      .exists()
       .isIn(allowedModes)
       .withMessage("Invalid mode")
       .custom((value, { req }) => {

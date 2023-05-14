@@ -10,3 +10,7 @@ const router: Router = express.Router();
 // @route		/api/chats
 // @access      Private
 router.post("/", check("userId", "User ID is required").exists(), auth, accessChat);
+
+// @desc		Get all the chats of a given user
+// @route		/api/chats
+// @access      Private

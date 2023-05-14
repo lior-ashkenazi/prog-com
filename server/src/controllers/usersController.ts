@@ -6,7 +6,6 @@ import { bottts } from "@dicebear/collection";
 
 import User, { IUser } from "../models/user";
 import { generateToken } from "../utils/generateToken";
-import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
 export async function registerUser(req: Request, res: Response): Promise<Response | void> {
   const errors: Result<ValidationError> = validationResult(req);
@@ -94,11 +93,8 @@ export async function fetchUsers(req: Request, res: Response): Promise<Response 
         }
       : {};
 
-    // we reach this code after authentication
-    // thus req.user._id is well defined
-    const fetchedUsersData: IUser[] = await User.find(keyword).find({
-      _id: { $ne: (req as IAuthenticatedRequest).user._id },
-    });
+    const fetchedUsersData: IUser[] = await User.find(keyword);
+
     res.json({ users: fetchedUsersData });
   } catch (err) {
     res.status(500).send("Server error");

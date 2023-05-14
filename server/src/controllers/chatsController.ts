@@ -12,13 +12,13 @@ export async function accessChat(req: Request, res: Response) {
   }
 
   try {
-    const { userId } = req.body;
+    const { userId: otherUserId } = req.body;
 
     let isChat = await Chat.find({
       isGroupChat: false,
       $and: [
         { users: { $elemMatch: { $eq: (req as IAuthenticatedRequest).user._id } } },
-        { users: { $elemMatch: { $eq: userId } } },
+        { users: { $elemMatch: { $eq: otherUserId } } },
       ],
     }).populate("users", "-password");
 
@@ -30,9 +30,9 @@ export async function accessChat(req: Request, res: Response) {
       return res.json(isChat[0]);
     } else {
       chatData = {
-        chatName: `${(req as IAuthenticatedRequest).user._id}-${userId}`,
+        chatName: `${(req as IAuthenticatedRequest).user._id}-${otherUserId}`,
         isGroupChat: false,
-        users: [(req as IAuthenticatedRequest).user._id, userId],
+        users: [(req as IAuthenticatedRequest).user._id, otherUserId],
       };
     }
 
@@ -46,10 +46,8 @@ export async function accessChat(req: Request, res: Response) {
 
 export async function fetchChats(req: Request, res: Response) {
   try {
-    const { _id: userId } = (req as IAuthenticatedRequest).user;
-
     const allUserChats = await Chat.find({
-      users: { $elemMatch: { $eq: userId } },
+      users: { $elemMatch: { $eq: (req as IAuthenticatedRequest).user._id } },
     })
       .populate("users", "-password")
       .populate("groupAdmin", "-password")

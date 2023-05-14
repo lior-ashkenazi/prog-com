@@ -26,6 +26,8 @@ function sendMessage(req, res) {
             const messageData = {
                 sender: req.user._id,
                 content,
+                mode,
+                language,
                 chatId,
             };
             let newMessage = yield message_1.default.create(messageData);
@@ -50,7 +52,7 @@ function fetchMessages(req, res) {
             const fetchedMessages = yield message_1.default.find({ chatId })
                 .populate("sender", "userName avatar email")
                 .populate("chatId");
-            res.json(fetchMessages);
+            res.json(fetchedMessages);
         }
         catch (err) {
             res.status(500).send("Server Error");

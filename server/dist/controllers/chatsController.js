@@ -22,12 +22,12 @@ function accessChat(req, res) {
             return res.status(400).json({ errors: errors.array() });
         }
         try {
-            const { userId } = req.body;
+            const { userId: otherUserId } = req.body;
             let isChat = yield chat_1.default.find({
                 isGroupChat: false,
                 $and: [
                     { users: { $elemMatch: { $eq: req.user._id } } },
-                    { users: { $elemMatch: { $eq: userId } } },
+                    { users: { $elemMatch: { $eq: otherUserId } } },
                 ],
             }).populate("users", "-password");
             let chatData;
@@ -39,9 +39,9 @@ function accessChat(req, res) {
             }
             else {
                 chatData = {
-                    chatName: `${req.user._id}-${userId}`,
+                    chatName: `${req.user._id}-${otherUserId}`,
                     isGroupChat: false,
-                    users: [req.user._id, userId],
+                    users: [req.user._id, otherUserId],
                 };
             }
             let newChat = yield chat_1.default.create(chatData);
@@ -57,9 +57,8 @@ exports.accessChat = accessChat;
 function fetchChats(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { _id: userId } = req.user;
             const allUserChats = yield chat_1.default.find({
-                users: { $elemMatch: { $eq: userId } },
+                users: { $elemMatch: { $eq: req.user._id } },
             })
                 .populate("users", "-password")
                 .populate("groupAdmin", "-password")

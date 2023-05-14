@@ -17,6 +17,8 @@ export async function sendMessage(req: Request, res: Response) {
     const messageData = {
       sender: (req as IAuthenticatedRequest).user._id,
       content,
+      mode,
+      language,
       chatId,
     };
 
@@ -40,7 +42,7 @@ export async function fetchMessages(req: Request, res: Response) {
     const fetchedMessages: IMessage[] = await Message.find({ chatId })
       .populate("sender", "userName avatar email")
       .populate("chatId");
-    res.json(fetchMessages);
+    res.json(fetchedMessages);
   } catch (err) {
     res.status(500).send("Server Error");
   }

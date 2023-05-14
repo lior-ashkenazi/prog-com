@@ -29,10 +29,9 @@ export default function (req: Request, res: Response, next: NextFunction): Respo
       if (error) {
         return res.status(401).json({ msg: "Token is not valid" });
       }
-      decoded = decoded as ITokenPayload;
       // we can't create new property on a defined interface
       // thus we did here type-casting
-      (req as IAuthenticatedRequest).user = decoded.user;
+      (req as IAuthenticatedRequest).user = (decoded as ITokenPayload).user;
       next();
     });
   } catch (err) {

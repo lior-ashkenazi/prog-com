@@ -18,7 +18,7 @@ const router = express_1.default.Router();
 router.post("/", [
     (0, express_validator_1.check)("content", "Include content").notEmpty(),
     (0, express_validator_1.check)("mode")
-        .notEmpty()
+        .exists()
         .isIn(allowedModes)
         .withMessage("Invalid mode")
         .custom((value, { req }) => {

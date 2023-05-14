@@ -96,11 +96,7 @@ function fetchUsers(req, res) {
                     userName: { $regex: req.query.search, $options: "i" },
                 }
                 : {};
-            // we reach this code after authentication
-            // thus req.user._id is well defined
-            const fetchedUsersData = yield user_1.default.find(keyword).find({
-                _id: { $ne: req.user._id },
-            });
+            const fetchedUsersData = yield user_1.default.find(keyword);
             res.json({ users: fetchedUsersData });
         }
         catch (err) {
