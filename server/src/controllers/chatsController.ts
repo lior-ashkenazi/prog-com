@@ -43,3 +43,20 @@ export async function accessChat(req: Request, res: Response) {
     res.status(500).send("Server error");
   }
 }
+
+export async function fetchChats(req: Request, res: Response) {
+  try {
+    const { _id: userId } = (req as IAuthenticatedRequest).user;
+
+    const allUserChats = await Chat.find({
+      users: { $elemMatch: { $eq: userId } },
+    })
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password")
+      .sort({ updatedAt: -1 });
+
+    res.json({ allUserChats });
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+}

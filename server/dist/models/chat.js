@@ -20,6 +20,17 @@ const chatSchema = new mongoose_1.Schema({
     groupAdmin: {
         type: mongoose_1.Types.ObjectId,
         ref: "User",
+        validate: [
+            {
+                validator: function (value) {
+                    if (!this.isGroupChat) {
+                        return null;
+                    }
+                    return value ? true : false;
+                },
+                message: "groupAdmin is required for group chats",
+            },
+        ],
     },
 }, { timestamps: true });
 const Chat = (0, mongoose_1.model)("Chat", chatSchema);

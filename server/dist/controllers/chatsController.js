@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.accessChat = void 0;
+exports.fetchChats = exports.accessChat = void 0;
 const express_validator_1 = require("express-validator");
 const chat_1 = __importDefault(require("../models/chat"));
 function accessChat(req, res) {
@@ -54,3 +54,21 @@ function accessChat(req, res) {
     });
 }
 exports.accessChat = accessChat;
+function fetchChats(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { _id: userId } = req.user;
+            const allUserChats = yield chat_1.default.find({
+                users: { $elemMatch: { $eq: userId } },
+            })
+                .populate("users", "-password")
+                .populate("groupAdmin", "-password")
+                .sort({ updatedAt: -1 });
+            res.json({ allUserChats });
+        }
+        catch (err) {
+            res.status(500).send("Server error");
+        }
+    });
+}
+exports.fetchChats = fetchChats;

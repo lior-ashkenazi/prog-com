@@ -3,7 +3,7 @@ import { check } from "express-validator";
 
 import { EMode, ELanguage } from "../models/message";
 
-import { sendMessage, fetchMessages } from "../controllers/messageController";
+import { sendMessage, fetchMessages } from "../controllers/messagesController";
 import auth from "../middleware/authMiddleware";
 import checkObjectId from "../middleware/reqMiddleware";
 
@@ -13,7 +13,7 @@ const allowedLanguages = Object.values(ELanguage);
 const router: Router = express.Router();
 
 // @desc		    Send message
-// @route		    /api/message
+// @route		    /api/messages
 // @access      Private
 router.post(
   "/",
@@ -42,7 +42,7 @@ router.post(
         }
         return true;
       }),
-    check("chatId", "Include chatId").notEmpty(),
+    check("chatId", "Chat ID is required").exists(),
   ],
   auth,
   sendMessage

@@ -6,14 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_validator_1 = require("express-validator");
 const message_1 = require("../models/message");
-const messageController_1 = require("../controllers/messageController");
+const messagesController_1 = require("../controllers/messagesController");
 const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
 const reqMiddleware_1 = __importDefault(require("../middleware/reqMiddleware"));
 const allowedModes = Object.values(message_1.EMode);
 const allowedLanguages = Object.values(message_1.ELanguage);
 const router = express_1.default.Router();
 // @desc		    Send message
-// @route		    /api/message
+// @route		    /api/messages
 // @access      Private
 router.post("/", [
     (0, express_validator_1.check)("content", "Include content").notEmpty(),
@@ -38,9 +38,9 @@ router.post("/", [
         }
         return true;
     }),
-    (0, express_validator_1.check)("chatId", "Include chatId").notEmpty(),
-], authMiddleware_1.default, messageController_1.sendMessage);
+    (0, express_validator_1.check)("chatId", "Chat ID is required").exists(),
+], authMiddleware_1.default, messagesController_1.sendMessage);
 // @desc		    Fetch all messages
 // @route		    /api/messages/:chatId
 // @access      Private
-router.get("/:chatId", authMiddleware_1.default, (0, reqMiddleware_1.default)("chatId"), messageController_1.fetchMessages);
+router.get("/:chatId", authMiddleware_1.default, (0, reqMiddleware_1.default)("chatId"), messagesController_1.fetchMessages);

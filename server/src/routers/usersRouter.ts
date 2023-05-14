@@ -2,12 +2,12 @@ import express, { Router } from "express";
 import { check } from "express-validator";
 
 import auth from "../middleware/authMiddleware";
-import { loginUser, registerUser, fetchUsers } from "../controllers/userController";
+import { loginUser, registerUser, fetchUsers } from "../controllers/usersController";
 
 const router: Router = express.Router();
 
 // @desc		  Register new user
-// @route		  /api/user
+// @route		  /api/users
 // @access		Public
 router.post(
   "/",
@@ -20,7 +20,7 @@ router.post(
 );
 
 // @desc		  Login user
-// @route		  /api/user/login
+// @route		  /api/users/login
 // @access    Public
 router.post(
   "/login",
@@ -30,6 +30,6 @@ router.post(
 );
 
 // @desc		  Fetch users
-// @route		  /api/user?search=
+// @route		  /api/users?search=
 // @access		Private
 router.get("/", auth, fetchUsers);

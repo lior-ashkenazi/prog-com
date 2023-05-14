@@ -2,9 +2,9 @@ import { Document, Schema, Types, model, Model } from "mongoose";
 
 export interface IChat extends Document {
   chatName: string;
+  users: Schema.Types.ObjectId[];
   isGroupChat: boolean;
-  users: string[];
-  groupAdmin?: Schema.Types.ObjectId;
+  groupAdmin?: Schema.Types.ObjectId | null;
   // TODO - maybe notification of last message
 }
 
@@ -29,6 +29,17 @@ const chatSchema: Schema = new Schema<IChat>(
     groupAdmin: {
       type: Types.ObjectId,
       ref: "User",
+      validate: [
+        {
+          validator: function (this: IChat, value: Types.ObjectId) {
+            if (!this.isGroupChat) {
+              return null;
+            }
+            return value ? true : false;
+          },
+          message: "groupAdmin is required for group chats",
+        },
+      ],
     },
   },
   { timestamps: true }
