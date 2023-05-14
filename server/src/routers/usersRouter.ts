@@ -24,8 +24,12 @@ router.post(
 // @access    Public
 router.post(
   "/login",
-  check("email", "Please include a valid email").isEmail(),
-  check("password", "Password is required").exists(),
+  check("email")
+    .exists()
+    .withMessage("Please add required fields")
+    .isEmail()
+    .withMessage("Recieved invalid fields"),
+  check("password", "Please add required fields").exists(),
   loginUser
 );
 

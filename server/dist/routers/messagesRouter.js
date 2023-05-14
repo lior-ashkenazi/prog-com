@@ -8,7 +8,6 @@ const express_validator_1 = require("express-validator");
 const message_1 = require("../models/message");
 const messagesController_1 = require("../controllers/messagesController");
 const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
-const reqMiddleware_1 = __importDefault(require("../middleware/reqMiddleware"));
 const allowedModes = Object.values(message_1.EMode);
 const allowedLanguages = Object.values(message_1.ELanguage);
 const router = express_1.default.Router();
@@ -16,7 +15,7 @@ const router = express_1.default.Router();
 // @route		    /api/messages
 // @access      Private
 router.post("/", [
-    (0, express_validator_1.check)("content", "Include content").notEmpty(),
+    (0, express_validator_1.check)("content", "Please add required fields").notEmpty(),
     (0, express_validator_1.check)("mode")
         .exists()
         .isIn(allowedModes)
@@ -38,9 +37,13 @@ router.post("/", [
         }
         return true;
     }),
-    (0, express_validator_1.check)("chatId", "Chat ID is required").exists(),
+    (0, express_validator_1.check)("chatId", "Please add required fields").exists(),
 ], authMiddleware_1.default, messagesController_1.sendMessage);
 // @desc		    Fetch all messages
 // @route		    /api/messages/:chatId
 // @access      Private
-router.get("/:chatId", authMiddleware_1.default, (0, reqMiddleware_1.default)("chatId"), messagesController_1.fetchMessages);
+router.get("/:chatId", (0, express_validator_1.check)("chatId")
+    .exists()
+    .withMessage("Please add required fields")
+    .isMongoId()
+    .withMessage("Invalid fields"), authMiddleware_1.default, messagesController_1.fetchMessages);

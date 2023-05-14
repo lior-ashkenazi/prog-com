@@ -19,7 +19,11 @@ router.post("/", [
 // @desc		  Login user
 // @route		  /api/users/login
 // @access    Public
-router.post("/login", (0, express_validator_1.check)("email", "Please include a valid email").isEmail(), (0, express_validator_1.check)("password", "Password is required").exists(), usersController_1.loginUser);
+router.post("/login", (0, express_validator_1.check)("email")
+    .exists()
+    .withMessage("Please add required fields")
+    .isEmail()
+    .withMessage("Recieved invalid fields"), (0, express_validator_1.check)("password", "Please add required fields").exists(), usersController_1.loginUser);
 // @desc		  Fetch users
 // @route		  /api/users?search=
 // @access		Private

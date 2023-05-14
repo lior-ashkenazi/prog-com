@@ -5,7 +5,6 @@ import { EMode, ELanguage } from "../models/message";
 
 import { sendMessage, fetchMessages } from "../controllers/messagesController";
 import auth from "../middleware/authMiddleware";
-import checkObjectId from "../middleware/reqMiddleware";
 
 const allowedModes = Object.values(EMode);
 const allowedLanguages = Object.values(ELanguage);
@@ -18,7 +17,7 @@ const router: Router = express.Router();
 router.post(
   "/",
   [
-    check("content", "Include content").notEmpty(),
+    check("content", "Please add required fields").notEmpty(),
     check("mode")
       .exists()
       .isIn(allowedModes)
@@ -42,7 +41,7 @@ router.post(
         }
         return true;
       }),
-    check("chatId", "Chat ID is required").exists(),
+    check("chatId", "Please add required fields").exists(),
   ],
   auth,
   sendMessage
@@ -51,4 +50,13 @@ router.post(
 // @desc		    Fetch all messages
 // @route		    /api/messages/:chatId
 // @access      Private
-router.get("/:chatId", auth, checkObjectId("chatId"), fetchMessages);
+router.get(
+  "/:chatId",
+  check("chatId")
+    .exists()
+    .withMessage("Please add required fields")
+    .isMongoId()
+    .withMessage("Invalid fields"),
+  auth,
+  fetchMessages
+);
