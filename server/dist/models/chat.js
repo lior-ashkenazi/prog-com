@@ -2,14 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const chatSchema = new mongoose_1.Schema({
-    name: {
+    chatName: {
         type: String,
         required: true,
         maxLength: 200,
-    },
-    isGroupChat: {
-        type: Boolean,
-        default: false,
     },
     users: [
         {
@@ -17,6 +13,10 @@ const chatSchema = new mongoose_1.Schema({
             ref: "User",
         },
     ],
+    isGroupChat: {
+        type: Boolean,
+        default: false,
+    },
     groupAdmin: {
         type: mongoose_1.Types.ObjectId,
         ref: "User",

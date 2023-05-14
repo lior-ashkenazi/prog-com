@@ -21,6 +21,8 @@ function default_1(req, res, next) {
                 return res.status(401).json({ msg: "Token is not valid" });
             }
             decoded = decoded;
+            // we can't create new property on a defined interface
+            // thus we did here type-casting
             req.user = decoded.user;
             next();
         });

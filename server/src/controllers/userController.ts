@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { validationResult } from "express-validator";
+import { validationResult, Result, ValidationError } from "express-validator";
 import normalize from "normalize-url";
 import { createAvatar } from "@dicebear/core";
 import { bottts } from "@dicebear/collection";
@@ -9,14 +9,14 @@ import { generateToken } from "../utils/generateToken";
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
 export async function registerUser(req: Request, res: Response): Promise<Response | void> {
-  const errors = validationResult(req);
+  const errors: Result<ValidationError> = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { userName, email, password } = req.body;
-
   try {
+    const { userName, email, password } = req.body;
+
     const user: IUser | null = await User.findOne({
       $or: [{ userName }, { email }],
     });
@@ -53,20 +53,21 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
 }
 
 export async function loginUser(req: Request, res: Response): Promise<Response | void> {
-  const errors = validationResult(req);
+  const errors: Result<ValidationError> = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, password } = req.body;
   try {
+    const { email, password } = req.body;
+
     const user: IUser | null = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
     }
 
-    const isMatchedPassword = await user.matchPassword(password);
+    const isMatchedPassword: boolean = await user.matchPassword(password);
 
     if (!isMatchedPassword) {
       return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
@@ -87,7 +88,7 @@ export async function loginUser(req: Request, res: Response): Promise<Response |
 
 export async function fetchUsers(req: Request, res: Response): Promise<Response | void> {
   try {
-    const keyword = req.query.search
+    const keyword: { userName: string } | {} = req.query.search
       ? {
           userName: { $regex: req.query.search, $options: "i" },
         }
@@ -95,7 +96,7 @@ export async function fetchUsers(req: Request, res: Response): Promise<Response 
 
     // we reach this code after authentication
     // thus req.user._id is well defined
-    const fetchedUsersData = await User.find(keyword).find({
+    const fetchedUsersData: IUser[] = await User.find(keyword).find({
       _id: { $ne: (req as IAuthenticatedRequest).user._id },
     });
     res.json({ users: fetchedUsersData });

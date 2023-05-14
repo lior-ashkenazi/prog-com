@@ -10,7 +10,7 @@ const path_1 = __importDefault(require("path"));
 const socket_io_1 = require("socket.io");
 // Routers
 const usersRouter_1 = __importDefault(require("./routers/api/usersRouter"));
-const chatsRouter_1 = __importDefault(require("./routers/chatsRouter"));
+const chatRouter_1 = __importDefault(require("./routers/chatRouter"));
 const messagesRouter_1 = __importDefault(require("./routers/api/messagesRouter"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -18,9 +18,9 @@ const app = (0, express_1.default)();
 // Init Middleware
 app.use(express_1.default.json());
 // Define Routes
-app.use("/api/users", usersRouter_1.default);
-app.use("/api/chats", chatsRouter_1.default);
-app.use("/api/messages", messagesRouter_1.default);
+app.use("/api/user", usersRouter_1.default);
+app.use("/api/chat", chatRouter_1.default);
+app.use("/api/message", messagesRouter_1.default);
 if (process.env.NODE_ENV === "production") {
     // Set static folder
     app.use(express_1.default.static("client/build"));

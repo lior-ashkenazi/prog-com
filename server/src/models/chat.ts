@@ -4,7 +4,7 @@ export interface IChat extends Document {
   chatName: string;
   isGroupChat: boolean;
   users: string[];
-  groupAdmin: Schema.Types.ObjectId;
+  groupAdmin?: Schema.Types.ObjectId;
   // TODO - maybe notification of last message
 }
 

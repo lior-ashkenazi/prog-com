@@ -16,7 +16,7 @@ const mongoose_1 = require("mongoose");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const saltRounds = 10;
 const userSchema = new mongoose_1.Schema({
-    username: {
+    userName: {
         type: String,
         required: true,
     },
