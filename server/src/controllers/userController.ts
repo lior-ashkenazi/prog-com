@@ -46,20 +46,20 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
     };
 
     const token: string = generateToken(payload);
-    res.status(200).json({ token });
+    res.json({ token });
   } catch (err) {
     res.status(500).send("Server error");
   }
 }
 
 export async function loginUser(req: Request, res: Response): Promise<Response | void> {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-    const { email, password } = req.body;
+  const { email, password } = req.body;
+  try {
     const user: IUser | null = await User.findOne({ email });
 
     if (!user) {
@@ -79,7 +79,7 @@ export async function loginUser(req: Request, res: Response): Promise<Response |
     };
 
     const token: string = generateToken(payload);
-    res.status(200).json({ token });
+    res.json({ token });
   } catch (err) {
     res.status(500).send("Server error");
   }
@@ -98,7 +98,7 @@ export async function fetchUsers(req: Request, res: Response): Promise<Response 
     const fetchedUsersData = await User.find(keyword).find({
       _id: { $ne: (req as IAuthenticatedRequest).user._id },
     });
-    res.status(200).json({ users: fetchedUsersData });
+    res.json({ users: fetchedUsersData });
   } catch (err) {
     res.status(500).send("Server error");
   }

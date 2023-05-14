@@ -15,16 +15,17 @@ const chatSchema: Schema = new Schema<IChat>(
       required: true,
       maxLength: 200,
     },
-    isGroupChat: {
-      type: Boolean,
-      default: false,
-    },
     users: [
       {
         type: Types.ObjectId,
         ref: "User",
       },
     ],
+    isGroupChat: {
+      type: Boolean,
+      default: false,
+    },
+
     groupAdmin: {
       type: Types.ObjectId,
       ref: "User",

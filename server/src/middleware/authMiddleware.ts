@@ -6,7 +6,7 @@ export interface IAuthenticatedRequest extends Request {
   user: { _id: number };
 }
 
-export default function (req: Request, res: Response, next: NextFunction) {
+export default function (req: Request, res: Response, next: NextFunction): Response | void {
   // Get token from header
   const token = req!.header("Authorization")!.replace("Bearer ", "");
 

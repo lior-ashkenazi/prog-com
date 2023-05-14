@@ -37,15 +37,16 @@ const messageSchema: Schema = new Schema<IMessage>(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    content: {
+      type: String,
+      required: true,
+    },
     mode: {
       type: String,
       required: true,
       enum: Object.values(EMode),
     },
-    content: {
-      type: String,
-      required: true,
-    },
+
     language: {
       type: String,
       required: false,

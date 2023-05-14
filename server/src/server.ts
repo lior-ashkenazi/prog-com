@@ -7,7 +7,7 @@ import { Server } from "socket.io";
 
 // Routers
 import usersRouter from "./routers/api/usersRouter";
-import chatsRouter from "./routers/chatsRouter";
+import chatsRouter from "./routers/chatRouter";
 import messagesRouter from "./routers/api/messagesRouter";
 
 dotenv.config();
@@ -20,9 +20,9 @@ connectDB();
 app.use(express.json());
 
 // Define Routes
-app.use("/api/users", usersRouter);
-app.use("/api/chats", chatsRouter);
-app.use("/api/messages", messagesRouter);
+app.use("/api/user", usersRouter);
+app.use("/api/chat", chatsRouter);
+app.use("/api/message", messagesRouter);
 
 if (process.env.NODE_ENV === "production") {
   // Set static folder
