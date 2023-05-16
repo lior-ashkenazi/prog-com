@@ -19,15 +19,17 @@ router.post(
   [
     check("content", "Please add required fields").notEmpty(),
     check("mode")
-      .exists()
+      .notEmpty()
       .isIn(allowedModes)
-      .withMessage("Invalid mode")
+      .withMessage("Recieved invalid fields")
       .custom((value, { req }) => {
         if (value === "code" && !req.body.language) {
-          throw new Error("Include language when mode is set to code");
+          throw new Error("Please add required fields");
         }
         if (value !== "code" && req.body.language) {
-          throw new Error("Language should not be provided when mode is not set to code");
+          throw new Error(
+            "Recieved redundant fields"
+          );
         }
         return true;
       })
@@ -37,11 +39,11 @@ router.post(
           req.body.language &&
           !allowedLanguages.includes(req.body.language)
         ) {
-          throw new Error("Invalid programming language");
+          throw new Error("Recieved invalid fields");
         }
         return true;
       }),
-    check("chatId", "Please add required fields").exists(),
+    check("chatId", "Please add required fields").notEmpty(),
   ],
   auth,
   sendMessage
@@ -53,10 +55,10 @@ router.post(
 router.get(
   "/:chatId",
   check("chatId")
-    .exists()
+    .notEmpty()
     .withMessage("Please add required fields")
     .isMongoId()
-    .withMessage("Invalid fields"),
+    .withMessage("Recieved invalid fields"),
   auth,
   fetchMessages
 );

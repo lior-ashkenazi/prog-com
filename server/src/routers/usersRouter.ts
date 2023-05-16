@@ -2,9 +2,15 @@ import express, { Router } from "express";
 import { check } from "express-validator";
 
 import auth from "../middleware/authMiddleware";
-import { loginUser, registerUser, fetchUsers } from "../controllers/usersController";
+import {
+  loginUser,
+  registerUser,
+  fetchUsers,
+} from "../controllers/usersController";
 
 const router: Router = express.Router();
+
+// UI should note users the format of a password!
 
 // @desc		  Register new user
 // @route		  /api/users
@@ -12,9 +18,9 @@ const router: Router = express.Router();
 router.post(
   "/",
   [
-    check("username", "Include a valid username").notEmpty(),
-    check("email", "Include a valid email").isEmail(),
-    check("password", "Include a valid password with 6 or more characters").isLength({ min: 6 }),
+    check("userName", "Please add required fields").notEmpty(),
+    check("email", "Recieved invalid fields").isEmail(),
+    check("password", "Recieved invalid fields").isLength({ min: 6 }),
   ],
   registerUser
 );
@@ -25,11 +31,11 @@ router.post(
 router.post(
   "/login",
   check("email")
-    .exists()
+    .notEmpty()
     .withMessage("Please add required fields")
     .isEmail()
     .withMessage("Recieved invalid fields"),
-  check("password", "Please add required fields").exists(),
+  check("password", "Please add required fields").notEmpty(),
   loginUser
 );
 

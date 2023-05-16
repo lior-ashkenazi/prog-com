@@ -17,7 +17,11 @@ export async function accessChat(req: Request, res: Response) {
     let isChat = await Chat.find({
       isGroupChat: false,
       $and: [
-        { users: { $elemMatch: { $eq: (req as IAuthenticatedRequest).user._id } } },
+        {
+          users: {
+            $elemMatch: { $eq: (req as IAuthenticatedRequest).user._id },
+          },
+        },
         { users: { $elemMatch: { $eq: otherUserId } } },
       ],
     }).populate("users", "-password");
@@ -37,7 +41,10 @@ export async function accessChat(req: Request, res: Response) {
     }
 
     let newChat: IChat | null = await Chat.create(chatData);
-    newChat = await Chat.findOne({ _id: newChat._id }).populate("users", "-password");
+    newChat = await Chat.findOne({ _id: newChat._id }).populate(
+      "users",
+      "-password"
+    );
     res.json({ newChat });
   } catch (err) {
     res.status(500).send("Server error");
@@ -58,3 +65,5 @@ export async function fetchChats(req: Request, res: Response) {
     res.status(500).send("Server error");
   }
 }
+
+export async function createGroupChat(req: Request, res: Response) {}
