@@ -122,7 +122,7 @@ export async function renameGroupChat(req: Request, res: Response) {
 
 // TODO - should add maybe functionality for deleting a group
 
-export async function AddUserToGroupChat(req: Request, res: Response) {
+export async function addUserToGroupChat(req: Request, res: Response) {
   const errors: Result<ValidationError> = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -146,5 +146,36 @@ export async function AddUserToGroupChat(req: Request, res: Response) {
     }
 
     res.json(updatedChat);
-  } catch (err) {}
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+}
+
+export async function removeUserFromGroupChat(req: Request, res: Response) {
+  const errors: Result<ValidationError> = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { chatId, userId } = req.body;
+
+  try {
+    const updatedChat = await Chat.findByIdAndUpdate(
+      chatId,
+      {
+        $pull: { users: userId },
+      },
+      { new: true }
+    )
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    if (!updatedChat) {
+      return res.status(400).send("Bad request");
+    }
+
+    res.json(updatedChat);
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
 }

@@ -7,7 +7,8 @@ import {
   fetchChats,
   createGroupChat,
   renameGroupChat,
-  AddUserToGroupChat,
+  addUserToGroupChat,
+  removeUserFromGroupChat,
 } from "../controllers/chatsController";
 
 const router: Router = express.Router();
@@ -47,7 +48,7 @@ router.post(
 // @desc		Rename a group chat
 // @route		/api/chats/groups
 // @access      Private
-router.post(
+router.put(
   "/groups",
   [
     check("chatId")
@@ -61,10 +62,10 @@ router.post(
   renameGroupChat
 );
 
-// @desc		Rename a group chat
-// @route		/api/chats/groups
+// @desc		Add a user to group chat
+// @route		/api/chats/groups/users
 // @access      Private
-router.post(
+router.put(
   "/groups/users",
   [
     check("chatId")
@@ -79,5 +80,26 @@ router.post(
       .withMessage("Recieved invalid fields"),
   ],
   auth,
-  AddUserToGroupChat
+  addUserToGroupChat
+);
+
+// @desc		Remove a user from group chat
+// @route		/api/chats/groups/users
+// @access      Private
+router.delete(
+  "/groups/users",
+  [
+    check("chatId")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isMongoId()
+      .withMessage("Recieved invalid fields"),
+    check("userId")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isMongoId()
+      .withMessage("Recieved invalid fields"),
+  ],
+  auth,
+  removeUserFromGroupChat
 );
