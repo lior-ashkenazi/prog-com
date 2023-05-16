@@ -6,11 +6,6 @@ import Message, { IMessage } from "../models/message";
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
 export async function sendMessage(req: Request, res: Response) {
-  const errors: Result<ValidationError> = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const { content, mode, language, chatId } = req.body;
 
   const messageData = {

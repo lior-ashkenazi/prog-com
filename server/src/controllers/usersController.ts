@@ -11,11 +11,6 @@ export async function registerUser(
   req: Request,
   res: Response
 ): Promise<Response | void> {
-  const errors: Result<ValidationError> = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const { userName, email, password } = req.body;
 
   try {
@@ -61,11 +56,6 @@ export async function loginUser(
   req: Request,
   res: Response
 ): Promise<Response | void> {
-  const errors: Result<ValidationError> = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const { email, password } = req.body;
 
   try {

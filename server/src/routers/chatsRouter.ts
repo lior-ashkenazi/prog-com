@@ -2,6 +2,8 @@ import express, { Router } from "express";
 import { check } from "express-validator";
 
 import auth from "../middleware/authMiddleware";
+import error from "../middleware/errorMiddleware";
+
 import {
   accessChat,
   fetchChats,
@@ -25,6 +27,7 @@ router.post(
     .isMongoId()
     .withMessage("Recieved invalid fields"),
   auth,
+  error,
   accessChat
 );
 
@@ -43,6 +46,7 @@ router.post(
     check("chatName", "Please add required fields").notEmpty(),
   ],
   auth,
+  error,
   createGroupChat
 );
 
@@ -60,6 +64,7 @@ router.put(
     check("chatName", "Please add required fields").notEmpty(),
   ],
   auth,
+  error,
   renameGroupChat
 );
 
@@ -76,6 +81,7 @@ router.delete(
       .withMessage("Recieved invalid fields"),
   ],
   auth,
+  error,
   removeGroupChat
 );
 
@@ -97,6 +103,7 @@ router.put(
       .withMessage("Recieved invalid fields"),
   ],
   auth,
+  error,
   addUserToGroupChat
 );
 
@@ -118,5 +125,6 @@ router.delete(
       .withMessage("Recieved invalid fields"),
   ],
   auth,
+  error,
   removeUserFromGroupChat
 );

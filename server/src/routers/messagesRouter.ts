@@ -3,8 +3,10 @@ import { check } from "express-validator";
 
 import { EMode, ELanguage } from "../models/message";
 
-import { sendMessage, fetchMessages } from "../controllers/messagesController";
 import auth from "../middleware/authMiddleware";
+import error from "../middleware/errorMiddleware";
+
+import { sendMessage, fetchMessages } from "../controllers/messagesController";
 
 const allowedModes = Object.values(EMode);
 const allowedLanguages = Object.values(ELanguage);
@@ -48,6 +50,7 @@ router.post(
       .withMessage("Recieved invalid fields"),
   ],
   auth,
+  error,
   sendMessage
 );
 
@@ -62,5 +65,6 @@ router.get(
     .isMongoId()
     .withMessage("Recieved invalid fields"),
   auth,
+  error,
   fetchMessages
 );

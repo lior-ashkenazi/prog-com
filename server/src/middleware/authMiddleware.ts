@@ -1,12 +1,17 @@
+import { Schema } from "mongoose";
 import { Request, Response, NextFunction } from "express";
 import { verify, VerifyOptions } from "jsonwebtoken";
 import { ITokenPayload } from "../utils/generateToken";
 
 export interface IAuthenticatedRequest extends Request {
-  user: { _id: number };
+  user: { _id: Schema.Types.ObjectId };
 }
 
-export default function (req: Request, res: Response, next: NextFunction): Response | void {
+export default function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Response | void {
   // Get token from header
   const token = req!.header("Authorization")!.replace("Bearer ", "");
 

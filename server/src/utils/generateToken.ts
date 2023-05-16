@@ -1,7 +1,8 @@
+import { Schema } from "mongoose";
 import { sign, SignOptions } from "jsonwebtoken";
 
 export interface ITokenPayload {
-  user: { _id: number };
+  user: { _id: Schema.Types.ObjectId };
 }
 
 export function generateToken(payload: ITokenPayload) {

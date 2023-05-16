@@ -1,3 +1,4 @@
+import { Schema } from "mongoose";
 import { Request, Response } from "express";
 import { validationResult, Result, ValidationError } from "express-validator";
 
@@ -6,11 +7,6 @@ import Chat, { IChat } from "../models/chat";
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
 export async function accessChat(req: Request, res: Response) {
-  const errors: Result<ValidationError> = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
     const { userId: otherUserId } = req.body;
 
@@ -67,14 +63,9 @@ export async function fetchChats(req: Request, res: Response) {
 }
 
 export async function createGroupChat(req: Request, res: Response) {
-  const errors: Result<ValidationError> = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+  let users: Schema.Types.ObjectId[] = req.body.users;
 
-  let users: object[] = req.body.users;
-
-  users.push((req as IAuthenticatedRequest).user);
+  users.push((req as IAuthenticatedRequest).user._id);
 
   try {
     let newGroupChat: IChat | null = await Chat.create({
@@ -94,11 +85,6 @@ export async function createGroupChat(req: Request, res: Response) {
 }
 
 export async function renameGroupChat(req: Request, res: Response) {
-  const errors: Result<ValidationError> = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const { chatId, chatName } = req.body;
 
   try {
@@ -123,21 +109,20 @@ export async function renameGroupChat(req: Request, res: Response) {
 export async function removeGroupChat(req: Request, res: Response) {
   const { chatId } = req.body;
 
-  const removedChat = await Chat.findByIdAndRemove(chatId);
+  try {
+    const removedChat = await Chat.findByIdAndRemove(chatId);
 
-  if (!removedChat) {
-    return res.status(400).json({ message: "Bad request" });
+    if (!removedChat) {
+      return res.status(400).json({ message: "Bad request" });
+    }
+
+    res.json(removedChat);
+  } catch (error) {
+    res.status(500).send("Server error");
   }
-
-  res.json(removedChat);
 }
 
 export async function addUserToGroupChat(req: Request, res: Response) {
-  const errors: Result<ValidationError> = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const { chatId, userId } = req.body;
 
   try {
@@ -162,12 +147,7 @@ export async function addUserToGroupChat(req: Request, res: Response) {
 }
 
 export async function removeUserFromGroupChat(req: Request, res: Response) {
-  const errors: Result<ValidationError> = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { chatId, userId } = req.body;
+const { chatId, userId } = req.body;
 
   try {
     const updatedChat = await Chat.findByIdAndUpdate(

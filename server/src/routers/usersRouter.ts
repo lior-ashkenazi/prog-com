@@ -2,6 +2,8 @@ import express, { Router } from "express";
 import { check } from "express-validator";
 
 import auth from "../middleware/authMiddleware";
+import error from "../middleware/errorMiddleware";
+
 import {
   loginUser,
   registerUser,
@@ -22,6 +24,7 @@ router.post(
     check("email", "Recieved invalid fields").isEmail(),
     check("password", "Recieved invalid fields").isLength({ min: 6 }),
   ],
+  error,
   registerUser
 );
 
@@ -36,6 +39,7 @@ router.post(
     .isEmail()
     .withMessage("Recieved invalid fields"),
   check("password", "Please add required fields").notEmpty(),
+  error,
   loginUser
 );
 
