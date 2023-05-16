@@ -9,6 +9,7 @@ import {
   renameGroupChat,
   addUserToGroupChat,
   removeUserFromGroupChat,
+  removeGroupChat,
 } from "../controllers/chatsController";
 
 const router: Router = express.Router();
@@ -60,6 +61,22 @@ router.put(
   ],
   auth,
   renameGroupChat
+);
+
+// @desc		Rename a group chat
+// @route		/api/chats/groups
+// @access      Private
+router.delete(
+  "/groups",
+  [
+    check("chatId")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isMongoId()
+      .withMessage("Recieved invalid fields"),
+  ],
+  auth,
+  removeGroupChat
 );
 
 // @desc		Add a user to group chat

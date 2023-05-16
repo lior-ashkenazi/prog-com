@@ -111,7 +111,7 @@ export async function renameGroupChat(req: Request, res: Response) {
       .populate("groupAdmin", "-password");
 
     if (!updatedChat) {
-      return res.status(400).send("Bad request");
+      return res.status(400).json({ message: "Bad request" });
     }
 
     res.json(updatedChat);
@@ -120,7 +120,17 @@ export async function renameGroupChat(req: Request, res: Response) {
   }
 }
 
-// TODO - should add maybe functionality for deleting a group
+export async function removeGroupChat(req: Request, res: Response) {
+  const { chatId } = req.body;
+
+  const removedChat = await Chat.findByIdAndRemove(chatId);
+
+  if (!removedChat) {
+    return res.status(400).json({ message: "Bad request" });
+  }
+
+  res.json(removedChat);
+}
 
 export async function addUserToGroupChat(req: Request, res: Response) {
   const errors: Result<ValidationError> = validationResult(req);
