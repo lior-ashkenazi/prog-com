@@ -27,9 +27,7 @@ router.post(
           throw new Error("Please add required fields");
         }
         if (value !== "code" && req.body.language) {
-          throw new Error(
-            "Recieved redundant fields"
-          );
+          throw new Error("Recieved redundant fields");
         }
         return true;
       })
@@ -43,7 +41,11 @@ router.post(
         }
         return true;
       }),
-    check("chatId", "Please add required fields").notEmpty(),
+    check("chatId")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isMongoId()
+      .withMessage("Recieved invalid fields"),
   ],
   auth,
   sendMessage

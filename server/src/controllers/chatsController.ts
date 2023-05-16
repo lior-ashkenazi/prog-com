@@ -77,5 +77,74 @@ export async function createGroupChat(req: Request, res: Response) {
   users.push((req as IAuthenticatedRequest).user);
 
   try {
-  } catch (error) {}
+    let newGroupChat: IChat | null = await Chat.create({
+      chatName: req.body.name,
+      users,
+      isGroupChat: true,
+      groupAdmin: (req as IAuthenticatedRequest).user,
+    });
+    newGroupChat = await Chat.findOne({ _id: newGroupChat._id })
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    res.json(newGroupChat);
+  } catch (error) {
+    res.status(500).send("Server error");
+  }
+}
+
+export async function renameGroupChat(req: Request, res: Response) {
+  const errors: Result<ValidationError> = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { chatId, chatName } = req.body;
+
+  try {
+    const updatedChat = await Chat.findByIdAndUpdate(
+      chatId,
+      { chatName },
+      { new: true }
+    )
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    if (!updatedChat) {
+      return res.status(400).send("Bad request");
+    }
+
+    res.json(updatedChat);
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+}
+
+// TODO - should add maybe functionality for deleting a group
+
+export async function AddUserToGroupChat(req: Request, res: Response) {
+  const errors: Result<ValidationError> = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { chatId, userId } = req.body;
+
+  try {
+    const updatedChat = await Chat.findByIdAndUpdate(
+      chatId,
+      {
+        $push: { users: userId },
+      },
+      { new: true }
+    )
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    if (!updatedChat) {
+      return res.status(400).send("Bad request");
+    }
+
+    res.json(updatedChat);
+  } catch (err) {}
 }

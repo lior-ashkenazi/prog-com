@@ -6,6 +6,8 @@ import {
   accessChat,
   fetchChats,
   createGroupChat,
+  renameGroupChat,
+  AddUserToGroupChat,
 } from "../controllers/chatsController";
 
 const router: Router = express.Router();
@@ -15,7 +17,11 @@ const router: Router = express.Router();
 // @access      Private
 router.post(
   "/",
-  check("userId", "Please add required fields").notEmpty(),
+  check("userId")
+    .notEmpty()
+    .withMessage("Please add required fields")
+    .isMongoId()
+    .withMessage("Recieved invalid fields"),
   auth,
   accessChat
 );
@@ -25,15 +31,53 @@ router.post(
 // @access      Private
 router.post("/", auth, fetchChats);
 
-// @desc		Create a new group chat room
-// @route		/api/chats/group
+// @desc		Create a new group chat
+// @route		/api/chats/groups
 // @access      Private
 router.post(
-  "/group",
+  "/groups",
   [
     check("users", "Please add required fields").notEmpty(),
-    check("userName", "Please add required fields").notEmpty(),
+    check("chatName", "Please add required fields").notEmpty(),
   ],
   auth,
   createGroupChat
+);
+
+// @desc		Rename a group chat
+// @route		/api/chats/groups
+// @access      Private
+router.post(
+  "/groups",
+  [
+    check("chatId")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isMongoId()
+      .withMessage("Recieved invalid fields"),
+    check("chatName", "Please add required fields").notEmpty(),
+  ],
+  auth,
+  renameGroupChat
+);
+
+// @desc		Rename a group chat
+// @route		/api/chats/groups
+// @access      Private
+router.post(
+  "/groups/users",
+  [
+    check("chatId")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isMongoId()
+      .withMessage("Recieved invalid fields"),
+    check("userId")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isMongoId()
+      .withMessage("Recieved invalid fields"),
+  ],
+  auth,
+  AddUserToGroupChat
 );
