@@ -66,4 +66,16 @@ export async function fetchChats(req: Request, res: Response) {
   }
 }
 
-export async function createGroupChat(req: Request, res: Response) {}
+export async function createGroupChat(req: Request, res: Response) {
+  const errors: Result<ValidationError> = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  let users: object[] = req.body.users;
+
+  users.push((req as IAuthenticatedRequest).user);
+
+  try {
+  } catch (error) {}
+}

@@ -7,22 +7,28 @@ import { bottts } from "@dicebear/collection";
 import User, { IUser } from "../models/user";
 import { generateToken } from "../utils/generateToken";
 
-export async function registerUser(req: Request, res: Response): Promise<Response | void> {
+export async function registerUser(
+  req: Request,
+  res: Response
+): Promise<Response | void> {
   const errors: Result<ValidationError> = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  try {
-    const { userName, email, password } = req.body;
+  const { userName, email, password } = req.body;
 
+  try {
     const user: IUser | null = await User.findOne({
       $or: [{ userName }, { email }],
     });
 
     if (user) {
-      const invalidField: string = user.userName === userName ? "Username" : "Email";
-      return res.status(400).json({ errors: [{ msg: `${invalidField} already exists` }] });
+      const invalidField: string =
+        user.userName === userName ? "Username" : "Email";
+      return res
+        .status(400)
+        .json({ errors: [{ msg: `${invalidField} already exists` }] });
     }
 
     const avatar = createAvatar(bottts, {});
@@ -51,15 +57,18 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
   }
 }
 
-export async function loginUser(req: Request, res: Response): Promise<Response | void> {
+export async function loginUser(
+  req: Request,
+  res: Response
+): Promise<Response | void> {
   const errors: Result<ValidationError> = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
+  try {
     const user: IUser | null = await User.findOne({ email });
 
     if (!user) {
@@ -85,14 +94,17 @@ export async function loginUser(req: Request, res: Response): Promise<Response |
   }
 }
 
-export async function fetchUsers(req: Request, res: Response): Promise<Response | void> {
-  try {
-    const keyword: { userName: string } | {} = req.query.search
-      ? {
-          userName: { $regex: req.query.search, $options: "i" },
-        }
-      : {};
+export async function fetchUsers(
+  req: Request,
+  res: Response
+): Promise<Response | void> {
+  const keyword: { userName: string } | {} = req.query.search
+    ? {
+        userName: { $regex: req.query.search, $options: "i" },
+      }
+    : {};
 
+  try {
     const fetchedUsersData: IUser[] = await User.find(keyword);
 
     res.json({ users: fetchedUsersData });

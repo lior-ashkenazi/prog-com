@@ -11,17 +11,17 @@ export async function sendMessage(req: Request, res: Response) {
     return res.status(400).json({ errors: errors.array() });
   }
 
+  const { content, mode, language, chatId } = req.body;
+
+  const messageData = {
+    sender: (req as IAuthenticatedRequest).user._id,
+    content,
+    mode,
+    language,
+    chatId,
+  };
+
   try {
-    const { content, mode, language, chatId } = req.body;
-
-    const messageData = {
-      sender: (req as IAuthenticatedRequest).user._id,
-      content,
-      mode,
-      language,
-      chatId,
-    };
-
     let newMessage: IMessage = await Message.create(messageData);
     newMessage = await newMessage.populate("sender", "userName avatar email");
     newMessage = await newMessage.populate("chatId");
@@ -36,9 +36,9 @@ export async function sendMessage(req: Request, res: Response) {
 }
 
 export async function fetchMessages(req: Request, res: Response) {
-  try {
-    const { chatId } = req.params;
+  const { chatId } = req.params;
 
+  try {
     const fetchedMessages: IMessage[] = await Message.find({ chatId })
       .populate("sender", "userName avatar email")
       .populate("chatId");
