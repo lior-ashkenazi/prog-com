@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_validator_1 = require("express-validator");
 const message_1 = require("../models/message");
-const messagesController_1 = require("../controllers/messagesController");
 const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
+const errorMiddleware_1 = __importDefault(require("../middleware/errorMiddleware"));
+const messagesController_1 = require("../controllers/messagesController");
 const allowedModes = Object.values(message_1.EMode);
 const allowedLanguages = Object.values(message_1.ELanguage);
 const router = express_1.default.Router();
@@ -17,15 +18,15 @@ const router = express_1.default.Router();
 router.post("/", [
     (0, express_validator_1.check)("content", "Please add required fields").notEmpty(),
     (0, express_validator_1.check)("mode")
-        .exists()
+        .notEmpty()
         .isIn(allowedModes)
-        .withMessage("Invalid mode")
+        .withMessage("Received invalid fields")
         .custom((value, { req }) => {
         if (value === "code" && !req.body.language) {
-            throw new Error("Include language when mode is set to code");
+            throw new Error("Please add required fields");
         }
         if (value !== "code" && req.body.language) {
-            throw new Error("Language should not be provided when mode is not set to code");
+            throw new Error("Received redundant fields");
         }
         return true;
     })
@@ -33,17 +34,22 @@ router.post("/", [
         if (value === "code" &&
             req.body.language &&
             !allowedLanguages.includes(req.body.language)) {
-            throw new Error("Invalid programming language");
+            throw new Error("Received invalid fields");
         }
         return true;
     }),
-    (0, express_validator_1.check)("chatId", "Please add required fields").exists(),
-], authMiddleware_1.default, messagesController_1.sendMessage);
+    (0, express_validator_1.check)("chatId")
+        .notEmpty()
+        .withMessage("Please add required fields")
+        .isMongoId()
+        .withMessage("Received invalid fields"),
+], authMiddleware_1.default, errorMiddleware_1.default, messagesController_1.sendMessage);
 // @desc		    Fetch all messages
 // @route		    /api/messages/:chatId
 // @access      Private
 router.get("/:chatId", (0, express_validator_1.check)("chatId")
-    .exists()
+    .notEmpty()
     .withMessage("Please add required fields")
     .isMongoId()
-    .withMessage("Invalid fields"), authMiddleware_1.default, messagesController_1.fetchMessages);
+    .withMessage("Received invalid fields"), authMiddleware_1.default, errorMiddleware_1.default, messagesController_1.fetchMessages);
+exports.default = router;

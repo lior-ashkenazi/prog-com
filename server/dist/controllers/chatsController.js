@@ -12,21 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchChats = exports.accessChat = void 0;
-const express_validator_1 = require("express-validator");
+exports.removeUserFromGroupChat = exports.addUserToGroupChat = exports.removeGroupChat = exports.renameGroupChat = exports.createGroupChat = exports.fetchChats = exports.accessChat = void 0;
 const chat_1 = __importDefault(require("../models/chat"));
 function accessChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const errors = (0, express_validator_1.validationResult)(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
         try {
             const { userId: otherUserId } = req.body;
             let isChat = yield chat_1.default.find({
                 isGroupChat: false,
                 $and: [
-                    { users: { $elemMatch: { $eq: req.user._id } } },
+                    {
+                        users: {
+                            $elemMatch: { $eq: req.user._id },
+                        },
+                    },
                     { users: { $elemMatch: { $eq: otherUserId } } },
                 ],
             }).populate("users", "-password");
@@ -71,3 +70,99 @@ function fetchChats(req, res) {
     });
 }
 exports.fetchChats = fetchChats;
+function createGroupChat(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let users = req.body.users;
+        users.push(req.user._id);
+        try {
+            let newGroupChat = yield chat_1.default.create({
+                chatName: req.body.name,
+                users,
+                isGroupChat: true,
+                groupAdmin: req.user,
+            });
+            newGroupChat = yield chat_1.default.findOne({ _id: newGroupChat._id })
+                .populate("users", "-password")
+                .populate("groupAdmin", "-password");
+            res.json(newGroupChat);
+        }
+        catch (error) {
+            res.status(500).send("Server error");
+        }
+    });
+}
+exports.createGroupChat = createGroupChat;
+function renameGroupChat(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { chatId, chatName } = req.body;
+        try {
+            const updatedChat = yield chat_1.default.findByIdAndUpdate(chatId, { chatName }, { new: true })
+                .populate("users", "-password")
+                .populate("groupAdmin", "-password");
+            if (!updatedChat) {
+                return res.status(400).json({ message: "Bad request" });
+            }
+            res.json(updatedChat);
+        }
+        catch (err) {
+            res.status(500).send("Server error");
+        }
+    });
+}
+exports.renameGroupChat = renameGroupChat;
+function removeGroupChat(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { chatId } = req.body;
+        try {
+            const removedChat = yield chat_1.default.findByIdAndRemove(chatId);
+            if (!removedChat) {
+                return res.status(400).json({ message: "Bad request" });
+            }
+            res.json(removedChat);
+        }
+        catch (error) {
+            res.status(500).send("Server error");
+        }
+    });
+}
+exports.removeGroupChat = removeGroupChat;
+function addUserToGroupChat(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { chatId, userId } = req.body;
+        try {
+            const updatedChat = yield chat_1.default.findByIdAndUpdate(chatId, {
+                $push: { users: userId },
+            }, { new: true })
+                .populate("users", "-password")
+                .populate("groupAdmin", "-password");
+            if (!updatedChat) {
+                return res.status(400).send("Bad request");
+            }
+            res.json(updatedChat);
+        }
+        catch (err) {
+            res.status(500).send("Server error");
+        }
+    });
+}
+exports.addUserToGroupChat = addUserToGroupChat;
+function removeUserFromGroupChat(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { chatId, userId } = req.body;
+        try {
+            const updatedChat = yield chat_1.default.findByIdAndUpdate(chatId, {
+                $pull: { users: userId },
+            }, { new: true })
+                .populate("users", "-password")
+                .populate("groupAdmin", "-password");
+            if (!updatedChat) {
+                return res.status(400).send("Bad request");
+            }
+            res.json(updatedChat);
+        }
+        catch (err) {
+            res.status(500).send("Server error");
+        }
+    });
+}
+exports.removeUserFromGroupChat = removeUserFromGroupChat;

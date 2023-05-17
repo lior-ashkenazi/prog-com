@@ -1,6 +1,5 @@
 import { Schema } from "mongoose";
 import { Request, Response } from "express";
-import { validationResult, Result, ValidationError } from "express-validator";
 
 import Chat, { IChat } from "../models/chat";
 

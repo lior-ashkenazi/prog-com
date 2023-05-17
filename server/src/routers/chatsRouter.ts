@@ -78,7 +78,7 @@ router.delete(
       .notEmpty()
       .withMessage("Please add required fields")
       .isMongoId()
-      .withMessage("Recieved invalid fields"),
+      .withMessage("Received invalid fields"),
   ],
   auth,
   error,
@@ -95,12 +95,12 @@ router.put(
       .notEmpty()
       .withMessage("Please add required fields")
       .isMongoId()
-      .withMessage("Recieved invalid fields"),
+      .withMessage("Received invalid fields"),
     check("userId")
       .notEmpty()
       .withMessage("Please add required fields")
       .isMongoId()
-      .withMessage("Recieved invalid fields"),
+      .withMessage("Received invalid fields"),
   ],
   auth,
   error,
@@ -117,12 +117,12 @@ router.delete(
       .notEmpty()
       .withMessage("Please add required fields")
       .isMongoId()
-      .withMessage("Recieved invalid fields"),
+      .withMessage("Received invalid fields"),
     check("userId")
       .notEmpty()
       .withMessage("Please add required fields")
       .isMongoId()
-      .withMessage("Recieved invalid fields"),
+      .withMessage("Received invalid fields"),
   ],
   auth,
   error,

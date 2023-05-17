@@ -17,8 +17,8 @@ router.post(
   "/",
   [
     check("userName", "Please add required fields").notEmpty(),
-    check("email", "Recieved invalid fields").isEmail(),
-    check("password", "Recieved invalid fields").isLength({ min: 6 }),
+    check("email", "Received invalid fields").isEmail(),
+    check("password", "Received invalid fields").isLength({ min: 6 }),
   ],
   error,
   registerUser
@@ -33,7 +33,7 @@ router.post(
     .notEmpty()
     .withMessage("Please add required fields")
     .isEmail()
-    .withMessage("Recieved invalid fields"),
+    .withMessage("Received invalid fields"),
   check("password", "Please add required fields").notEmpty(),
   error,
   loginUser

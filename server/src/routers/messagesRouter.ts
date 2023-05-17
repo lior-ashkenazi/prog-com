@@ -23,13 +23,13 @@ router.post(
     check("mode")
       .notEmpty()
       .isIn(allowedModes)
-      .withMessage("Recieved invalid fields")
+      .withMessage("Received invalid fields")
       .custom((value, { req }) => {
         if (value === "code" && !req.body.language) {
           throw new Error("Please add required fields");
         }
         if (value !== "code" && req.body.language) {
-          throw new Error("Recieved redundant fields");
+          throw new Error("Received redundant fields");
         }
         return true;
       })
@@ -39,7 +39,7 @@ router.post(
           req.body.language &&
           !allowedLanguages.includes(req.body.language)
         ) {
-          throw new Error("Recieved invalid fields");
+          throw new Error("Received invalid fields");
         }
         return true;
       }),
@@ -47,7 +47,7 @@ router.post(
       .notEmpty()
       .withMessage("Please add required fields")
       .isMongoId()
-      .withMessage("Recieved invalid fields"),
+      .withMessage("Received invalid fields"),
   ],
   auth,
   error,
@@ -63,7 +63,7 @@ router.get(
     .notEmpty()
     .withMessage("Please add required fields")
     .isMongoId()
-    .withMessage("Recieved invalid fields"),
+    .withMessage("Received invalid fields"),
   auth,
   error,
   fetchMessages

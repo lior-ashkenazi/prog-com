@@ -13,23 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchMessages = exports.sendMessage = void 0;
-const express_validator_1 = require("express-validator");
 const message_1 = __importDefault(require("../models/message"));
 function sendMessage(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const errors = (0, express_validator_1.validationResult)(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+        const { content, mode, language, chatId } = req.body;
+        const messageData = {
+            sender: req.user._id,
+            content,
+            mode,
+            language,
+            chatId,
+        };
         try {
-            const { content, mode, language, chatId } = req.body;
-            const messageData = {
-                sender: req.user._id,
-                content,
-                mode,
-                language,
-                chatId,
-            };
             let newMessage = yield message_1.default.create(messageData);
             newMessage = yield newMessage.populate("sender", "userName avatar email");
             newMessage = yield newMessage.populate("chatId");
@@ -47,8 +42,8 @@ function sendMessage(req, res) {
 exports.sendMessage = sendMessage;
 function fetchMessages(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        const { chatId } = req.params;
         try {
-            const { chatId } = req.params;
             const fetchedMessages = yield message_1.default.find({ chatId })
                 .populate("sender", "userName avatar email")
                 .populate("chatId");

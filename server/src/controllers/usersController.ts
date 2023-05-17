@@ -1,16 +1,10 @@
 import { Request, Response } from "express";
-import { validationResult, Result, ValidationError } from "express-validator";
-import normalize from "normalize-url";
-import { createAvatar } from "@dicebear/core";
-import { bottts } from "@dicebear/collection";
+import axios from "axios";
 
 import User, { IUser } from "../models/user";
 import { generateToken } from "../utils/generateToken";
 
-export async function registerUser(
-  req: Request,
-  res: Response
-): Promise<Response | void> {
+export async function registerUser(req: Request, res: Response): Promise<Response | void> {
   const { userName, email, password } = req.body;
 
   try {
@@ -19,21 +13,17 @@ export async function registerUser(
     });
 
     if (user) {
-      const invalidField: string =
-        user.userName === userName ? "Username" : "Email";
-      return res
-        .status(400)
-        .json({ errors: [{ msg: `${invalidField} already exists` }] });
+      const invalidField: string = user.userName === userName ? "Username" : "Email";
+      return res.status(400).json({ errors: [{ msg: `${invalidField} already exists` }] });
     }
 
-    const avatar = createAvatar(bottts, {});
-    const dataUri: string = await avatar.toDataUri();
-    const normalizedDataUri: string = normalize(dataUri);
+    const response = await axios.get(`https://api.dicebear.com/6.x/bottts/svg`);
+    const avatar: string = response.data;
 
     const newUser: IUser = new User({
       userName,
       email,
-      avatar: normalizedDataUri,
+      avatar,
       password,
     });
 
@@ -52,10 +42,7 @@ export async function registerUser(
   }
 }
 
-export async function loginUser(
-  req: Request,
-  res: Response
-): Promise<Response | void> {
+export async function loginUser(req: Request, res: Response): Promise<Response | void> {
   const { email, password } = req.body;
 
   try {
@@ -84,10 +71,7 @@ export async function loginUser(
   }
 }
 
-export async function fetchUsers(
-  req: Request,
-  res: Response
-): Promise<Response | void> {
+export async function fetchUsers(req: Request, res: Response): Promise<Response | void> {
   const keyword: { userName: string } | {} = req.query.search
     ? {
         userName: { $regex: req.query.search, $options: "i" },

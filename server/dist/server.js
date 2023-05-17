@@ -9,9 +9,9 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 const socket_io_1 = require("socket.io");
 // Routers
-const usersRouter_1 = __importDefault(require("./routers/api/usersRouter"));
+const usersRouter_1 = __importDefault(require("./routers/usersRouter"));
 const chatsRouter_1 = __importDefault(require("./routers/chatsRouter"));
-const messagesRouter_1 = __importDefault(require("./routers/api/messagesRouter"));
+const messagesRouter_1 = __importDefault(require("./routers/messagesRouter"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 (0, db_1.default)();
@@ -21,11 +21,12 @@ app.use(express_1.default.json());
 app.use("/api/users", usersRouter_1.default);
 app.use("/api/chats", chatsRouter_1.default);
 app.use("/api/messages", messagesRouter_1.default);
+const __dirname$ = path_1.default.resolve();
 if (process.env.NODE_ENV === "production") {
     // Set static folder
-    app.use(express_1.default.static("client/build"));
+    app.use(express_1.default.static(path_1.default.join(__dirname$, "/client/build")));
     app.get("*", (req, res) => {
-        res.sendFile(path_1.default.resolve(__dirname, "client", "build", "index.html"));
+        res.sendFile(path_1.default.resolve(__dirname$, "client", "build", "index.html"));
     });
 }
 const PORT = process.env.PORT || 5000;
@@ -37,5 +38,40 @@ const io = new socket_io_1.Server(server, {
 });
 io.on("connection", (socket) => {
     console.log("Socket are in action");
-    socket.on("setup");
+    // Setup on
+    socket.on("setup", (user) => {
+        socket.join(user._id);
+        console.log(user.userName, "USER CONNECTED");
+        socket.emit("connected");
+    });
+    // Join chat
+    socket.on("access chat", (chat) => {
+        socket.join(chat);
+        console.log(`User accessed chat ${chat}`);
+    });
+    // Send new message
+    socket.on("send message", (newMessage) => {
+        // chatId after population in route
+        // is an OBJECT rather than ObjectId!
+        let chat = newMessage.chatId;
+        if (!chat.users)
+            return console.log("chat.users not defined");
+        chat.users.forEach((user) => {
+            if (user._id === newMessage.sender)
+                return;
+            socket.in(user._id).emit("message received", newMessage);
+        });
+        // Start typing
+        socket.on("start typing", (chat) => {
+            socket.in(chat).emit("start typing");
+        });
+        // Stop typing
+        socket.on("stop typing", (chat) => {
+            socket.in(chat).emit("stop typing");
+        });
+    });
+    socket.off("setup", (user) => {
+        console.log("USER DISCONNECTED");
+        socket.leave(user);
+    });
 });

@@ -13,20 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchUsers = exports.loginUser = exports.registerUser = void 0;
-const express_validator_1 = require("express-validator");
-const normalize_url_1 = __importDefault(require("normalize-url"));
-const core_1 = require("@dicebear/core");
-const collection_1 = require("@dicebear/collection");
+const axios_1 = __importDefault(require("axios"));
 const user_1 = __importDefault(require("../models/user"));
 const generateToken_1 = require("../utils/generateToken");
 function registerUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const errors = (0, express_validator_1.validationResult)(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+        const { userName, email, password } = req.body;
         try {
-            const { userName, email, password } = req.body;
             const user = yield user_1.default.findOne({
                 $or: [{ userName }, { email }],
             });
@@ -34,13 +27,12 @@ function registerUser(req, res) {
                 const invalidField = user.userName === userName ? "Username" : "Email";
                 return res.status(400).json({ errors: [{ msg: `${invalidField} already exists` }] });
             }
-            const avatar = (0, core_1.createAvatar)(collection_1.bottts, {});
-            const dataUri = yield avatar.toDataUri();
-            const normalizedDataUri = (0, normalize_url_1.default)(dataUri);
+            const response = yield axios_1.default.get(`https://api.dicebear.com/6.x/bottts/svg`);
+            const avatar = response.data;
             const newUser = new user_1.default({
                 userName,
                 email,
-                avatar: normalizedDataUri,
+                avatar,
                 password,
             });
             yield newUser.save();
@@ -60,12 +52,8 @@ function registerUser(req, res) {
 exports.registerUser = registerUser;
 function loginUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const errors = (0, express_validator_1.validationResult)(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+        const { email, password } = req.body;
         try {
-            const { email, password } = req.body;
             const user = yield user_1.default.findOne({ email });
             if (!user) {
                 return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
@@ -90,12 +78,12 @@ function loginUser(req, res) {
 exports.loginUser = loginUser;
 function fetchUsers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        const keyword = req.query.search
+            ? {
+                userName: { $regex: req.query.search, $options: "i" },
+            }
+            : {};
         try {
-            const keyword = req.query.search
-                ? {
-                    userName: { $regex: req.query.search, $options: "i" },
-                }
-                : {};
             const fetchedUsersData = yield user_1.default.find(keyword);
             res.json({ users: fetchedUsersData });
         }

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { validationResult, Result, ValidationError } from "express-validator";
 
 import Message, { IMessage } from "../models/message";
 
