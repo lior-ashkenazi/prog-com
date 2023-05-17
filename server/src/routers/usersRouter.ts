@@ -4,11 +4,7 @@ import { check } from "express-validator";
 import auth from "../middleware/authMiddleware";
 import error from "../middleware/errorMiddleware";
 
-import {
-  loginUser,
-  registerUser,
-  fetchUsers,
-} from "../controllers/usersController";
+import { loginUser, registerUser, fetchUsers } from "../controllers/usersController";
 
 const router: Router = express.Router();
 
@@ -47,3 +43,5 @@ router.post(
 // @route		  /api/users?search=
 // @access		Private
 router.get("/", auth, fetchUsers);
+
+export default router;

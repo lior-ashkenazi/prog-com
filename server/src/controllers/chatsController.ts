@@ -37,10 +37,7 @@ export async function accessChat(req: Request, res: Response) {
     }
 
     let newChat: IChat | null = await Chat.create(chatData);
-    newChat = await Chat.findOne({ _id: newChat._id }).populate(
-      "users",
-      "-password"
-    );
+    newChat = await Chat.findOne({ _id: newChat._id }).populate("users", "-password");
     res.json({ newChat });
   } catch (err) {
     res.status(500).send("Server error");
@@ -88,11 +85,7 @@ export async function renameGroupChat(req: Request, res: Response) {
   const { chatId, chatName } = req.body;
 
   try {
-    const updatedChat = await Chat.findByIdAndUpdate(
-      chatId,
-      { chatName },
-      { new: true }
-    )
+    const updatedChat = await Chat.findByIdAndUpdate(chatId, { chatName }, { new: true })
       .populate("users", "-password")
       .populate("groupAdmin", "-password");
 
@@ -147,7 +140,7 @@ export async function addUserToGroupChat(req: Request, res: Response) {
 }
 
 export async function removeUserFromGroupChat(req: Request, res: Response) {
-const { chatId, userId } = req.body;
+  const { chatId, userId } = req.body;
 
   try {
     const updatedChat = await Chat.findByIdAndUpdate(

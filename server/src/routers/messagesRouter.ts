@@ -68,3 +68,5 @@ router.get(
   error,
   fetchMessages
 );
+
+export default router;

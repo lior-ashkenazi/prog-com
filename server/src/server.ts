@@ -5,10 +5,15 @@ import path from "path";
 
 import { Server } from "socket.io";
 
+// Interfaces
+import { IUser } from "./models/user";
+import { IMessage } from "./models/message";
+import { IChat } from "./models/chat";
+
 // Routers
-import usersRouter from "./routers/api/usersRouter";
+import usersRouter from "./routers/usersRouter";
 import chatsRouter from "./routers/chatsRouter";
-import messagesRouter from "./routers/api/messagesRouter";
+import messagesRouter from "./routers/messagesRouter";
 
 dotenv.config();
 
@@ -24,12 +29,12 @@ app.use("/api/users", usersRouter);
 app.use("/api/chats", chatsRouter);
 app.use("/api/messages", messagesRouter);
 
+const __dirname$ = path.resolve();
 if (process.env.NODE_ENV === "production") {
   // Set static folder
-  app.use(express.static("client/build"));
-
-  app.get("*", (req: Request, res: Response) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  app.use(express.static(path.join(__dirname$, "/client/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname$, "client", "build", "index.html"));
   });
 }
 
@@ -45,5 +50,45 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("Socket are in action");
-  socket.on("setup");
+
+  // Setup on
+  socket.on("setup", (user) => {
+    socket.join(user._id);
+    console.log(user.userName, "USER CONNECTED");
+    socket.emit("connected");
+  });
+
+  // Join chat
+  socket.on("access chat", (chat) => {
+    socket.join(chat);
+    console.log(`User accessed chat ${chat}`);
+  });
+
+  // Send new message
+  socket.on("send message", (newMessage) => {
+    // chatId after population in route
+    // is an OBJECT rather than ObjectId!
+    let chat = newMessage.chatId;
+    if (!chat.users) return console.log("chat.users not defined");
+
+    chat.users.forEach((user: IUser) => {
+      if (user._id === newMessage.sender) return;
+      socket.in(user._id).emit("message received", newMessage);
+    });
+
+    // Start typing
+    socket.on("start typing", (chat) => {
+      socket.in(chat).emit("start typing");
+    });
+
+    // Stop typing
+    socket.on("stop typing", (chat) => {
+      socket.in(chat).emit("stop typing");
+    });
+  });
+
+  socket.off("setup", (user) => {
+    console.log("USER DISCONNECTED");
+    socket.leave(user);
+  });
 });

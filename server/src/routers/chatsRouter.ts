@@ -128,3 +128,5 @@ router.delete(
   error,
   removeUserFromGroupChat
 );
+
+export default router;
