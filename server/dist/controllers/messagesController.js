@@ -16,13 +16,13 @@ exports.fetchMessages = exports.sendMessage = void 0;
 const message_1 = __importDefault(require("../models/message"));
 function sendMessage(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { content, mode, language, chatId } = req.body;
+        const { chatId, content, mode, language } = req.body;
         const messageData = {
+            chatId,
             sender: req.user._id,
             content,
             mode,
             language,
-            chatId,
         };
         try {
             let newMessage = yield message_1.default.create(messageData);
@@ -32,7 +32,7 @@ function sendMessage(req, res) {
                 path: "chatId.users",
                 select: "username avatar email",
             });
-            res.json({ newMessage });
+            res.json({ message: newMessage });
         }
         catch (err) {
             res.status(500).send("Server error");
@@ -46,8 +46,9 @@ function fetchMessages(req, res) {
         try {
             const fetchedMessages = yield message_1.default.find({ chatId })
                 .populate("sender", "userName avatar email")
-                .populate("chatId");
-            res.json(fetchedMessages);
+                .populate("chatId")
+                .sort("createdAt");
+            res.json({ messages: fetchedMessages });
         }
         catch (err) {
             res.status(500).send("Server Error");

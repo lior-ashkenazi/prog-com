@@ -5,10 +5,13 @@ import Chat, { IChat } from "../models/chat";
 
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
-export async function accessChat(req: Request, res: Response) {
+export async function accessUserChat(req: Request, res: Response) {
   try {
     const { userId: otherUserId } = req.body;
 
+    // in the current version of the app
+    // groups are *private*, they can only be accessed
+    // when the admin adds you to the group chat
     let isChat = await Chat.find({
       isGroupChat: false,
       $and: [
@@ -21,29 +24,28 @@ export async function accessChat(req: Request, res: Response) {
       ],
     }).populate("users", "-password");
 
-    let chatData;
     // we check isChat.length > 0
     // because of a race condition where mistakenly
     // two copies of the chat is created in our DB
     if (isChat.length > 0) {
       return res.json(isChat[0]);
-    } else {
-      chatData = {
-        chatName: `${(req as IAuthenticatedRequest).user._id}-${otherUserId}`,
-        isGroupChat: false,
-        users: [(req as IAuthenticatedRequest).user._id, otherUserId],
-      };
     }
+
+    let chatData = {
+      chatName: `${(req as IAuthenticatedRequest).user._id}-${otherUserId}`,
+      isGroupChat: false,
+      users: [(req as IAuthenticatedRequest).user._id, otherUserId],
+    };
 
     let newChat: IChat | null = await Chat.create(chatData);
     newChat = await Chat.findOne({ _id: newChat._id }).populate("users", "-password");
-    res.json({ newChat });
+    res.json({ chat: newChat });
   } catch (err) {
     res.status(500).send("Server error");
   }
 }
 
-export async function fetchChats(req: Request, res: Response) {
+export async function fetchUserChats(req: Request, res: Response) {
   try {
     const allUserChats = await Chat.find({
       users: { $elemMatch: { $eq: (req as IAuthenticatedRequest).user._id } },
@@ -52,20 +54,20 @@ export async function fetchChats(req: Request, res: Response) {
       .populate("groupAdmin", "-password")
       .sort({ updatedAt: -1 });
 
-    res.json({ allUserChats });
+    res.json({ chats: allUserChats });
   } catch (err) {
     res.status(500).send("Server error");
   }
 }
 
 export async function createGroupChat(req: Request, res: Response) {
-  let users: Schema.Types.ObjectId[] = req.body.users;
+  const { users, chatName }: { users: Schema.Types.ObjectId[]; chatName: string } = req.body;
 
-  users.push((req as IAuthenticatedRequest).user._id);
+  users.unshift((req as IAuthenticatedRequest).user._id);
 
   try {
     let newGroupChat: IChat | null = await Chat.create({
-      chatName: req.body.name,
+      chatName,
       users,
       isGroupChat: true,
       groupAdmin: (req as IAuthenticatedRequest).user,
@@ -74,7 +76,7 @@ export async function createGroupChat(req: Request, res: Response) {
       .populate("users", "-password")
       .populate("groupAdmin", "-password");
 
-    res.json(newGroupChat);
+    res.json({ chat: newGroupChat });
   } catch (error) {
     res.status(500).send("Server error");
   }
@@ -89,26 +91,28 @@ export async function renameGroupChat(req: Request, res: Response) {
       .populate("groupAdmin", "-password");
 
     if (!updatedChat) {
-      return res.status(400).json({ message: "Bad request" });
+      return res.status(400).json({ msg: "Bad request" });
     }
 
-    res.json(updatedChat);
+    res.json({ chat: updatedChat });
   } catch (err) {
     res.status(500).send("Server error");
   }
 }
 
-export async function removeGroupChat(req: Request, res: Response) {
+export async function deleteGroupChat(req: Request, res: Response) {
   const { chatId } = req.body;
 
   try {
-    const removedChat = await Chat.findByIdAndRemove(chatId);
+    const removedChat = await Chat.findByIdAndRemove(chatId)
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
 
     if (!removedChat) {
-      return res.status(400).json({ message: "Bad request" });
+      return res.status(400).json({ msg: "Bad request" });
     }
 
-    res.json(removedChat);
+    res.json({ chat: removedChat });
   } catch (error) {
     res.status(500).send("Server error");
   }
@@ -119,7 +123,10 @@ export async function addUserToGroupChat(req: Request, res: Response) {
 
   try {
     const updatedChat = await Chat.findByIdAndUpdate(
-      chatId,
+      {
+        _id: chatId,
+        isGroupChat: true,
+      },
       {
         $push: { users: userId },
       },
@@ -132,8 +139,10 @@ export async function addUserToGroupChat(req: Request, res: Response) {
       return res.status(400).send("Bad request");
     }
 
-    res.json(updatedChat);
+    res.json({ chat: updatedChat });
   } catch (err) {
+    console.log(err);
+
     res.status(500).send("Server error");
   }
 }
@@ -143,7 +152,10 @@ export async function removeUserFromGroupChat(req: Request, res: Response) {
 
   try {
     const updatedChat = await Chat.findByIdAndUpdate(
-      chatId,
+      {
+        _id: chatId,
+        isGroupChat: true,
+      },
       {
         $pull: { users: userId },
       },
@@ -156,7 +168,7 @@ export async function removeUserFromGroupChat(req: Request, res: Response) {
       return res.status(400).send("Bad request");
     }
 
-    res.json(updatedChat);
+    res.json({ chat: updatedChat });
   } catch (err) {
     res.status(500).send("Server error");
   }

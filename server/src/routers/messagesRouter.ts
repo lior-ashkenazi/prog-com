@@ -22,6 +22,7 @@ router.post(
     check("content", "Please add required fields").notEmpty(),
     check("mode")
       .notEmpty()
+      .withMessage("Please add required fields")
       .isIn(allowedModes)
       .withMessage("Received invalid fields")
       .custom((value, { req }) => {

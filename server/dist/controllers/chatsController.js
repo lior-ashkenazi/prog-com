@@ -12,12 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeUserFromGroupChat = exports.addUserToGroupChat = exports.removeGroupChat = exports.renameGroupChat = exports.createGroupChat = exports.fetchChats = exports.accessChat = void 0;
+exports.removeUserFromGroupChat = exports.addUserToGroupChat = exports.deleteGroupChat = exports.renameGroupChat = exports.createGroupChat = exports.fetchUserChats = exports.accessUserChat = void 0;
 const chat_1 = __importDefault(require("../models/chat"));
-function accessChat(req, res) {
+function accessUserChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { userId: otherUserId } = req.body;
+            // in the current version of the app
+            // groups are *private*, they can only be accessed
+            // when the admin adds you to the group chat
             let isChat = yield chat_1.default.find({
                 isGroupChat: false,
                 $and: [
@@ -29,31 +32,28 @@ function accessChat(req, res) {
                     { users: { $elemMatch: { $eq: otherUserId } } },
                 ],
             }).populate("users", "-password");
-            let chatData;
             // we check isChat.length > 0
             // because of a race condition where mistakenly
             // two copies of the chat is created in our DB
             if (isChat.length > 0) {
                 return res.json(isChat[0]);
             }
-            else {
-                chatData = {
-                    chatName: `${req.user._id}-${otherUserId}`,
-                    isGroupChat: false,
-                    users: [req.user._id, otherUserId],
-                };
-            }
+            let chatData = {
+                chatName: `${req.user._id}-${otherUserId}`,
+                isGroupChat: false,
+                users: [req.user._id, otherUserId],
+            };
             let newChat = yield chat_1.default.create(chatData);
             newChat = yield chat_1.default.findOne({ _id: newChat._id }).populate("users", "-password");
-            res.json({ newChat });
+            res.json({ chat: newChat });
         }
         catch (err) {
             res.status(500).send("Server error");
         }
     });
 }
-exports.accessChat = accessChat;
-function fetchChats(req, res) {
+exports.accessUserChat = accessUserChat;
+function fetchUserChats(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const allUserChats = yield chat_1.default.find({
@@ -62,21 +62,21 @@ function fetchChats(req, res) {
                 .populate("users", "-password")
                 .populate("groupAdmin", "-password")
                 .sort({ updatedAt: -1 });
-            res.json({ allUserChats });
+            res.json({ chats: allUserChats });
         }
         catch (err) {
             res.status(500).send("Server error");
         }
     });
 }
-exports.fetchChats = fetchChats;
+exports.fetchUserChats = fetchUserChats;
 function createGroupChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        let users = req.body.users;
-        users.push(req.user._id);
+        const { users, chatName } = req.body;
+        users.unshift(req.user._id);
         try {
             let newGroupChat = yield chat_1.default.create({
-                chatName: req.body.name,
+                chatName,
                 users,
                 isGroupChat: true,
                 groupAdmin: req.user,
@@ -84,7 +84,7 @@ function createGroupChat(req, res) {
             newGroupChat = yield chat_1.default.findOne({ _id: newGroupChat._id })
                 .populate("users", "-password")
                 .populate("groupAdmin", "-password");
-            res.json(newGroupChat);
+            res.json({ chat: newGroupChat });
         }
         catch (error) {
             res.status(500).send("Server error");
@@ -100,9 +100,9 @@ function renameGroupChat(req, res) {
                 .populate("users", "-password")
                 .populate("groupAdmin", "-password");
             if (!updatedChat) {
-                return res.status(400).json({ message: "Bad request" });
+                return res.status(400).json({ msg: "Bad request" });
             }
-            res.json(updatedChat);
+            res.json({ chat: updatedChat });
         }
         catch (err) {
             res.status(500).send("Server error");
@@ -110,27 +110,32 @@ function renameGroupChat(req, res) {
     });
 }
 exports.renameGroupChat = renameGroupChat;
-function removeGroupChat(req, res) {
+function deleteGroupChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { chatId } = req.body;
         try {
-            const removedChat = yield chat_1.default.findByIdAndRemove(chatId);
+            const removedChat = yield chat_1.default.findByIdAndRemove(chatId)
+                .populate("users", "-password")
+                .populate("groupAdmin", "-password");
             if (!removedChat) {
-                return res.status(400).json({ message: "Bad request" });
+                return res.status(400).json({ msg: "Bad request" });
             }
-            res.json(removedChat);
+            res.json({ chat: removedChat });
         }
         catch (error) {
             res.status(500).send("Server error");
         }
     });
 }
-exports.removeGroupChat = removeGroupChat;
+exports.deleteGroupChat = deleteGroupChat;
 function addUserToGroupChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { chatId, userId } = req.body;
         try {
-            const updatedChat = yield chat_1.default.findByIdAndUpdate(chatId, {
+            const updatedChat = yield chat_1.default.findByIdAndUpdate({
+                _id: chatId,
+                isGroupChat: true,
+            }, {
                 $push: { users: userId },
             }, { new: true })
                 .populate("users", "-password")
@@ -138,9 +143,10 @@ function addUserToGroupChat(req, res) {
             if (!updatedChat) {
                 return res.status(400).send("Bad request");
             }
-            res.json(updatedChat);
+            res.json({ chat: updatedChat });
         }
         catch (err) {
+            console.log(err);
             res.status(500).send("Server error");
         }
     });
@@ -150,7 +156,10 @@ function removeUserFromGroupChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { chatId, userId } = req.body;
         try {
-            const updatedChat = yield chat_1.default.findByIdAndUpdate(chatId, {
+            const updatedChat = yield chat_1.default.findByIdAndUpdate({
+                _id: chatId,
+                isGroupChat: true,
+            }, {
                 $pull: { users: userId },
             }, { new: true })
                 .populate("users", "-password")
@@ -158,7 +167,7 @@ function removeUserFromGroupChat(req, res) {
             if (!updatedChat) {
                 return res.status(400).send("Bad request");
             }
-            res.json(updatedChat);
+            res.json({ chat: updatedChat });
         }
         catch (err) {
             res.status(500).send("Server error");

@@ -5,14 +5,14 @@ import Message, { IMessage } from "../models/message";
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
 export async function sendMessage(req: Request, res: Response) {
-  const { content, mode, language, chatId } = req.body;
+  const { chatId, content, mode, language } = req.body;
 
   const messageData = {
+    chatId,
     sender: (req as IAuthenticatedRequest).user._id,
     content,
     mode,
     language,
-    chatId,
   };
 
   try {
@@ -23,7 +23,7 @@ export async function sendMessage(req: Request, res: Response) {
       path: "chatId.users",
       select: "username avatar email",
     });
-    res.json({ newMessage });
+    res.json({ message: newMessage });
   } catch (err) {
     res.status(500).send("Server error");
   }
@@ -35,8 +35,9 @@ export async function fetchMessages(req: Request, res: Response) {
   try {
     const fetchedMessages: IMessage[] = await Message.find({ chatId })
       .populate("sender", "userName avatar email")
-      .populate("chatId");
-    res.json(fetchedMessages);
+      .populate("chatId")
+      .sort("createdAt");
+    res.json({ messages: fetchedMessages });
   } catch (err) {
     res.status(500).send("Server Error");
   }

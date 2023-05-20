@@ -5,13 +5,13 @@ import auth from "../middleware/authMiddleware";
 import error from "../middleware/errorMiddleware";
 
 import {
-  accessChat,
-  fetchChats,
+  accessUserChat,
+  fetchUserChats,
   createGroupChat,
   renameGroupChat,
   addUserToGroupChat,
   removeUserFromGroupChat,
-  removeGroupChat,
+  deleteGroupChat,
 } from "../controllers/chatsController";
 
 const router: Router = express.Router();
@@ -28,13 +28,13 @@ router.post(
     .withMessage("Received invalid fields"),
   auth,
   error,
-  accessChat
+  accessUserChat
 );
 
 // @desc		    Get all the chats of a given user
 // @route		    /api/chats
 // @access      Private
-router.post("/", auth, fetchChats);
+router.get("/", auth, fetchUserChats);
 
 // @desc		    Create a new group chat
 // @route		    /api/chats/groups
@@ -42,7 +42,20 @@ router.post("/", auth, fetchChats);
 router.post(
   "/groups",
   [
-    check("users", "Please add required fields").notEmpty(),
+    check("users")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isArray()
+      .withMessage("Received invalid fields")
+      .custom((value) => {
+        value.forEach((user: string, i: number) => {
+          if (!check(user).isMongoId()) {
+            throw new Error(`Received invalid fields`);
+          }
+        });
+
+        return true;
+      }),
     check("chatName", "Please add required fields").notEmpty(),
   ],
   auth,
@@ -68,7 +81,7 @@ router.put(
   renameGroupChat
 );
 
-// @desc		    Rename a group chat
+// @desc		    Delete a group chat
 // @route		    /api/chats/groups
 // @access      Private
 router.delete(
@@ -82,13 +95,13 @@ router.delete(
   ],
   auth,
   error,
-  removeGroupChat
+  deleteGroupChat
 );
 
-// @desc		Add a user to group chat
-// @route		/api/chats/groups/users
+// @desc		    Add a user to group chat
+// @route		    /api/chats/groups/users
 // @access      Private
-router.put(
+router.post(
   "/groups/users",
   [
     check("chatId")

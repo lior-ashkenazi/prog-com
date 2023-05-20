@@ -59,7 +59,7 @@ function loginUser(req, res) {
                 $or: [{ userName }, { email }],
             });
             if (!user) {
-                return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
+                return res.status(400).json({ errors: [{ message: "Invalid credentials" }] });
             }
             const isMatchedPassword = yield user.matchPassword(password);
             console.log(isMatchedPassword);

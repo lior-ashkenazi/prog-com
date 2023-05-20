@@ -19,6 +19,7 @@ router.post("/", [
     (0, express_validator_1.check)("content", "Please add required fields").notEmpty(),
     (0, express_validator_1.check)("mode")
         .notEmpty()
+        .withMessage("Please add required fields")
         .isIn(allowedModes)
         .withMessage("Received invalid fields")
         .custom((value, { req }) => {

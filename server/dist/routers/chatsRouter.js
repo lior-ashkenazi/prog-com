@@ -16,16 +16,28 @@ router.post("/", (0, express_validator_1.check)("userId")
     .notEmpty()
     .withMessage("Please add required fields")
     .isMongoId()
-    .withMessage("Received invalid fields"), authMiddleware_1.default, errorMiddleware_1.default, chatsController_1.accessChat);
+    .withMessage("Received invalid fields"), authMiddleware_1.default, errorMiddleware_1.default, chatsController_1.accessUserChat);
 // @desc		    Get all the chats of a given user
 // @route		    /api/chats
 // @access      Private
-router.post("/", authMiddleware_1.default, chatsController_1.fetchChats);
+router.get("/", authMiddleware_1.default, chatsController_1.fetchUserChats);
 // @desc		    Create a new group chat
 // @route		    /api/chats/groups
 // @access      Private
 router.post("/groups", [
-    (0, express_validator_1.check)("users", "Please add required fields").notEmpty(),
+    (0, express_validator_1.check)("users")
+        .notEmpty()
+        .withMessage("Please add required fields")
+        .isArray()
+        .withMessage("Received invalid fields")
+        .custom((value) => {
+        value.forEach((user, i) => {
+            if (!(0, express_validator_1.check)(user).isMongoId()) {
+                throw new Error(`Received invalid fields`);
+            }
+        });
+        return true;
+    }),
     (0, express_validator_1.check)("chatName", "Please add required fields").notEmpty(),
 ], authMiddleware_1.default, errorMiddleware_1.default, chatsController_1.createGroupChat);
 // @desc		    Rename a group chat
@@ -39,7 +51,7 @@ router.put("/groups", [
         .withMessage("Received invalid fields"),
     (0, express_validator_1.check)("chatName", "Please add required fields").notEmpty(),
 ], authMiddleware_1.default, errorMiddleware_1.default, chatsController_1.renameGroupChat);
-// @desc		    Rename a group chat
+// @desc		    Delete a group chat
 // @route		    /api/chats/groups
 // @access      Private
 router.delete("/groups", [
@@ -48,11 +60,11 @@ router.delete("/groups", [
         .withMessage("Please add required fields")
         .isMongoId()
         .withMessage("Received invalid fields"),
-], authMiddleware_1.default, errorMiddleware_1.default, chatsController_1.removeGroupChat);
-// @desc		Add a user to group chat
-// @route		/api/chats/groups/users
+], authMiddleware_1.default, errorMiddleware_1.default, chatsController_1.deleteGroupChat);
+// @desc		    Add a user to group chat
+// @route		    /api/chats/groups/users
 // @access      Private
-router.put("/groups/users", [
+router.post("/groups/users", [
     (0, express_validator_1.check)("chatId")
         .notEmpty()
         .withMessage("Please add required fields")
