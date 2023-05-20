@@ -10,17 +10,14 @@ function default_1(req, res, next) {
     }
     // Verify token
     try {
-        const verifyOptions = {
-            algorithms: ["RS256"],
-        };
-        (0, jsonwebtoken_1.verify)(token, process.env.PUBLIC_KEY, verifyOptions, (error, decoded) => {
+        (0, jsonwebtoken_1.verify)(token, process.env.JWT_SECRET, (error, decoded) => {
             if (error) {
                 return res.status(401).json({ msg: "Token is not valid" });
             }
-            // we can't create new property on a defined interface
-            // thus we did here type-casting
-            req.user = decoded.user;
-            next();
+            else {
+                req.user = decoded.user;
+                next();
+            }
         });
     }
     catch (err) {

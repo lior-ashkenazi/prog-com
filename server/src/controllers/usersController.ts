@@ -3,10 +3,10 @@ import axios from "axios";
 
 import User, { IUser } from "../models/user";
 import { generateToken } from "../utils/generateToken";
+import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
 export async function registerUser(req: Request, res: Response): Promise<Response | void> {
   const { userName, email, password } = req.body;
-  console.log(userName, email, password);
 
   try {
     const user: IUser | null = await User.findOne({
@@ -28,15 +28,13 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
       password,
     });
 
-    // await newUser.save();
+    await newUser.save();
 
     const payload = {
       user: {
         _id: newUser._id,
       },
     };
-
-    console.log(payload);
 
     const token: string = generateToken(payload);
     res.json({ token });
@@ -48,16 +46,20 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
 }
 
 export async function loginUser(req: Request, res: Response): Promise<Response | void> {
-  const { email, password } = req.body;
+  const { userName, email, password } = req.body;
 
   try {
-    const user: IUser | null = await User.findOne({ email });
+    const user: IUser | null = await User.findOne({
+      $or: [{ userName }, { email }],
+    });
 
     if (!user) {
       return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
     }
 
     const isMatchedPassword: boolean = await user.matchPassword(password);
+
+    console.log(isMatchedPassword);
 
     if (!isMatchedPassword) {
       return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
@@ -84,7 +86,9 @@ export async function fetchUsers(req: Request, res: Response): Promise<Response 
     : {};
 
   try {
-    const fetchedUsersData: IUser[] = await User.find(keyword);
+    const fetchedUsersData: IUser[] = await User.find(keyword, "-password").find({
+      _id: { $ne: (req as IAuthenticatedRequest).user._id },
+    });
 
     res.json({ users: fetchedUsersData });
   } catch (err) {

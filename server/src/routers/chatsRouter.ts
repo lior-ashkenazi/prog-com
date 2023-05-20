@@ -16,8 +16,8 @@ import {
 
 const router: Router = express.Router();
 
-// @desc		Access/Initiate a chat between two users
-// @route		/api/chats
+// @desc		    Access/Initiate a chat between two users
+// @route		    /api/chats
 // @access      Private
 router.post(
   "/",
@@ -25,19 +25,19 @@ router.post(
     .notEmpty()
     .withMessage("Please add required fields")
     .isMongoId()
-    .withMessage("Recieved invalid fields"),
+    .withMessage("Received invalid fields"),
   auth,
   error,
   accessChat
 );
 
-// @desc		Get all the chats of a given user
-// @route		/api/chats
+// @desc		    Get all the chats of a given user
+// @route		    /api/chats
 // @access      Private
 router.post("/", auth, fetchChats);
 
-// @desc		Create a new group chat
-// @route		/api/chats/groups
+// @desc		    Create a new group chat
+// @route		    /api/chats/groups
 // @access      Private
 router.post(
   "/groups",
@@ -50,8 +50,8 @@ router.post(
   createGroupChat
 );
 
-// @desc		Rename a group chat
-// @route		/api/chats/groups
+// @desc		    Rename a group chat
+// @route		    /api/chats/groups
 // @access      Private
 router.put(
   "/groups",
@@ -60,7 +60,7 @@ router.put(
       .notEmpty()
       .withMessage("Please add required fields")
       .isMongoId()
-      .withMessage("Recieved invalid fields"),
+      .withMessage("Received invalid fields"),
     check("chatName", "Please add required fields").notEmpty(),
   ],
   auth,
@@ -68,8 +68,8 @@ router.put(
   renameGroupChat
 );
 
-// @desc		Rename a group chat
-// @route		/api/chats/groups
+// @desc		    Rename a group chat
+// @route		    /api/chats/groups
 // @access      Private
 router.delete(
   "/groups",
@@ -107,8 +107,8 @@ router.put(
   addUserToGroupChat
 );
 
-// @desc		Remove a user from group chat
-// @route		/api/chats/groups/users
+// @desc		    Remove a user from group chat
+// @route		    /api/chats/groups/users
 // @access      Private
 router.delete(
   "/groups/users",

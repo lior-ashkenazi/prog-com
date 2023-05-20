@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
 import { Request, Response, NextFunction } from "express";
-import { verify, VerifyOptions } from "jsonwebtoken";
+import { verify } from "jsonwebtoken";
+
 import { ITokenPayload } from "../utils/generateToken";
 
 export interface IAuthenticatedRequest extends Request {
@@ -9,7 +10,7 @@ export interface IAuthenticatedRequest extends Request {
 
 export default function (req: Request, res: Response, next: NextFunction): Response | void {
   // Get token from header
-  const token = req!.header("Authorization")!.replace("Bearer ", "");
+  const token = req.header("Authorization")!.replace("Bearer ", "");
 
   // Check if not token
   if (!token) {
@@ -18,18 +19,13 @@ export default function (req: Request, res: Response, next: NextFunction): Respo
 
   // Verify token
   try {
-    const verifyOptions: VerifyOptions = {
-      algorithms: ["RS256"],
-    };
-
-    verify(token, process.env.PUBLIC_KEY!, verifyOptions, (error, decoded) => {
+    verify(token, process.env.JWT_SECRET!, (error, decoded) => {
       if (error) {
         return res.status(401).json({ msg: "Token is not valid" });
+      } else {
+        (req as IAuthenticatedRequest).user = (decoded as ITokenPayload).user;
+        next();
       }
-      // we can't create new property on a defined interface
-      // thus we did here type-casting
-      (req as IAuthenticatedRequest).user = (decoded as ITokenPayload).user;
-      next();
     });
   } catch (err) {
     res.status(500).json({ msg: "Server error" });

@@ -19,7 +19,6 @@ const generateToken_1 = require("../utils/generateToken");
 function registerUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userName, email, password } = req.body;
-        console.log(userName, email, password);
         try {
             const user = yield user_1.default.findOne({
                 $or: [{ userName }, { email }],
@@ -36,13 +35,12 @@ function registerUser(req, res) {
                 avatar,
                 password,
             });
-            // await newUser.save();
+            yield newUser.save();
             const payload = {
                 user: {
                     _id: newUser._id,
                 },
             };
-            console.log(payload);
             const token = (0, generateToken_1.generateToken)(payload);
             res.json({ token });
         }
@@ -55,13 +53,16 @@ function registerUser(req, res) {
 exports.registerUser = registerUser;
 function loginUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { email, password } = req.body;
+        const { userName, email, password } = req.body;
         try {
-            const user = yield user_1.default.findOne({ email });
+            const user = yield user_1.default.findOne({
+                $or: [{ userName }, { email }],
+            });
             if (!user) {
                 return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
             }
             const isMatchedPassword = yield user.matchPassword(password);
+            console.log(isMatchedPassword);
             if (!isMatchedPassword) {
                 return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
             }
@@ -87,7 +88,9 @@ function fetchUsers(req, res) {
             }
             : {};
         try {
-            const fetchedUsersData = yield user_1.default.find(keyword);
+            const fetchedUsersData = yield user_1.default.find(keyword, "-password").find({
+                _id: { $ne: req.user._id },
+            });
             res.json({ users: fetchedUsersData });
         }
         catch (err) {
