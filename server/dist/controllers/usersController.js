@@ -19,6 +19,7 @@ const generateToken_1 = require("../utils/generateToken");
 function registerUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userName, email, password } = req.body;
+        console.log(userName, email, password);
         try {
             const user = yield user_1.default.findOne({
                 $or: [{ userName }, { email }],
@@ -35,16 +36,18 @@ function registerUser(req, res) {
                 avatar,
                 password,
             });
-            yield newUser.save();
+            // await newUser.save();
             const payload = {
                 user: {
                     _id: newUser._id,
                 },
             };
+            console.log(payload);
             const token = (0, generateToken_1.generateToken)(payload);
             res.json({ token });
         }
         catch (err) {
+            console.log(err);
             res.status(500).send("Server error");
         }
     });

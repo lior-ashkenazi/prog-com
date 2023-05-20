@@ -6,6 +6,7 @@ import { generateToken } from "../utils/generateToken";
 
 export async function registerUser(req: Request, res: Response): Promise<Response | void> {
   const { userName, email, password } = req.body;
+  console.log(userName, email, password);
 
   try {
     const user: IUser | null = await User.findOne({
@@ -27,7 +28,7 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
       password,
     });
 
-    await newUser.save();
+    // await newUser.save();
 
     const payload = {
       user: {
@@ -35,9 +36,13 @@ export async function registerUser(req: Request, res: Response): Promise<Respons
       },
     };
 
+    console.log(payload);
+
     const token: string = generateToken(payload);
     res.json({ token });
   } catch (err) {
+    console.log(err);
+
     res.status(500).send("Server error");
   }
 }

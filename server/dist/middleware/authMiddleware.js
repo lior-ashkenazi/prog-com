@@ -13,9 +13,6 @@ function default_1(req, res, next) {
         const verifyOptions = {
             algorithms: ["RS256"],
         };
-        if (!process.env.PUBLIC_KEY) {
-            throw new Error("Key not found");
-        }
         (0, jsonwebtoken_1.verify)(token, process.env.PUBLIC_KEY, verifyOptions, (error, decoded) => {
             if (error) {
                 return res.status(401).json({ msg: "Token is not valid" });

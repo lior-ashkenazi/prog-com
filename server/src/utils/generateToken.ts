@@ -6,6 +6,8 @@ export interface ITokenPayload {
 }
 
 export function generateToken(payload: ITokenPayload) {
+  const privateKey = process.env.PRIVATE_KEY!;
+
   const signInOptions: SignOptions = {
     // RS256 uses a public/private key pair. The API provides the private key
     // to generate the JWT. The client gets a public key to validate the
@@ -13,6 +15,8 @@ export function generateToken(payload: ITokenPayload) {
     algorithm: "RS256",
   };
 
+  console.log(payload, privateKey, signInOptions);
+
   // generate JWT
-  return sign(payload, process.env.PRIVATE_KEY!, signInOptions);
+  return sign(payload, privateKey, signInOptions);
 }

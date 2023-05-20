@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { check } from "express-validator";
+import { check, oneOf } from "express-validator";
 
 import auth from "../middleware/authMiddleware";
 import error from "../middleware/errorMiddleware";
@@ -16,9 +16,21 @@ const router: Router = express.Router();
 router.post(
   "/",
   [
-    check("userName", "Please add required fields").notEmpty(),
-    check("email", "Received invalid fields").isEmail(),
-    check("password", "Received invalid fields").isLength({ min: 6 }),
+    check("userName")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .matches(/^[a-zA-Z0-9_-]*$/)
+      .withMessage("Received invalid fields"),
+    check("email")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isEmail()
+      .withMessage("Received invalid fields"),
+    check("password")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isLength({ min: 6 })
+      .withMessage("Received invalid fields"),
   ],
   error,
   registerUser
@@ -29,12 +41,17 @@ router.post(
 // @access    Public
 router.post(
   "/login",
-  check("email")
-    .notEmpty()
-    .withMessage("Please add required fields")
-    .isEmail()
-    .withMessage("Received invalid fields"),
-  check("password", "Please add required fields").notEmpty(),
+  [
+    oneOf([
+      check("userName").notEmpty().withMessage("Please add required fields"),
+      check("email")
+        .notEmpty()
+        .withMessage("Please add required fields")
+        .isEmail()
+        .withMessage("Received invalid fields"),
+    ]),
+    check("password", "Please add required fields").notEmpty(),
+  ],
   error,
   loginUser
 );
