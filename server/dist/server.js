@@ -8,6 +8,8 @@ const db_1 = __importDefault(require("./config/db"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 const socket_io_1 = require("socket.io");
+// Error handling
+const errorMiddleware_1 = require("./middleware/errorMiddleware");
 // Routes
 const usersRoutes_1 = __importDefault(require("./routes/usersRoutes"));
 const chatsRoutes_1 = __importDefault(require("./routes/chatsRoutes"));
@@ -30,6 +32,8 @@ if (process.env.NODE_ENV === "production") {
     });
 }
 const PORT = process.env.PORT || 5000;
+app.use(errorMiddleware_1.notFound);
+app.use(errorMiddleware_1.errorHandler);
 const server = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 const io = new socket_io_1.Server(server, {
     cors: {

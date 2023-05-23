@@ -10,6 +10,9 @@ import { IUser } from "./models/userModel";
 import { IMessage } from "./models/messageModel";
 import { IChat } from "./models/chatModel";
 
+// Error handling
+import { errorHandler, notFound } from "./middleware/errorMiddleware";
+
 // Routes
 import usersRouter from "./routes/usersRoutes";
 import chatsRouter from "./routes/chatsRoutes";
@@ -39,6 +42,9 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const PORT = process.env.PORT || 5000;
+
+app.use(notFound);
+app.use(errorHandler);
 
 const server = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 

@@ -2,7 +2,7 @@ import express, { Router } from "express";
 import { check, oneOf } from "express-validator";
 
 import auth from "../middleware/authMiddleware";
-import error from "../middleware/errorMiddleware";
+import { validationErrorHandler } from "../middleware/errorMiddleware";
 
 import { loginUser, registerUser, fetchUsers } from "../controllers/usersController";
 
@@ -32,7 +32,7 @@ router.post(
       .isLength({ min: 6 })
       .withMessage("Received invalid fields"),
   ],
-  error,
+  validationErrorHandler,
   registerUser
 );
 
@@ -52,7 +52,7 @@ router.post(
     ]),
     check("password", "Please add required fields").notEmpty(),
   ],
-  error,
+  validationErrorHandler,
   loginUser
 );
 

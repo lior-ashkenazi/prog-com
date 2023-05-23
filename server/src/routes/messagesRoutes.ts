@@ -4,7 +4,7 @@ import { check } from "express-validator";
 import { EMode, ELanguage } from "../models/messageModel";
 
 import auth from "../middleware/authMiddleware";
-import error from "../middleware/errorMiddleware";
+import { validationErrorHandler } from "../middleware/errorMiddleware";
 
 import { sendMessage, fetchMessages } from "../controllers/messagesController";
 
@@ -51,7 +51,7 @@ router.post(
       .withMessage("Received invalid fields"),
   ],
   auth,
-  error,
+  validationErrorHandler,
   sendMessage
 );
 
@@ -66,7 +66,7 @@ router.get(
     .isMongoId()
     .withMessage("Received invalid fields"),
   auth,
-  error,
+  validationErrorHandler,
   fetchMessages
 );
 
