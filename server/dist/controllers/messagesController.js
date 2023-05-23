@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchMessages = exports.sendMessage = void 0;
-const message_1 = __importDefault(require("../models/message"));
+const messageModel_1 = __importDefault(require("../models/messageModel"));
 function sendMessage(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { chatId, content, mode, language } = req.body;
@@ -25,7 +25,7 @@ function sendMessage(req, res) {
             language,
         };
         try {
-            let newMessage = yield message_1.default.create(messageData);
+            let newMessage = yield messageModel_1.default.create(messageData);
             newMessage = yield newMessage.populate("sender", "userName avatar email");
             newMessage = yield newMessage.populate("chatId");
             newMessage = yield newMessage.populate({
@@ -44,7 +44,7 @@ function fetchMessages(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { chatId } = req.params;
         try {
-            const fetchedMessages = yield message_1.default.find({ chatId })
+            const fetchedMessages = yield messageModel_1.default.find({ chatId })
                 .populate("sender", "userName avatar email")
                 .populate("chatId")
                 .sort("createdAt");

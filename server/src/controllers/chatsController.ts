@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 import { Request, Response } from "express";
 
-import Chat, { IChat } from "../models/chat";
+import Chat, { IChat } from "../models/chatModel";
 
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 

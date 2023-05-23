@@ -6,9 +6,9 @@ import path from "path";
 import { Server } from "socket.io";
 
 // Interfaces
-import { IUser } from "./models/user";
-import { IMessage } from "./models/message";
-import { IChat } from "./models/chat";
+import { IUser } from "./models/userModel";
+import { IMessage } from "./models/messageModel";
+import { IChat } from "./models/chatModel";
 
 // Routers
 import usersRouter from "./routers/usersRouter";

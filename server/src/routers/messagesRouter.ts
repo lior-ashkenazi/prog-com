@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import { check } from "express-validator";
 
-import { EMode, ELanguage } from "../models/message";
+import { EMode, ELanguage } from "../models/messageModel";
 
 import auth from "../middleware/authMiddleware";
 import error from "../middleware/errorMiddleware";

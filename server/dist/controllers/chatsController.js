@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeUserFromGroupChat = exports.addUserToGroupChat = exports.deleteGroupChat = exports.renameGroupChat = exports.createGroupChat = exports.fetchUserChats = exports.accessUserChat = void 0;
-const chat_1 = __importDefault(require("../models/chat"));
+const chatModel_1 = __importDefault(require("../models/chatModel"));
 function accessUserChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -21,7 +21,7 @@ function accessUserChat(req, res) {
             // in the current version of the app
             // groups are *private*, they can only be accessed
             // when the admin adds you to the group chat
-            let isChat = yield chat_1.default.find({
+            let isChat = yield chatModel_1.default.find({
                 isGroupChat: false,
                 $and: [
                     {
@@ -43,8 +43,8 @@ function accessUserChat(req, res) {
                 isGroupChat: false,
                 users: [req.user._id, otherUserId],
             };
-            let newChat = yield chat_1.default.create(chatData);
-            newChat = yield chat_1.default.findOne({ _id: newChat._id }).populate("users", "-password");
+            let newChat = yield chatModel_1.default.create(chatData);
+            newChat = yield chatModel_1.default.findOne({ _id: newChat._id }).populate("users", "-password");
             res.json({ chat: newChat });
         }
         catch (err) {
@@ -56,7 +56,7 @@ exports.accessUserChat = accessUserChat;
 function fetchUserChats(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const allUserChats = yield chat_1.default.find({
+            const allUserChats = yield chatModel_1.default.find({
                 users: { $elemMatch: { $eq: req.user._id } },
             })
                 .populate("users", "-password")
@@ -75,13 +75,13 @@ function createGroupChat(req, res) {
         const { users, chatName } = req.body;
         users.unshift(req.user._id);
         try {
-            let newGroupChat = yield chat_1.default.create({
+            let newGroupChat = yield chatModel_1.default.create({
                 chatName,
                 users,
                 isGroupChat: true,
                 groupAdmin: req.user,
             });
-            newGroupChat = yield chat_1.default.findOne({ _id: newGroupChat._id })
+            newGroupChat = yield chatModel_1.default.findOne({ _id: newGroupChat._id })
                 .populate("users", "-password")
                 .populate("groupAdmin", "-password");
             res.json({ chat: newGroupChat });
@@ -96,7 +96,7 @@ function renameGroupChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { chatId, chatName } = req.body;
         try {
-            const updatedChat = yield chat_1.default.findByIdAndUpdate(chatId, { chatName }, { new: true })
+            const updatedChat = yield chatModel_1.default.findByIdAndUpdate(chatId, { chatName }, { new: true })
                 .populate("users", "-password")
                 .populate("groupAdmin", "-password");
             if (!updatedChat) {
@@ -114,7 +114,7 @@ function deleteGroupChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { chatId } = req.body;
         try {
-            const removedChat = yield chat_1.default.findByIdAndRemove(chatId)
+            const removedChat = yield chatModel_1.default.findByIdAndRemove(chatId)
                 .populate("users", "-password")
                 .populate("groupAdmin", "-password");
             if (!removedChat) {
@@ -132,7 +132,7 @@ function addUserToGroupChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { chatId, userId } = req.body;
         try {
-            const updatedChat = yield chat_1.default.findByIdAndUpdate({
+            const updatedChat = yield chatModel_1.default.findByIdAndUpdate({
                 _id: chatId,
                 isGroupChat: true,
             }, {
@@ -156,7 +156,7 @@ function removeUserFromGroupChat(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { chatId, userId } = req.body;
         try {
-            const updatedChat = yield chat_1.default.findByIdAndUpdate({
+            const updatedChat = yield chatModel_1.default.findByIdAndUpdate({
                 _id: chatId,
                 isGroupChat: true,
             }, {

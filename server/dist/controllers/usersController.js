@@ -14,13 +14,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchUsers = exports.loginUser = exports.registerUser = void 0;
 const axios_1 = __importDefault(require("axios"));
-const user_1 = __importDefault(require("../models/user"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 const generateToken_1 = require("../utils/generateToken");
 function registerUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userName, email, password } = req.body;
         try {
-            const user = yield user_1.default.findOne({
+            const user = yield userModel_1.default.findOne({
                 $or: [{ userName }, { email }],
             });
             if (user) {
@@ -29,7 +29,7 @@ function registerUser(req, res) {
             }
             const response = yield axios_1.default.get(`https://api.dicebear.com/6.x/bottts/svg`);
             const avatar = response.data;
-            const newUser = new user_1.default({
+            const newUser = new userModel_1.default({
                 userName,
                 email,
                 avatar,
@@ -55,7 +55,7 @@ function loginUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userName, email, password } = req.body;
         try {
-            const user = yield user_1.default.findOne({
+            const user = yield userModel_1.default.findOne({
                 $or: [{ userName }, { email }],
             });
             if (!user) {
@@ -88,7 +88,7 @@ function fetchUsers(req, res) {
             }
             : {};
         try {
-            const fetchedUsersData = yield user_1.default.find(keyword, "-password").find({
+            const fetchedUsersData = yield userModel_1.default.find(keyword, "-password").find({
                 _id: { $ne: req.user._id },
             });
             res.json({ users: fetchedUsersData });

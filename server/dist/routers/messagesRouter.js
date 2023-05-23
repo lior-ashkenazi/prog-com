@@ -5,12 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_validator_1 = require("express-validator");
-const message_1 = require("../models/message");
+const messageModel_1 = require("../models/messageModel");
 const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
 const errorMiddleware_1 = __importDefault(require("../middleware/errorMiddleware"));
 const messagesController_1 = require("../controllers/messagesController");
-const allowedModes = Object.values(message_1.EMode);
-const allowedLanguages = Object.values(message_1.ELanguage);
+const allowedModes = Object.values(messageModel_1.EMode);
+const allowedLanguages = Object.values(messageModel_1.ELanguage);
 const router = express_1.default.Router();
 // @desc		    Send message
 // @route		    /api/messages

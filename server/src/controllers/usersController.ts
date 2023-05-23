@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import axios from "axios";
 
-import User, { IUser } from "../models/user";
+import User, { IUser } from "../models/userModel";
 import { generateToken } from "../utils/generateToken";
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 

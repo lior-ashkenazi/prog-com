@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import Message, { IMessage } from "../models/message";
+import Message, { IMessage } from "../models/messageModel";
 
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
