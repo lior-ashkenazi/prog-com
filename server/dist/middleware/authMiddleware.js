@@ -34,3 +34,4 @@ const auth = (0, express_async_handler_1.default)((req, res, next) => __awaiter(
         }
     });
 }));
+exports.default = auth;

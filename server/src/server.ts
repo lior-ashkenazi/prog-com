@@ -58,7 +58,7 @@ io.on("connection", (socket) => {
   console.log("Socket are in action");
 
   // Setup on
-  socket.on("setup", (user) => {
+  socket.on("setup", (user: IUser) => {
     socket.join(user._id);
     console.log(user.userName, "USER CONNECTED");
     socket.emit("connected");

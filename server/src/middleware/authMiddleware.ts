@@ -32,3 +32,5 @@ const auth = asyncHandler(
     });
   }
 );
+
+export default auth;
