@@ -10,10 +10,10 @@ import { IUser } from "./models/userModel";
 import { IMessage } from "./models/messageModel";
 import { IChat } from "./models/chatModel";
 
-// Routers
-import usersRouter from "./routers/usersRouter";
-import chatsRouter from "./routers/chatsRouter";
-import messagesRouter from "./routers/messagesRouter";
+// Routes
+import usersRouter from "./routes/usersRoutes";
+import chatsRouter from "./routes/chatsRoutes";
+import messagesRouter from "./routes/messagesRoutes";
 
 dotenv.config();
 

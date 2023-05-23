@@ -8,19 +8,19 @@ const db_1 = __importDefault(require("./config/db"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 const socket_io_1 = require("socket.io");
-// Routers
-const usersRouter_1 = __importDefault(require("./routers/usersRouter"));
-const chatsRouter_1 = __importDefault(require("./routers/chatsRouter"));
-const messagesRouter_1 = __importDefault(require("./routers/messagesRouter"));
+// Routes
+const usersRoutes_1 = __importDefault(require("./routes/usersRoutes"));
+const chatsRoutes_1 = __importDefault(require("./routes/chatsRoutes"));
+const messagesRoutes_1 = __importDefault(require("./routes/messagesRoutes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 (0, db_1.default)();
 // Init Middleware
 app.use(express_1.default.json());
 // Define Routes
-app.use("/api/users", usersRouter_1.default);
-app.use("/api/chats", chatsRouter_1.default);
-app.use("/api/messages", messagesRouter_1.default);
+app.use("/api/users", usersRoutes_1.default);
+app.use("/api/chats", chatsRoutes_1.default);
+app.use("/api/messages", messagesRoutes_1.default);
 const __dirname$ = path_1.default.resolve();
 if (process.env.NODE_ENV === "production") {
     // Set static folder
