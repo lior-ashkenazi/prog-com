@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import asyncHandler from "express-async-handler";
 import { validationResult, Result, ValidationError } from "express-validator";
 import { MongooseError } from "mongoose";
 
@@ -33,17 +34,16 @@ const errorHandler = (
   });
 };
 
-const validationErrorHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Response | void => {
-  const errors: Result<ValidationError> = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+const validationErrorHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      throw new Error("Bad request");
+    }
 
-  next();
-};
+    next();
+  }
+);
 
 export { notFound, errorHandler, validationErrorHandler };
