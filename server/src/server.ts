@@ -7,8 +7,6 @@ import { Server } from "socket.io";
 
 // Interfaces
 import { IUser } from "./models/userModel";
-import { IMessage } from "./models/messageModel";
-import { IChat } from "./models/chatModel";
 
 // Error handling
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
@@ -38,6 +36,12 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname$, "/client/build")));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname$, "client", "build", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.status(200).json({
+      message: "ProgCom server has been rolled up",
+    });
   });
 }
 
@@ -93,8 +97,8 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.off("setup", (user) => {
+  socket.off("setup", (user: IUser) => {
     console.log("USER DISCONNECTED");
-    socket.leave(user);
+    socket.leave(user._id);
   });
 });

@@ -31,6 +31,13 @@ if (process.env.NODE_ENV === "production") {
         res.sendFile(path_1.default.resolve(__dirname$, "client", "build", "index.html"));
     });
 }
+else {
+    app.get("/", (req, res) => {
+        res.status(200).json({
+            message: "ProgCom server has been rolled up",
+        });
+    });
+}
 const PORT = process.env.PORT || 5000;
 app.use(errorMiddleware_1.notFound);
 app.use(errorMiddleware_1.errorHandler);
@@ -76,6 +83,6 @@ io.on("connection", (socket) => {
     });
     socket.off("setup", (user) => {
         console.log("USER DISCONNECTED");
-        socket.leave(user);
+        socket.leave(user._id);
     });
 });
