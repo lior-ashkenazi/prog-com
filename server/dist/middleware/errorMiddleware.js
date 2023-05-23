@@ -12,6 +12,9 @@ exports.notFound = notFound;
 const errorHandler = (err, req, res, next) => {
     let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
     let message = err.message;
+    if (res.statusCode === 500) {
+        message = "Server error";
+    }
     // Mongoose not found error
     if (err instanceof mongoose_1.MongooseError) {
         statusCode = 404;

@@ -17,6 +17,10 @@ const errorHandler = (
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message;
 
+  if (res.statusCode === 500) {
+    message = "Server error";
+  }
+
   // Mongoose not found error
   if (err instanceof MongooseError) {
     statusCode = 404;

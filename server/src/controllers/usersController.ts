@@ -1,97 +1,102 @@
 import { Request, Response } from "express";
+import asyncHandler from "express-async-handler";
 import axios from "axios";
 
 import User, { IUser } from "../models/userModel";
 import { generateToken } from "../utils/generateToken";
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
-export async function registerUser(req: Request, res: Response): Promise<Response | void> {
+// const authUser
+
+const registerUser = asyncHandler(async <T>(req: Request, res: Response): Promise<void> => {
   const { userName, email, password } = req.body;
 
-  try {
-    const user: IUser | null = await User.findOne({
-      $or: [{ userName }, { email }],
-    });
+  const user: IUser | null = await User.findOne({
+    $or: [{ userName }, { email }],
+  });
 
-    if (user) {
-      const invalidField: string = user.userName === userName ? "Username" : "Email";
-      return res.status(400).json({ errors: [{ msg: `${invalidField} already exists` }] });
-    }
+  if (user) {
+    const invalidField: string = user.userName === userName ? "Username" : "Email";
+    throw new Error(`${invalidField} is already exists`);
+  }
 
-    const response = await axios.get(`https://api.dicebear.com/6.x/bottts/svg`);
-    const avatar: string = response.data;
+  const response = await axios.get(`https://api.dicebear.com/6.x/bottts/svg`);
+  const avatar: string = response.data;
 
-    const newUser: IUser = new User({
-      userName,
-      email,
-      avatar,
-      password,
-    });
+  const newUser: IUser = await User.create({
+    userName,
+    email,
+    avatar,
+    password,
+  });
 
-    await newUser.save();
-
+  if (newUser) {
     const payload = {
       user: {
         _id: newUser._id,
       },
     };
 
-    const token: string = generateToken(payload);
-    res.json({ token });
-  } catch (err) {
-    console.log(err);
+    const token = generateToken(payload);
 
-    res.status(500).send("Server error");
+    res.status(201).json({
+      user: {
+        _id: newUser._id,
+        userName: newUser.userName,
+        email: newUser.email,
+        avatar: newUser.avatar,
+      },
+      message: "User registered successfully",
+      token,
+    });
+  } else {
+    res.status(500);
+    throw new Error("Server error");
   }
-}
+});
 
-export async function loginUser(req: Request, res: Response): Promise<Response | void> {
+const loginUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const { userName, email, password } = req.body;
 
-  try {
-    const user: IUser | null = await User.findOne({
+  const user: IUser | null = await User.findOne(
+    {
       $or: [{ userName }, { email }],
-    });
+    },
+    "-password"
+  );
 
-    if (!user) {
-      return res.status(400).json({ errors: [{ message: "Invalid credentials" }] });
-    }
-
-    const isMatchedPassword: boolean = await user.matchPassword(password);
-
-    console.log(isMatchedPassword);
-
-    if (!isMatchedPassword) {
-      return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
-    }
-
+  if (user && (await user.matchPassword(password))) {
     const payload = {
       user: {
         _id: user._id,
       },
     };
 
-    const token: string = generateToken(payload);
-    res.json({ token });
-  } catch (err) {
-    res.status(500).send("Server error");
-  }
-}
+    const token = generateToken(payload);
 
-export async function fetchUsers(req: Request, res: Response): Promise<Response | void> {
+    res.status(200).json({
+      user,
+      message: "User successfully logged in",
+      token,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid username, email or password");
+  }
+});
+
+const fetchUsers = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const keyword: { userName: string } | {} = req.query.search
     ? {
         userName: { $regex: req.query.search, $options: "i" },
       }
     : {};
 
-  try {
-    const fetchedUsersData: IUser[] = await User.find(keyword, "-password").find({
-      _id: { $ne: (req as IAuthenticatedRequest).user._id },
-    });
+  const fetchedUsersData: IUser[] = await User.find(keyword, "-password").find({
+    _id: { $ne: (req as IAuthenticatedRequest).user._id },
+  });
 
-    res.json({ users: fetchedUsersData });
-  } catch (err) {
-    res.status(500).send("Server error");
-  }
-}
+  res.status(200).json({ users: fetchedUsersData });
+});
+
+export { registerUser, loginUser, fetchUsers };
