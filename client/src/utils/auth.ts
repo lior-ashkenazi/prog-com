@@ -1,11 +1,7 @@
-import api from "./api";
-
 export const setToken = (token: string) => {
-  api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  localStorage.setItem("prog-com-token", token);
+  localStorage.setItem("prog-com-jwt", token);
 };
 
 export const removeToken = () => {
-  delete api.defaults.headers.common["Authorization"];
-  localStorage.removeItem("token");
+  localStorage.removeItem("prog-com-jwt");
 };
