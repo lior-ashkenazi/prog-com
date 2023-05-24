@@ -32,7 +32,7 @@ router.post(
 );
 
 // @desc		    Get all the chats of a given user
-// @route		    /api/chats
+// @route		    GET /api/chats
 // @access      Private
 router.get("/", auth, fetchUserChats);
 

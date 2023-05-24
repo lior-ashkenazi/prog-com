@@ -56,7 +56,7 @@ router.post(
 );
 
 // @desc		    Fetch all messages
-// @route		    GET /api/messages
+// @route		    GET /api/messages/:chatId
 // @access      Private
 router.get(
   "/",
