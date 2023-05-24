@@ -71,90 +71,59 @@ const createGroupChat = asyncHandler(async (req: Request, res: Response): Promis
   res.status(200).json({ chat: newGroupChat });
 });
 
-const renameGroupChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { chatId, chatName } = req.body;
+const updateGroupChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  const { chatId, chatName, users } = req.body;
 
-  const updatedChat = await Chat.findByIdAndUpdate(chatId, { chatName }, { new: true })
-    .populate("users", "-password")
-    .populate("groupAdmin", "-password");
+  const chat: IChat | null = await Chat.findById(chatId);
+  if (!chat) {
+    res.status(404);
+    throw new Error("Resource not found");
+  }
 
-  if (!updatedChat) {
+  if (!chat.isGroupChat) {
     res.status(400);
     throw new Error("Bad request");
   }
+
+  if (chat.groupAdmin!.toString() !== (req as IAuthenticatedRequest).user._id.toString()) {
+    res.status(403);
+    throw new Error("Unauthorized user");
+  }
+
+  chat.chatName = chatName || chat.chatName;
+  chat.users = users || chat.users;
+
+  await chat.save();
+
+  const updatedChat = await Chat.findById(chat._id)
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password");
 
   res.json({ chat: updatedChat });
 });
 
 const deleteGroupChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { chatId } = req.body;
+  const { chatId } = req.params;
 
-  const removedChat = await Chat.findByIdAndRemove(chatId)
-    .populate("users", "-password")
-    .populate("groupAdmin", "-password");
-
-  if (!removedChat) {
-    res.status(400);
-    throw new Error("Bad Request");
+  const chat: IChat | null = await Chat.findById(chatId);
+  if (!chat) {
+    res.status(404);
+    throw new Error("Resource not found");
   }
 
-  res.status(200).json({ chat: removedChat });
-});
-
-const addUserToGroupChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { chatId, userId } = req.body;
-
-  const updatedChat = await Chat.findByIdAndUpdate(
-    {
-      _id: chatId,
-      isGroupChat: true,
-    },
-    {
-      $push: { users: userId },
-    },
-    { new: true }
-  )
-    .populate("users", "-password")
-    .populate("groupAdmin", "-password");
-
-  if (!updatedChat) {
+  if (!chat.isGroupChat) {
     res.status(400);
     throw new Error("Bad request");
   }
 
-  res.status(200).json({ chat: updatedChat });
-});
-
-const removeUserFromGroupChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { chatId, userId } = req.body;
-
-  const updatedChat = await Chat.findByIdAndUpdate(
-    {
-      _id: chatId,
-      isGroupChat: true,
-    },
-    {
-      $pull: { users: userId },
-    },
-    { new: true }
-  )
-    .populate("users", "-password")
-    .populate("groupAdmin", "-password");
-
-  if (!updatedChat) {
-    res.status(400);
-    throw new Error("Bad request");
+  if (chat.groupAdmin!.toString() !== (req as IAuthenticatedRequest).user._id.toString()) {
+    res.status(403);
+    throw new Error("Unauthorized user");
   }
 
-  res.status(200).json({ chat: updatedChat });
+  await Chat.deleteOne({ _id: chat._id });
+
+  res.json({ chat });
 });
 
-export {
-  accessUserChat,
-  fetchUserChats,
-  createGroupChat,
-  renameGroupChat,
-  deleteGroupChat,
-  addUserToGroupChat,
-  removeUserFromGroupChat,
-};
+export { accessUserChat, fetchUserChats, createGroupChat, updateGroupChat, deleteGroupChat };

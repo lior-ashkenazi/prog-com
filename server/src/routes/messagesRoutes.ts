@@ -59,7 +59,7 @@ router.post(
 // @route		    GET /api/messages/:chatId
 // @access      Private
 router.get(
-  "/",
+  "/:chatId",
   check("chatId")
     .notEmpty()
     .withMessage("Please add required fields")

@@ -7,6 +7,6 @@ apiSlice.injectEndpoints({
         url: "/messages",
       }),
     }),
-    fetchMessages: builder.query({ query: () => "messages" }),
+    fetchMessages: builder.query({ query: (chatId) => `messages/${chatId}` }),
   }),
 });

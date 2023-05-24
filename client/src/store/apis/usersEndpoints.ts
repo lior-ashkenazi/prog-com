@@ -4,7 +4,7 @@ apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (newUserFields) => ({
-        url: "users/",
+        url: "users",
         method: "POST",
         body: newUserFields,
       }),
@@ -18,8 +18,6 @@ apiSlice.injectEndpoints({
     }),
     fetchUsers: builder.query({
       query: () => "users",
-      // equivalent of:
-      // query: () => ({ url: "users/", method: GET})
     }),
   }),
 });
