@@ -12,7 +12,7 @@ const accessUserChat = asyncHandler(async (req: Request, res: Response): Promise
   // in the current version of the app
   // groups are *private*, they can only be accessed
   // when the admin adds you to the group chat
-  let isChat = await Chat.find({
+  let existingChats = await Chat.find({
     isGroupChat: false,
     $and: [
       {
@@ -24,11 +24,11 @@ const accessUserChat = asyncHandler(async (req: Request, res: Response): Promise
     ],
   }).populate("users", "-password");
 
-  // we check isChat.length > 0
+  // we check existingChats.length > 0
   // because of a race condition where mistakenly
   // two copies of the chat is created in our DB
-  if (isChat.length > 0) {
-    res.status(200).json(isChat[0]);
+  if (existingChats.length > 0) {
+    res.status(200).json({ chat: existingChats[0], type: "exists" });
   } else {
     let chatData = {
       chatName: `${(req as IAuthenticatedRequest).user._id}-${otherUserId}`,
@@ -38,7 +38,7 @@ const accessUserChat = asyncHandler(async (req: Request, res: Response): Promise
 
     let newChat: IChat | null = await Chat.create(chatData);
     newChat = await Chat.findOne({ _id: newChat._id }).populate("users", "-password");
-    res.status(200).json({ chat: newChat });
+    res.status(200).json({ chat: newChat, type: "new" });
   }
 });
 
@@ -75,6 +75,7 @@ const updateGroupChat = asyncHandler(async (req: Request, res: Response): Promis
   const { chatId, chatName, users } = req.body;
 
   const chat: IChat | null = await Chat.findById(chatId);
+
   if (!chat) {
     res.status(404);
     throw new Error("Resource not found");
@@ -106,6 +107,7 @@ const deleteGroupChat = asyncHandler(async (req: Request, res: Response): Promis
   const { chatId } = req.params;
 
   const chat: IChat | null = await Chat.findById(chatId);
+
   if (!chat) {
     res.status(404);
     throw new Error("Resource not found");

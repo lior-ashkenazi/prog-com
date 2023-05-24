@@ -3,17 +3,17 @@ import { apiSlice } from "./apiSlice";
 apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     registerUser: builder.mutation({
-      query: (newUserFields) => ({
+      query: (userCredentials) => ({
         url: "users",
         method: "POST",
-        body: newUserFields,
+        body: userCredentials,
       }),
     }),
     loginUser: builder.mutation({
-      query: (userFields) => ({
+      query: (userCredentials) => ({
         url: "users/login",
         method: "POST",
-        body: userFields,
+        body: userCredentials,
       }),
     }),
     fetchUsers: builder.query({

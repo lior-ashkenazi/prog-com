@@ -8,7 +8,11 @@ apiSlice.injectEndpoints({
         method: "POST",
         body: messageDetails,
       }),
+      invalidatesTags: [{ type: "Messages" }],
     }),
-    fetchMessages: builder.query({ query: (chatId) => `messages/${chatId}` }),
+    fetchMessages: builder.query({
+      query: (chatId) => `messages/${chatId}`,
+      providesTags: [{ type: "Messages" }],
+    }),
   }),
 });

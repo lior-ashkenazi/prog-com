@@ -3,6 +3,7 @@ import { getToken } from "../../utils/auth";
 
 export const apiSlice = createApi({
   reducerPath: "api",
+  tagTypes: ["Users", "Messages", "Chats"],
   baseQuery: fetchBaseQuery({
     baseUrl: "/api",
     prepareHeaders: (headers, { getState }) => {
