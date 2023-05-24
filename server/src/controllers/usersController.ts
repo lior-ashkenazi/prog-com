@@ -20,8 +20,9 @@ const registerUser = asyncHandler(async <T>(req: Request, res: Response): Promis
     throw new Error(`${invalidField} is already exists`);
   }
 
-  const response = await axios.get(`https://api.dicebear.com/6.x/bottts/svg`);
-  const avatar: string = response.data;
+  let seed =
+    Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  const avatar: string = `https://api.dicebear.com/6.x/bottts/${seed}.svg`;
 
   const newUser: IUser = await User.create({
     userName,

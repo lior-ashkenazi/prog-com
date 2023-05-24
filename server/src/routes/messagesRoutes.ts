@@ -14,7 +14,7 @@ const allowedLanguages = Object.values(ELanguage);
 const router: Router = express.Router();
 
 // @desc		    Send message
-// @route		    /api/messages
+// @route		    POST /api/messages
 // @access      Private
 router.post(
   "/",
@@ -56,7 +56,7 @@ router.post(
 );
 
 // @desc		    Fetch all messages
-// @route		    /api/messages
+// @route		    GET /api/messages
 // @access      Private
 router.get(
   "/",

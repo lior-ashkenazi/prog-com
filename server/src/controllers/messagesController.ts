@@ -28,7 +28,7 @@ const sendMessage = asyncHandler(async (req: Request, res: Response): Promise<vo
 });
 
 const fetchMessages = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { chatId } = req.params;
+  const { chatId } = req.body;
 
   const fetchedMessages: IMessage[] = await Message.find({ chatId })
     .populate("sender", "userName avatar email")

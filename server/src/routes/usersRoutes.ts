@@ -11,7 +11,7 @@ const router: Router = express.Router();
 // UI should note users the format of a password!
 
 // @desc		  Register new user
-// @route		  /api/users
+// @route		  POST /api/users
 // @access		Public
 router.post(
   "/",
@@ -37,7 +37,7 @@ router.post(
 );
 
 // @desc		  Login user
-// @route		  /api/users/login
+// @route		  POST /api/users/login
 // @access    Public
 router.post(
   "/login",

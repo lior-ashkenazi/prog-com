@@ -17,7 +17,7 @@ import {
 const router: Router = express.Router();
 
 // @desc		    Access/Initiate a chat between two users
-// @route		    /api/chats
+// @route		    POST /api/chats
 // @access      Private
 router.post(
   "/",
@@ -37,7 +37,7 @@ router.post(
 router.get("/", auth, fetchUserChats);
 
 // @desc		    Create a new group chat
-// @route		    /api/chats/groups
+// @route		    POST /api/chats/groups
 // @access      Private
 router.post(
   "/groups",
@@ -64,7 +64,7 @@ router.post(
 );
 
 // @desc		    Rename a group chat
-// @route		    /api/chats/groups
+// @route		    PUT /api/chats/groups
 // @access      Private
 router.put(
   "/groups",
@@ -82,7 +82,7 @@ router.put(
 );
 
 // @desc		    Delete a group chat
-// @route		    /api/chats/groups
+// @route		    DELETE /api/chats/groups
 // @access      Private
 router.delete(
   "/groups",
@@ -99,7 +99,7 @@ router.delete(
 );
 
 // @desc		    Add a user to group chat
-// @route		    /api/chats/groups/users
+// @route		    POST /api/chats/groups/users
 // @access      Private
 router.post(
   "/groups/users",
@@ -121,7 +121,7 @@ router.post(
 );
 
 // @desc		    Remove a user from group chat
-// @route		    /api/chats/groups/users
+// @route		    DELETE /api/chats/groups/users
 // @access      Private
 router.delete(
   "/groups/users",
