@@ -18,7 +18,7 @@ apiSlice.injectEndpoints({
         method: "POST",
         body: { userId }, // otherUserId!
       }),
-      invalidatesTags: (result, error, userId) => {
+      invalidatesTags: (result) => {
         if (result?.type === "new") {
           return [{ type: "Chats" }];
         }
@@ -43,7 +43,7 @@ apiSlice.injectEndpoints({
         method: "PUT",
         body: chatDetails,
       }),
-      invalidatesTags: (result, error, chatDetails) => {
+      invalidatesTags: (_result, _error, chatDetails) => {
         if (chatDetails.chatName) {
           return [{ type: "Chats" }];
         }
