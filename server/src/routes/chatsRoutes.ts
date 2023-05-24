@@ -43,7 +43,7 @@ router.post(
     check("users")
       .notEmpty()
       .withMessage("Please add required fields")
-      .isArray({ min: 1 })
+      .isArray({ min: 2 })
       .withMessage("Received invalid fields")
       .custom((value) => {
         value.forEach((user: string, i: number) => {

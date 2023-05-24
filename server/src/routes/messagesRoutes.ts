@@ -17,7 +17,7 @@ const router: Router = express.Router();
 // @route		    POST /api/messages
 // @access      Private
 router.post(
-  "/",
+  "/:chatId",
   [
     check("content", "Please add required fields").notEmpty(),
     check("mode")
