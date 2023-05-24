@@ -1,8 +1,14 @@
 import { apiSlice } from "./apiSlice";
+import {
+  SendMessageRequest,
+  SendMessageResponse,
+  FetchMessagesRequest,
+  FetchMessagesResponse,
+} from "./types/messagesEndpointsTypes";
 
 apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    sendMessage: builder.mutation({
+    sendMessage: builder.mutation<SendMessageResponse, SendMessageRequest>({
       query: ({ chatId, ...messageDetails }) => ({
         url: `/messages/${chatId}`,
         method: "POST",
@@ -10,7 +16,7 @@ apiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Messages" }],
     }),
-    fetchMessages: builder.query({
+    fetchMessages: builder.query<FetchMessagesResponse, FetchMessagesRequest>({
       query: (chatId) => `messages/${chatId}`,
       providesTags: [{ type: "Messages" }],
     }),

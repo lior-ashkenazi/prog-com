@@ -1,12 +1,22 @@
 import { apiSlice } from "./apiSlice";
+import {
+  AccessUserChatRequest,
+  AccessUserChatResponse,
+  FetchUserChatsRequest,
+  FetchUserChatsResponse,
+  CreateGroupChatRequest,
+  CreateGroupChatResponse,
+  UpdateGroupChatRequest,
+  UpdateGroupChatResponse,
+} from "./types/chatsEndpointsTypes";
 
 apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    accessUserChat: builder.mutation({
+    accessUserChat: builder.mutation<AccessUserChatResponse, AccessUserChatRequest>({
       query: (userId) => ({
         url: "chats",
         method: "POST",
-        body: userId, // otherUserId!
+        body: { userId }, // otherUserId!
       }),
       invalidatesTags: (result, error, userId) => {
         if (result?.type === "new") {
@@ -15,11 +25,11 @@ apiSlice.injectEndpoints({
         return [];
       },
     }),
-    fetchUserChats: builder.query({
+    fetchUserChats: builder.query<FetchUserChatsResponse, FetchUserChatsRequest>({
       query: () => "chats",
       providesTags: [{ type: "Chats" }],
     }),
-    createGroupChat: builder.mutation({
+    createGroupChat: builder.mutation<CreateGroupChatResponse, CreateGroupChatRequest>({
       query: (newChatDetails) => ({
         url: "chats/groups",
         method: "POST",
@@ -27,7 +37,7 @@ apiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Chats" }],
     }),
-    updateGroupChat: builder.mutation({
+    updateGroupChat: builder.mutation<UpdateGroupChatResponse, UpdateGroupChatRequest>({
       query: (chatDetails) => ({
         url: "chats/groups",
         method: "PUT",
@@ -39,13 +49,6 @@ apiSlice.injectEndpoints({
         }
         return [];
       },
-    }),
-    deleteGroupChat: builder.mutation({
-      query: (chatId) => ({
-        url: `chats/groups/:${chatId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: [{ type: "Chats" }],
     }),
   }),
 });
