@@ -56,10 +56,10 @@ router.post(
 );
 
 // @desc		    Fetch all messages
-// @route		    /api/messages/:chatId
+// @route		    /api/messages
 // @access      Private
 router.get(
-  "/:chatId",
+  "/",
   check("chatId")
     .notEmpty()
     .withMessage("Please add required fields")
