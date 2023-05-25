@@ -15,8 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchMessages = exports.sendMessage = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const messageModel_1 = __importDefault(require("../models/messageModel"));
+const chatModel_1 = __importDefault(require("../models/chatModel"));
 const sendMessage = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { chatId, content, mode, language } = req.body;
+    const { chatId } = req.params;
+    const { content, mode, language } = req.body;
+    const chat = yield chatModel_1.default.findById(chatId);
+    if (!chat) {
+        res.status(404);
+        throw new Error("Resource not found");
+    }
+    if (!chat.users.includes(req.user._id)) {
+        res.status(403);
+        throw new Error("Unauthorized request");
+    }
     const messageData = {
         chatId,
         sender: req.user._id,
@@ -37,6 +48,15 @@ const sendMessage = (0, express_async_handler_1.default)((req, res) => __awaiter
 exports.sendMessage = sendMessage;
 const fetchMessages = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { chatId } = req.params;
+    const chat = yield chatModel_1.default.findById(chatId);
+    if (!chat) {
+        res.status(404);
+        throw new Error("Resource not found");
+    }
+    if (!chat.users.includes(req.user._id)) {
+        res.status(403);
+        throw new Error("Unauthorized request");
+    }
     const fetchedMessages = yield messageModel_1.default.find({ chatId })
         .populate("sender", "userName avatar email")
         .populate("chatId")

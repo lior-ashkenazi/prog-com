@@ -9,7 +9,6 @@ import {
   fetchUserChats,
   createGroupChat,
   updateGroupChat,
-  deleteGroupChat,
 } from "../controllers/chatsController";
 
 const router: Router = express.Router();
@@ -93,23 +92,6 @@ router.put(
   auth,
   validationErrorHandler,
   updateGroupChat
-);
-
-// @desc		    Delete a group chat
-// @route		    DELETE /api/chats/groups
-// @access      Private
-router.delete(
-  "/groups/:chatId",
-  [
-    check("chatId")
-      .notEmpty()
-      .withMessage("Please add required fields")
-      .isMongoId()
-      .withMessage("Received invalid fields"),
-  ],
-  auth,
-  validationErrorHandler,
-  deleteGroupChat
 );
 
 export default router;

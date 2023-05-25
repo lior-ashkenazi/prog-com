@@ -10,7 +10,7 @@ const errorMiddleware_1 = require("../middleware/errorMiddleware");
 const chatsController_1 = require("../controllers/chatsController");
 const router = express_1.default.Router();
 // @desc		    Access/Initiate a chat between two users
-// @route		    /api/chats
+// @route		    POST /api/chats
 // @access      Private
 router.post("/", (0, express_validator_1.check)("userId")
     .notEmpty()
@@ -18,17 +18,17 @@ router.post("/", (0, express_validator_1.check)("userId")
     .isMongoId()
     .withMessage("Received invalid fields"), authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.accessUserChat);
 // @desc		    Get all the chats of a given user
-// @route		    /api/chats
+// @route		    GET /api/chats
 // @access      Private
 router.get("/", authMiddleware_1.default, chatsController_1.fetchUserChats);
 // @desc		    Create a new group chat
-// @route		    /api/chats/groups
+// @route		    POST /api/chats/groups
 // @access      Private
 router.post("/groups", [
     (0, express_validator_1.check)("users")
         .notEmpty()
         .withMessage("Please add required fields")
-        .isArray()
+        .isArray({ min: 2 })
         .withMessage("Received invalid fields")
         .custom((value) => {
         value.forEach((user, i) => {
@@ -40,8 +40,8 @@ router.post("/groups", [
     }),
     (0, express_validator_1.check)("chatName", "Please add required fields").notEmpty(),
 ], authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.createGroupChat);
-// @desc		    Rename a group chat
-// @route		    /api/chats/groups
+// @desc		    Update a group chat
+// @route		    PUT /api/chats/groups
 // @access      Private
 router.put("/groups", [
     (0, express_validator_1.check)("chatId")
@@ -49,46 +49,29 @@ router.put("/groups", [
         .withMessage("Please add required fields")
         .isMongoId()
         .withMessage("Received invalid fields"),
-    (0, express_validator_1.check)("chatName", "Please add required fields").notEmpty(),
-], authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.renameGroupChat);
+    (0, express_validator_1.oneOf)([
+        (0, express_validator_1.check)("users")
+            .isArray({ min: 1 })
+            .withMessage("Received invalid fields")
+            .custom((value) => {
+            value.forEach((user, i) => {
+                if (!(0, express_validator_1.check)(user).isMongoId()) {
+                    throw new Error(`Received invalid fields`);
+                }
+            });
+            return true;
+        }),
+        (0, express_validator_1.check)("chatName", "Please add required fields").notEmpty(),
+    ], { message: "At least one of chatName or users must be provided" }),
+], authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.updateGroupChat);
 // @desc		    Delete a group chat
-// @route		    /api/chats/groups
+// @route		    DELETE /api/chats/groups
 // @access      Private
-router.delete("/groups", [
+router.delete("/groups/:chatId", [
     (0, express_validator_1.check)("chatId")
         .notEmpty()
         .withMessage("Please add required fields")
         .isMongoId()
         .withMessage("Received invalid fields"),
 ], authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.deleteGroupChat);
-// @desc		    Add a user to group chat
-// @route		    /api/chats/groups/users
-// @access      Private
-router.post("/groups/users", [
-    (0, express_validator_1.check)("chatId")
-        .notEmpty()
-        .withMessage("Please add required fields")
-        .isMongoId()
-        .withMessage("Received invalid fields"),
-    (0, express_validator_1.check)("userId")
-        .notEmpty()
-        .withMessage("Please add required fields")
-        .isMongoId()
-        .withMessage("Received invalid fields"),
-], authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.addUserToGroupChat);
-// @desc		    Remove a user from group chat
-// @route		    /api/chats/groups/users
-// @access      Private
-router.delete("/groups/users", [
-    (0, express_validator_1.check)("chatId")
-        .notEmpty()
-        .withMessage("Please add required fields")
-        .isMongoId()
-        .withMessage("Received invalid fields"),
-    (0, express_validator_1.check)("userId")
-        .notEmpty()
-        .withMessage("Please add required fields")
-        .isMongoId()
-        .withMessage("Received invalid fields"),
-], authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.removeUserFromGroupChat);
 exports.default = router;

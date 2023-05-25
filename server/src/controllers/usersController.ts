@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import axios from "axios";
 
 import User, { IUser } from "../models/userModel";
 import { generateToken } from "../utils/generateToken";
@@ -47,7 +46,6 @@ const registerUser = asyncHandler(async <T>(req: Request, res: Response): Promis
         email: newUser.email,
         avatar: newUser.avatar,
       },
-      message: "User registered successfully",
       token,
     });
   } else {
@@ -77,7 +75,6 @@ const loginUser = asyncHandler(async (req: Request, res: Response): Promise<void
 
     res.status(200).json({
       user,
-      message: "User successfully logged in",
       token,
     });
   } else {

@@ -11,7 +11,7 @@ const usersController_1 = require("../controllers/usersController");
 const router = express_1.default.Router();
 // UI should note users the format of a password!
 // @desc		  Register new user
-// @route		  /api/users
+// @route		  POST /api/users
 // @access		Public
 router.post("/", [
     (0, express_validator_1.check)("userName")
@@ -31,7 +31,7 @@ router.post("/", [
         .withMessage("Received invalid fields"),
 ], errorMiddleware_1.validationErrorHandler, usersController_1.registerUser);
 // @desc		  Login user
-// @route		  /api/users/login
+// @route		  POST /api/users/login
 // @access    Public
 router.post("/login", [
     (0, express_validator_1.oneOf)([

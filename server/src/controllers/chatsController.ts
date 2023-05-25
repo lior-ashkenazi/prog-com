@@ -43,7 +43,7 @@ const accessUserChat = asyncHandler(async (req: Request, res: Response): Promise
 });
 
 const fetchUserChats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const allUserChats = await Chat.find({
+  const allUserChats: IChat[] = await Chat.find({
     users: { $elemMatch: { $eq: (req as IAuthenticatedRequest).user._id } },
   })
     .populate("users", "-password")
@@ -103,29 +103,4 @@ const updateGroupChat = asyncHandler(async (req: Request, res: Response): Promis
   res.json({ chat: updatedChat });
 });
 
-const deleteGroupChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { chatId } = req.params;
-
-  const chat: IChat | null = await Chat.findById(chatId);
-
-  if (!chat) {
-    res.status(404);
-    throw new Error("Resource not found");
-  }
-
-  if (!chat.isGroupChat) {
-    res.status(400);
-    throw new Error("Bad request");
-  }
-
-  if (chat.groupAdmin!.toString() !== (req as IAuthenticatedRequest).user._id.toString()) {
-    res.status(403);
-    throw new Error("Unauthorized user");
-  }
-
-  await Chat.deleteOne({ _id: chat._id });
-
-  res.json({ chat });
-});
-
-export { accessUserChat, fetchUserChats, createGroupChat, updateGroupChat, deleteGroupChat };
+export { accessUserChat, fetchUserChats, createGroupChat, updateGroupChat };

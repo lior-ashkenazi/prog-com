@@ -8,7 +8,7 @@ import {
   FetchChatsResponse,
 } from "./types/usersEndpointsTypes";
 
-apiSlice.injectEndpoints({
+export const usersEndpoints = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     registerUser: builder.mutation<RegisterUserResponse, RegisterUserRequest>({
       query: (userCredentials) => ({

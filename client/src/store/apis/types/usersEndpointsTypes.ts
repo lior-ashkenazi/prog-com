@@ -1,9 +1,4 @@
-type User = {
-  _id: string;
-  userName: string;
-  email: string;
-  avatar: string;
-};
+import { User } from "../../types/userTypes";
 
 export type RegisterUserRequest = {
   userName: string;

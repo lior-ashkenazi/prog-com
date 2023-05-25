@@ -13,6 +13,7 @@ const chatSchema: Schema = new Schema<IChat>(
     chatName: {
       type: String,
       required: true,
+      minLength: 1,
       maxLength: 200,
     },
     users: [

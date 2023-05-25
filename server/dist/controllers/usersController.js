@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchUsers = exports.loginUser = exports.registerUser = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
-const axios_1 = __importDefault(require("axios"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const generateToken_1 = require("../utils/generateToken");
 // const authUser
@@ -27,8 +26,8 @@ const registerUser = (0, express_async_handler_1.default)((req, res) => __awaite
         const invalidField = user.userName === userName ? "Username" : "Email";
         throw new Error(`${invalidField} is already exists`);
     }
-    const response = yield axios_1.default.get(`https://api.dicebear.com/6.x/bottts/svg`);
-    const avatar = response.data;
+    let seed = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const avatar = `https://api.dicebear.com/6.x/bottts/${seed}.svg`;
     const newUser = yield userModel_1.default.create({
         userName,
         email,
@@ -49,7 +48,6 @@ const registerUser = (0, express_async_handler_1.default)((req, res) => __awaite
                 email: newUser.email,
                 avatar: newUser.avatar,
             },
-            message: "User registered successfully",
             token,
         });
     }
@@ -73,7 +71,6 @@ const loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter(v
         const token = (0, generateToken_1.generateToken)(payload);
         res.status(200).json({
             user,
-            message: "User successfully logged in",
             token,
         });
     }

@@ -13,9 +13,9 @@ const allowedModes = Object.values(messageModel_1.EMode);
 const allowedLanguages = Object.values(messageModel_1.ELanguage);
 const router = express_1.default.Router();
 // @desc		    Send message
-// @route		    /api/messages
+// @route		    POST /api/messages
 // @access      Private
-router.post("/", [
+router.post("/:chatId", [
     (0, express_validator_1.check)("content", "Please add required fields").notEmpty(),
     (0, express_validator_1.check)("mode")
         .notEmpty()
@@ -46,7 +46,7 @@ router.post("/", [
         .withMessage("Received invalid fields"),
 ], authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, messagesController_1.sendMessage);
 // @desc		    Fetch all messages
-// @route		    /api/messages/:chatId
+// @route		    GET /api/messages/:chatId
 // @access      Private
 router.get("/:chatId", (0, express_validator_1.check)("chatId")
     .notEmpty()

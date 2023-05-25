@@ -10,7 +10,7 @@ import {
   UpdateGroupChatResponse,
 } from "./types/chatsEndpointsTypes";
 
-apiSlice.injectEndpoints({
+export const chatsEndpoints = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     accessUserChat: builder.mutation<AccessUserChatResponse, AccessUserChatRequest>({
       query: (userId) => ({

@@ -59,7 +59,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("Socket are in action");
+  console.log("Socket is in action");
 
   // Setup on
   socket.on("setup", (user: IUser) => {

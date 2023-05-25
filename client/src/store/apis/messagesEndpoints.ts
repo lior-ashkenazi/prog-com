@@ -6,7 +6,7 @@ import {
   FetchMessagesResponse,
 } from "./types/messagesEndpointsTypes";
 
-apiSlice.injectEndpoints({
+export const messagesEndpoints = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     sendMessage: builder.mutation<SendMessageResponse, SendMessageRequest>({
       query: ({ chatId, ...messageDetails }) => ({
