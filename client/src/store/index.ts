@@ -23,6 +23,8 @@ export type AppDispatch = typeof store.dispatch;
 
 export type RootState = ReturnType<typeof store.getState>;
 
+export default store;
+
 export { setUser, setSelectedChat, setChats } from "./slices/appSlice";
 
 export const { useRegisterUserMutation, useLoginUserMutation, useFetchUsersQuery } = usersEndpoints;

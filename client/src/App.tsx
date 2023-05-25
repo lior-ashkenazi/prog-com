@@ -5,7 +5,7 @@ import HomePage from "./pages/HomePage";
 const App = () => {
   return (
     <MemoryRouter>
-      <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] min-h-screen flex items-center justify-center font-sans">
+      <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] h-screen w-screen flex items-center justify-center font-sans">
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
           {/* <Route path="/chats" element={<ChatsPage />}></Route> */}
