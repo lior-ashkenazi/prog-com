@@ -1,5 +1,5 @@
 import { useState } from "react";
-import LoginForm from "../components/home/LoginForm";
+import LoginForm from "../components/home/RegisterForm";
 
 const HomePage = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
