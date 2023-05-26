@@ -1,36 +1,64 @@
 const LoginForm = () => {
   return (
-    <div className="h-full flex flex-col justify-between gap-8">
+    <form className="h-full flex flex-col justify-between gap-8">
       <div>
         <h2 className="text-6xl font-medium mb-6">Log in</h2>
         <div className="flex flex-col justify-between gap-1">
           <div>
-            <div className="font-semibold text-lg mb-1">Username</div>
-            <input className="w-full p-2" placeholder="Enter Username"></input>
+            <label className="font-semibold text-lg mb-1" htmlFor="userName">
+              Username
+            </label>
+            <input
+              className="w-full p-2 rounded"
+              placeholder="Enter Username"
+              type="text"
+              id="userName"
+            ></input>
+            <span className="text-xs">""</span>
+          </div>
+          <div>
+            <label className="font-semibold text-lg mb-1" htmlFor="email">
+              Email
+            </label>
+            <input
+              className="w-full p-2 rounded"
+              placeholder="Enter Email"
+              type="text"
+              id="email"
+            ></input>
             <span className="text-xs">* Comment</span>
           </div>
           <div>
-            <div className="font-semibold text-lg mb-1">Email</div>
-            <input className="w-full p-2" placeholder="Enter Email"></input>
+            <label className="font-semibold text-lg mb-1" htmlFor="password">
+              Password
+            </label>
+            <input
+              className="w-full p-2 rounded"
+              placeholder="Enter Password"
+              type="text"
+              id="password"
+            ></input>
             <span className="text-xs">* Comment</span>
           </div>
           <div>
-            <div className="font-semibold text-lg mb-1">Password</div>
-            <input className="w-full p-2" placeholder="Enter Password"></input>
-            <span className="text-xs">* Comment</span>
-          </div>
-          <div>
-            <div className="font-semibold text-lg mb-1">Re-Password</div>
-            <input className="w-full p-2" placeholder="Re-enter Password"></input>
+            <label className="font-semibold text-lg mb-1" htmlFor="confirmPassword">
+              Confirm Password
+            </label>
+            <input
+              className="w-full p-2 rounded"
+              placeholder="Re-enter Password"
+              type="text"
+              id="confirmPassword"
+            ></input>
             <span className="text-xs">* Comment</span>
           </div>
         </div>
       </div>
       <div className="flex justify-center">
-        <button>Log in</button>
+        <button type="submit">Log in</button>
       </div>
       <div className="flex justify-center">Already a member? Sign in</div>
-    </div>
+    </form>
   );
 };
 
