@@ -1,8 +1,7 @@
-import { useDispatch } from "react-redux";
-import { AppDispatch, useLoginUserMutation, useRegisterUserMutation } from "../../store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useRegisterUserMutation, isUserCredentialsError } from "../../store";
 
 const registerFormValidationSchema = z
   .object({
@@ -22,28 +21,41 @@ const registerFormValidationSchema = z
 type RegisterFormValidationSchema = z.infer<typeof registerFormValidationSchema>;
 
 const RegisterForm = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const [register, ] = useRegisterUserMutation();
+  const [registerUser] = useRegisterUserMutation();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<RegisterFormValidationSchema>({
     resolver: zodResolver(registerFormValidationSchema),
   });
 
-  const onSubmit: SubmitHandler<RegisterFormValidationSchema> = async (data) => {
-    const { confirmPassword, ...userCredentials } = data;
+  const onSubmitHandler: SubmitHandler<RegisterFormValidationSchema> = async (data) => {
+    const { userName, email, password } = data;
+    const userCredentials = { userName, email, password };
     try {
-      await 
+      await registerUser(userCredentials).unwrap();
+      // navigate
     } catch (error) {
-      
-    } 
+      console.log(error);
+      if (isUserCredentialsError(error)) {
+        const msg = error.data.message;
+        if (error.data.message.startsWith("Username")) {
+          setError("userName", { type: "manual", message: msg });
+        } else if (error.data.message.startsWith("Email")) {
+          setError("email", { type: "manual", message: msg });
+        }
+      }
+    }
   };
 
   return (
-    <form className="h-full flex flex-col justify-between gap-8" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="h-full flex flex-col justify-between gap-8"
+      onSubmit={handleSubmit(onSubmitHandler)}
+    >
       <div>
         <h2 className="text-6xl font-medium mb-6">Sign up</h2>
         <div className="flex flex-col justify-between">
@@ -123,12 +135,14 @@ const RegisterForm = () => {
         <button
           className="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-primary-800 text-lg transition-all"
           type="submit"
-          disabled={Object.keys(errors).length > 0 || isSubmitting}
+          disabled={isSubmitting}
         >
           Create an account
         </button>
       </div>
-      <div className="flex justify-center">Already a member? Log in</div>
+      <div className="flex justify-center">
+        Already a member?<button className="ml-1.5">Log in</button>
+      </div>
     </form>
   );
 };

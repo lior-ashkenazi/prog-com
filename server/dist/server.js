@@ -48,7 +48,7 @@ const io = new socket_io_1.Server(server, {
     },
 });
 io.on("connection", (socket) => {
-    console.log("Socket are in action");
+    console.log("Socket is in action");
     // Setup on
     socket.on("setup", (user) => {
         socket.join(user._id);

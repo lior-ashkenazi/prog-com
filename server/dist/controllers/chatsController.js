@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteGroupChat = exports.updateGroupChat = exports.createGroupChat = exports.fetchUserChats = exports.accessUserChat = void 0;
+exports.updateGroupChat = exports.createGroupChat = exports.fetchUserChats = exports.accessUserChat = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const chatModel_1 = __importDefault(require("../models/chatModel"));
 const accessUserChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -98,22 +98,3 @@ const updateGroupChat = (0, express_async_handler_1.default)((req, res) => __awa
     res.json({ chat: updatedChat });
 }));
 exports.updateGroupChat = updateGroupChat;
-const deleteGroupChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { chatId } = req.params;
-    const chat = yield chatModel_1.default.findById(chatId);
-    if (!chat) {
-        res.status(404);
-        throw new Error("Resource not found");
-    }
-    if (!chat.isGroupChat) {
-        res.status(400);
-        throw new Error("Bad request");
-    }
-    if (chat.groupAdmin.toString() !== req.user._id.toString()) {
-        res.status(403);
-        throw new Error("Unauthorized user");
-    }
-    yield chatModel_1.default.deleteOne({ _id: chat._id });
-    res.json({ chat });
-}));
-exports.deleteGroupChat = deleteGroupChat;

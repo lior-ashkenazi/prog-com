@@ -9,21 +9,18 @@ const notFound = (req: Request, res: Response, next: NextFunction) => {
   next(error);
 };
 
-const errorHandler = (
-  err: Error | MongooseError,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message;
+
+  console.log(err);
 
   if (res.statusCode === 500) {
     message = "Server error";
   }
 
   // Mongoose not found error
-  if (err instanceof MongooseError) {
+  if (err.name === "CastError" && err?.kind === "ObjectId") {
     statusCode = 404;
     message = "Resource not found";
   }

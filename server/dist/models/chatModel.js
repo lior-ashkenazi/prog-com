@@ -5,6 +5,7 @@ const chatSchema = new mongoose_1.Schema({
     chatName: {
         type: String,
         required: true,
+        minLength: 1,
         maxLength: 200,
     },
     users: [

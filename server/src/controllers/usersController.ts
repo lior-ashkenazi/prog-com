@@ -14,12 +14,13 @@ const registerUser = asyncHandler(async (req: Request, res: Response): Promise<v
 
   if (user) {
     const invalidField: string = user.userName === userName ? "Username" : "Email";
-    throw new Error(`${invalidField} is already exists`);
+    res.status(400);
+    throw new Error(`${invalidField} already exists`);
   }
 
   let seed =
     Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  const avatar: string = `https://api.dicebear.com/6.x/bottts/${seed}.svg`;
+  const avatar: string = `https://robohash.org/${seed}`;
 
   const newUser: IUser = await User.create({
     userName,
@@ -62,23 +63,27 @@ const loginUser = asyncHandler(async (req: Request, res: Response): Promise<void
     "-password"
   );
 
-  if (user && (await user.matchPassword(password))) {
-    const payload = {
-      user: {
-        _id: user._id,
-      },
-    };
-
-    const token = generateToken(payload);
-
-    res.status(200).json({
-      user,
-      token,
-    });
-  } else {
-    res.status(400);
-    throw new Error("Invalid username, email or password");
+  if (!user) {
+    res.status(404);
+    throw new Error("Username or email not found");
   }
+
+  if (await user.matchPassword(password)) {
+    res.status(400);
+    throw new Error("Wrong password");
+  }
+  const payload = {
+    user: {
+      _id: user._id,
+    },
+  };
+
+  const token = generateToken(payload);
+
+  res.status(200).json({
+    user,
+    token,
+  });
 });
 
 const logoutUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {

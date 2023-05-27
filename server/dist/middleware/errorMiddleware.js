@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validationErrorHandler = exports.errorHandler = exports.notFound = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const express_validator_1 = require("express-validator");
-const mongoose_1 = require("mongoose");
 const notFound = (req, res, next) => {
     const error = new Error(`Not found - ${req.originalUrl}`);
     res.status(404);
@@ -25,11 +24,12 @@ exports.notFound = notFound;
 const errorHandler = (err, req, res, next) => {
     let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
     let message = err.message;
+    console.log(err);
     if (res.statusCode === 500) {
         message = "Server error";
     }
     // Mongoose not found error
-    if (err instanceof mongoose_1.MongooseError) {
+    if (err.name === "CastError" && (err === null || err === void 0 ? void 0 : err.kind) === "ObjectId") {
         statusCode = 404;
         message = "Resource not found";
     }

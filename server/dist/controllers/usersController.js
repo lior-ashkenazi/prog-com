@@ -12,11 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchUsers = exports.loginUser = exports.registerUser = void 0;
+exports.fetchUsers = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const generateToken_1 = require("../utils/generateToken");
-// const authUser
 const registerUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userName, email, password } = req.body;
     const user = yield userModel_1.default.findOne({
@@ -24,10 +23,11 @@ const registerUser = (0, express_async_handler_1.default)((req, res) => __awaite
     });
     if (user) {
         const invalidField = user.userName === userName ? "Username" : "Email";
-        throw new Error(`${invalidField} is already exists`);
+        res.status(400);
+        throw new Error(`${invalidField} already exists`);
     }
     let seed = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const avatar = `https://api.dicebear.com/6.x/bottts/${seed}.svg`;
+    const avatar = `https://robohash.org/${seed}`;
     const newUser = yield userModel_1.default.create({
         userName,
         email,
@@ -62,24 +62,30 @@ const loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter(v
     const user = yield userModel_1.default.findOne({
         $or: [{ userName }, { email }],
     }, "-password");
-    if (user && (yield user.matchPassword(password))) {
-        const payload = {
-            user: {
-                _id: user._id,
-            },
-        };
-        const token = (0, generateToken_1.generateToken)(payload);
-        res.status(200).json({
-            user,
-            token,
-        });
+    if (!user) {
+        res.status(404);
+        throw new Error("Username or email not found");
     }
-    else {
+    if (yield user.matchPassword(password)) {
         res.status(400);
-        throw new Error("Invalid username, email or password");
+        throw new Error("Wrong password");
     }
+    const payload = {
+        user: {
+            _id: user._id,
+        },
+    };
+    const token = (0, generateToken_1.generateToken)(payload);
+    res.status(200).json({
+        user,
+        token,
+    });
 }));
 exports.loginUser = loginUser;
+const logoutUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.status(200);
+}));
+exports.logoutUser = logoutUser;
 const fetchUsers = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const keyword = req.query.search
         ? {

@@ -25,6 +25,27 @@ export type AppDispatch = typeof store.dispatch;
 
 export type RootState = ReturnType<typeof store.getState>;
 
+type UserCredentialsError = {
+  status: number;
+  data: {
+    message: string;
+    stack?: string;
+  };
+};
+
+export function isUserCredentialsError(obj: any): obj is UserCredentialsError {
+  return (
+    typeof obj === "object" &&
+    obj !== null &&
+    "status" in obj &&
+    typeof obj.status === "number" &&
+    "data" in obj &&
+    typeof obj.data === "object" &&
+    "message" in obj.data &&
+    typeof obj.data.message === "string"
+  );
+}
+
 export default store;
 
 export { setToken, removeToken } from "./slices/authSlice";
