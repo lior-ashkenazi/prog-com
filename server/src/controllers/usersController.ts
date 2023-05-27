@@ -5,9 +5,7 @@ import User, { IUser } from "../models/userModel";
 import { generateToken } from "../utils/generateToken";
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
-// const authUser
-
-const registerUser = asyncHandler(async <T>(req: Request, res: Response): Promise<void> => {
+const registerUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const { userName, email, password } = req.body;
 
   const user: IUser | null = await User.findOne({
