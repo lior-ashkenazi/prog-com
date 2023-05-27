@@ -1,8 +1,10 @@
+import { useDispatch } from "react-redux";
+import { AppDispatch, useLoginUserMutation, useRegisterUserMutation } from "../../store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-const loginFormValidationSchema = z
+const registerFormValidationSchema = z
   .object({
     userName: z.string().min(1, { message: "Username is required" }),
     email: z
@@ -17,19 +19,27 @@ const loginFormValidationSchema = z
     message: "Password don't match",
   });
 
-type LoginFormValidationSchema = z.infer<typeof loginFormValidationSchema>;
+type RegisterFormValidationSchema = z.infer<typeof registerFormValidationSchema>;
 
-const LoginForm = () => {
+const RegisterForm = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const [register, ] = useRegisterUserMutation();
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValidationSchema>({
-    resolver: zodResolver(loginFormValidationSchema),
+  } = useForm<RegisterFormValidationSchema>({
+    resolver: zodResolver(registerFormValidationSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginFormValidationSchema> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<RegisterFormValidationSchema> = async (data) => {
+    const { confirmPassword, ...userCredentials } = data;
+    try {
+      await 
+    } catch (error) {
+      
+    } 
   };
 
   return (
@@ -123,4 +133,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

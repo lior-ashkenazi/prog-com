@@ -20,6 +20,10 @@ export type LoginUserResponse = {
   token: string;
 };
 
+export type LogoutUserResponse = void;
+
+export type LogoutUserRequest = void;
+
 export type FetchChatsRequest = string;
 
 export type FetchChatsResponse = { users: User[] };

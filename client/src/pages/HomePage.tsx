@@ -1,5 +1,5 @@
 import { useState } from "react";
-import LoginForm from "../components/home/RegisterForm";
+import RegisterForm from "../components/home/RegisterForm";
 
 const HomePage = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
@@ -10,8 +10,8 @@ const HomePage = () => {
         ProgCom
       </h1>
       <div className="items-center justify-center bg-gray-100 w-[28rem] rounded-md shadow-md p-8">
-        <LoginForm />
         {/* isLogin ? <LoginForm />  */}
+        <RegisterForm />
       </div>
     </div>
   );

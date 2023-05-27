@@ -83,6 +83,10 @@ const loginUser = asyncHandler(async (req: Request, res: Response): Promise<void
   }
 });
 
+const logoutUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  res.status(200);
+});
+
 const fetchUsers = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const keyword: { userName: string } | {} = req.query.search
     ? {
@@ -97,4 +101,4 @@ const fetchUsers = asyncHandler(async (req: Request, res: Response): Promise<voi
   res.status(200).json({ users: fetchedUsersData });
 });
 
-export { registerUser, loginUser, fetchUsers };
+export { registerUser, loginUser, logoutUser, fetchUsers };

@@ -4,7 +4,7 @@ import { check, oneOf } from "express-validator";
 import auth from "../middleware/authMiddleware";
 import { validationErrorHandler } from "../middleware/errorMiddleware";
 
-import { loginUser, registerUser, fetchUsers } from "../controllers/usersController";
+import { loginUser, registerUser, logoutUser, fetchUsers } from "../controllers/usersController";
 
 const router: Router = express.Router();
 
@@ -55,6 +55,11 @@ router.post(
   validationErrorHandler,
   loginUser
 );
+
+// @desc		  Logout user
+// @route		  POST /api/users/logout
+// @access    Public
+router.post("/logout", auth, logoutUser);
 
 // @desc		  Fetch users
 // @route		  /api/users?search=

@@ -4,6 +4,8 @@ import {
   RegisterUserResponse,
   LoginUserRequest,
   LoginUserResponse,
+  LogoutUserRequest,
+  LogoutUserResponse,
   FetchChatsRequest,
   FetchChatsResponse,
 } from "./types/usersEndpointsTypes";
@@ -22,6 +24,12 @@ export const usersEndpoints = apiSlice.injectEndpoints({
         url: "users/login",
         method: "POST",
         body: userCredentials,
+      }),
+    }),
+    logoutUser: builder.mutation<LogoutUserResponse, LogoutUserRequest>({
+      query: () => ({
+        url: "users/logout",
+        method: "POST",
       }),
     }),
     fetchUsers: builder.query<FetchChatsResponse, FetchChatsRequest>({
