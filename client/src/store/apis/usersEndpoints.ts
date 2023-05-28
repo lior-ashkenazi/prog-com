@@ -4,11 +4,14 @@ import {
   RegisterUserResponse,
   LoginUserRequest,
   LoginUserResponse,
+  AuthUserRequest,
+  AuthUserResponse,
   LogoutUserRequest,
   LogoutUserResponse,
   FetchChatsRequest,
   FetchChatsResponse,
 } from "./types/usersEndpointsTypes";
+import { chatsEndpoints } from "./chatsEndpoints";
 
 export const usersEndpoints = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -18,6 +21,10 @@ export const usersEndpoints = apiSlice.injectEndpoints({
         method: "POST",
         body: userCredentials,
       }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+        dispatch(chatsEndpoints.endpoints.fetchUserChats.initiate());
+      },
     }),
     loginUser: builder.mutation<LoginUserResponse, LoginUserRequest>({
       query: (userCredentials) => ({
@@ -25,6 +32,17 @@ export const usersEndpoints = apiSlice.injectEndpoints({
         method: "POST",
         body: userCredentials,
       }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+        dispatch(chatsEndpoints.endpoints.fetchUserChats.initiate());
+      },
+    }),
+    authUser: builder.query<AuthUserResponse, AuthUserRequest>({
+      query: () => "users",
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+        dispatch(chatsEndpoints.endpoints.fetchUserChats.initiate());
+      },
     }),
     logoutUser: builder.mutation<LogoutUserResponse, LogoutUserRequest>({
       query: () => ({

@@ -52,7 +52,12 @@ export default store;
 export { setToken, removeToken } from "./slices/authSlice";
 export { setUser, setSelectedChat, setChats } from "./slices/appSlice";
 
-export const { useRegisterUserMutation, useLoginUserMutation, useFetchUsersQuery } = usersEndpoints;
+export const {
+  useRegisterUserMutation,
+  useLoginUserMutation,
+  useAuthUserQuery,
+  useFetchUsersQuery,
+} = usersEndpoints;
 export const { useSendMessageMutation, useFetchMessagesQuery } = messagesEndpoints;
 export const {
   useAccessUserChatMutation,

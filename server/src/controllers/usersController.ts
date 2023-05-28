@@ -84,6 +84,19 @@ const loginUser = asyncHandler(async (req: Request, res: Response): Promise<void
   });
 });
 
+const authUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  const user: IUser | null = await User.findById((req as IAuthenticatedRequest).user._id);
+
+  if (!user) {
+    res.status(404);
+    throw new Error("Resource not found");
+  }
+
+  // we don't need token as
+  // client has already a token
+  res.status(200).json({ user });
+});
+
 const logoutUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   res.status(200);
 });
@@ -102,4 +115,4 @@ const fetchUsers = asyncHandler(async (req: Request, res: Response): Promise<voi
   res.status(200).json({ users: fetchedUsersData });
 });
 
-export { registerUser, loginUser, logoutUser, fetchUsers };
+export { registerUser, loginUser, authUser, logoutUser, fetchUsers };

@@ -1,35 +1,29 @@
-import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { useNavigate, NavigateFunction } from "react-router-dom";
-import { AppDispatch } from "../store";
 import RegisterForm from "../components/home/RegisterForm";
 import LoginForm from "../components/home/LoginForm";
 
 const HomePage = () => {
-  const dispatch: AppDispatch = useDispatch();
   const navigate: NavigateFunction = useNavigate();
 
   const [isLogin, setIsLogin] = useState<boolean>(true);
 
-  const handleIsLoginClick = () => setIsLogin(!isLogin);
+  const onClickChangeForm = () => setIsLogin(!isLogin);
 
-  useEffect(() => {
-    // should in redux store!
-    // if (token) {
-    //   navigate("/chats");
-    // }
-  }, [dispatch, navigate]);
+  const onSubmitForm = () => {
+    navigate("/chats");
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-y-10">
-      <h1 className="font-mono text-8xl text-gray-100 font-semibold tracking-tighter drop-shadow-md outlined-text">
+    <div className="flex w-full justify-evenly items-center">
+      <h1 className="font-mono text-[10rem] text-gray-50 font-semibold tracking-tighter drop-shadow-md outlined-text">
         ProgCom
       </h1>
-      <div className="items-center justify-center bg-gray-100 w-[28rem] rounded-md shadow-md p-8">
+      <div className="items-center justify-center bg-gray-50 w-[28rem] rounded-md shadow-lg p-8">
         {isLogin ? (
-          <LoginForm onClickSignup={handleIsLoginClick} />
+          <LoginForm onClickChangeForm={onClickChangeForm} onSubmitForm={onSubmitForm} />
         ) : (
-          <RegisterForm onClickLogin={handleIsLoginClick} />
+          <RegisterForm onClickChangeForm={onClickChangeForm} onSubmitForm={onSubmitForm} />
         )}
       </div>
     </div>

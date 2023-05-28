@@ -11,10 +11,11 @@ const loginFormValidationSchema = z.object({
 type LoginFormValidationSchema = z.infer<typeof loginFormValidationSchema>;
 
 interface LoginFormsProps {
-  onClickSignup: () => void;
+  onClickChangeForm: () => void;
+  onSubmitForm: () => void;
 }
 
-const LoginForm = ({ onClickSignup }: LoginFormsProps) => {
+const LoginForm = ({ onClickChangeForm, onSubmitForm }: LoginFormsProps) => {
   const [loginUser] = useLoginUserMutation();
 
   const {
@@ -24,6 +25,7 @@ const LoginForm = ({ onClickSignup }: LoginFormsProps) => {
     setError,
   } = useForm<LoginFormValidationSchema>({
     resolver: zodResolver(loginFormValidationSchema),
+    mode: "onBlur",
   });
 
   const onSubmitHandler: SubmitHandler<LoginFormValidationSchema> = async (data) => {
@@ -31,7 +33,7 @@ const LoginForm = ({ onClickSignup }: LoginFormsProps) => {
     const userCredentials = { usernameOrEmail, password };
     try {
       await loginUser(userCredentials).unwrap();
-      // navigate
+      onSubmitForm();
     } catch (error) {
       console.log(error);
 
@@ -52,7 +54,7 @@ const LoginForm = ({ onClickSignup }: LoginFormsProps) => {
       onSubmit={handleSubmit(onSubmitHandler)}
     >
       <div>
-        <h2 className="text-6xl font-medium mb-6">Sign up</h2>
+        <h2 className="text-6xl font-medium mb-6">Log in</h2>
         <div className="flex flex-col justify-between">
           <div>
             <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="userName">
@@ -107,7 +109,7 @@ const LoginForm = ({ onClickSignup }: LoginFormsProps) => {
         <button
           type="button"
           className="ml-1.5 text-emerald-500 font-semibold underline underline-offset-2 hover:text-emerald-600 active:text-emerald-600 transition"
-          onClick={onClickSignup}
+          onClick={onClickChangeForm}
         >
           Sign up
         </button>

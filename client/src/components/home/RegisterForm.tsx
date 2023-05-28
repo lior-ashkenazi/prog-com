@@ -21,10 +21,11 @@ const registerFormValidationSchema = z
 type RegisterFormValidationSchema = z.infer<typeof registerFormValidationSchema>;
 
 interface RegisterFormsProps {
-  onClickLogin: () => void;
+  onClickChangeForm: () => void;
+  onSubmitForm: () => void;
 }
 
-const RegisterForm = ({ onClickLogin }: RegisterFormsProps) => {
+const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) => {
   const [registerUser] = useRegisterUserMutation();
 
   const {
@@ -34,6 +35,7 @@ const RegisterForm = ({ onClickLogin }: RegisterFormsProps) => {
     setError,
   } = useForm<RegisterFormValidationSchema>({
     resolver: zodResolver(registerFormValidationSchema),
+    mode: "onBlur",
   });
 
   const onSubmitHandler: SubmitHandler<RegisterFormValidationSchema> = async (data) => {
@@ -41,7 +43,7 @@ const RegisterForm = ({ onClickLogin }: RegisterFormsProps) => {
     const userCredentials = { userName, email, password };
     try {
       await registerUser(userCredentials).unwrap();
-      // navigate
+      onSubmitForm();
     } catch (error) {
       if (error && typeof error === "object" && isUserCredentialsError(error)) {
         const msg = error.data.message;
@@ -151,7 +153,7 @@ const RegisterForm = ({ onClickLogin }: RegisterFormsProps) => {
         <button
           type="button"
           className="ml-1.5 text-emerald-500 font-semibold underline underline-offset-2 hover:text-emerald-600 active:text-emerald-600 transition"
-          onClick={onClickLogin}
+          onClick={onClickChangeForm}
         >
           Log in
         </button>

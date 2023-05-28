@@ -37,6 +37,10 @@ router.post("/login", [
     (0, express_validator_1.check)("usernameOrEmail").notEmpty().withMessage("Please add required fields"),
     (0, express_validator_1.check)("password", "Please add required fields").notEmpty(),
 ], errorMiddleware_1.validationErrorHandler, usersController_1.loginUser);
+// @desc		  Auth user
+// @route		  GET /api/users
+// @access    Private
+router.post("/logout", authMiddleware_1.default, usersController_1.authUser);
 // @desc		  Logout user
 // @route		  POST /api/users/logout
 // @access    Private

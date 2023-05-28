@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchUsers = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
+exports.fetchUsers = exports.logoutUser = exports.authUser = exports.loginUser = exports.registerUser = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const generateToken_1 = require("../utils/generateToken");
@@ -82,6 +82,17 @@ const loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter(v
     });
 }));
 exports.loginUser = loginUser;
+const authUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel_1.default.findById(req.user._id);
+    if (!user) {
+        res.status(404);
+        throw new Error("Resource not found");
+    }
+    // we don't need token as
+    // client has already a token
+    res.status(200).json({ user });
+}));
+exports.authUser = authUser;
 const logoutUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200);
 }));

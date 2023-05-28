@@ -18,6 +18,13 @@ export type LoginUserResponse = {
   token: string;
 };
 
+export type AuthUserRequest = void;
+
+export type AuthUserResponse = {
+  user: User;
+  token: string;
+};
+
 export type LogoutUserResponse = void;
 
 export type LogoutUserRequest = void;

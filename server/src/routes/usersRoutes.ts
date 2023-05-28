@@ -1,10 +1,16 @@
 import express, { Router } from "express";
-import { check, oneOf } from "express-validator";
+import { check } from "express-validator";
 
 import auth from "../middleware/authMiddleware";
 import { validationErrorHandler } from "../middleware/errorMiddleware";
 
-import { registerUser, loginUser, logoutUser, fetchUsers } from "../controllers/usersController";
+import {
+  registerUser,
+  loginUser,
+  authUser,
+  logoutUser,
+  fetchUsers,
+} from "../controllers/usersController";
 
 const router: Router = express.Router();
 
@@ -48,6 +54,11 @@ router.post(
   validationErrorHandler,
   loginUser
 );
+
+// @desc		  Auth user
+// @route		  GET /api/users
+// @access    Private
+router.post("/logout", auth, authUser);
 
 // @desc		  Logout user
 // @route		  POST /api/users/logout
