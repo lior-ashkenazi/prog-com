@@ -2,11 +2,12 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { RootState, useAuthUserQuery } from "./store";
+import HomeSpinner from "./components/home/HomeSpinner";
 
 const App = () => {
   const navigate = useNavigate();
   const token: string | null = useSelector((state: RootState) => state.auth.token);
-  useAuthUserQuery();
+  const { isLoading } = useAuthUserQuery();
 
   useEffect(() => {
     if (token) {
@@ -32,8 +33,8 @@ const App = () => {
   }, [navigate]);
 
   return (
-    <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] h-screen w-screen flex items-center justify-center font-sans">
-      <Outlet />
+    <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] h-screen w-screen min-w-[75rem] flex items-center justify-center font-sans">
+      {isLoading ? <HomeSpinner /> : <Outlet />}
     </div>
   );
 };
