@@ -33,7 +33,7 @@ type UserCredentialsError = {
   };
 };
 
-export function isUserCredentialsError(obj: any): obj is UserCredentialsError {
+export function isUserCredentialsError(obj: object): obj is UserCredentialsError {
   return (
     typeof obj === "object" &&
     obj !== null &&
@@ -41,6 +41,7 @@ export function isUserCredentialsError(obj: any): obj is UserCredentialsError {
     typeof obj.status === "number" &&
     "data" in obj &&
     typeof obj.data === "object" &&
+    obj.data !== null &&
     "message" in obj.data &&
     typeof obj.data.message === "string"
   );

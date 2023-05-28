@@ -11,9 +11,7 @@ export type RegisterUserResponse = {
   token: string;
 };
 
-export type LoginUserRequest =
-  | { userName: string; email?: string }
-  | ({ userName?: string; email: string } & { password: string });
+export type LoginUserRequest = { usernameOrEmail: string; password: string };
 
 export type LoginUserResponse = {
   user: User;

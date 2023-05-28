@@ -4,7 +4,7 @@ import { check, oneOf } from "express-validator";
 import auth from "../middleware/authMiddleware";
 import { validationErrorHandler } from "../middleware/errorMiddleware";
 
-import { loginUser, registerUser, logoutUser, fetchUsers } from "../controllers/usersController";
+import { registerUser, loginUser, logoutUser, fetchUsers } from "../controllers/usersController";
 
 const router: Router = express.Router();
 
@@ -42,14 +42,7 @@ router.post(
 router.post(
   "/login",
   [
-    oneOf([
-      check("userName").notEmpty().withMessage("Please add required fields"),
-      check("email")
-        .notEmpty()
-        .withMessage("Please add required fields")
-        .isEmail()
-        .withMessage("Received invalid fields"),
-    ]),
+    check("usernameOrEmail").notEmpty().withMessage("Please add required fields"),
     check("password", "Please add required fields").notEmpty(),
   ],
   validationErrorHandler,
@@ -58,7 +51,7 @@ router.post(
 
 // @desc		  Logout user
 // @route		  POST /api/users/logout
-// @access    Public
+// @access    Private
 router.post("/logout", auth, logoutUser);
 
 // @desc		  Fetch users

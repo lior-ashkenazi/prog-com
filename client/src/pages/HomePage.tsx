@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, NavigateFunction } from "react-router-dom";
-import { AppDispatch, setToken } from "../store";
+import { AppDispatch } from "../store";
 import RegisterForm from "../components/home/RegisterForm";
+import LoginForm from "../components/home/LoginForm";
 
 const HomePage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -10,10 +11,11 @@ const HomePage = () => {
 
   const [isLogin, setIsLogin] = useState<boolean>(true);
 
+  const handleIsLoginClick = () => setIsLogin(!isLogin);
+
   useEffect(() => {
-    // const token = localStorage.getItem("prog-com-jwt");
+    // should in redux store!
     // if (token) {
-    //   dispatch(setToken(token));
     //   navigate("/chats");
     // }
   }, [dispatch, navigate]);
@@ -24,8 +26,11 @@ const HomePage = () => {
         ProgCom
       </h1>
       <div className="items-center justify-center bg-gray-100 w-[28rem] rounded-md shadow-md p-8">
-        {/* isLogin ? <LoginForm />  */}
-        <RegisterForm setIsLogin={setIsLogin} />
+        {isLogin ? (
+          <LoginForm onClickSignup={handleIsLoginClick} />
+        ) : (
+          <RegisterForm onClickLogin={handleIsLoginClick} />
+        )}
       </div>
     </div>
   );

@@ -20,7 +20,11 @@ const registerFormValidationSchema = z
 
 type RegisterFormValidationSchema = z.infer<typeof registerFormValidationSchema>;
 
-const RegisterForm = () => {
+interface RegisterFormsProps {
+  onClickLogin: () => void;
+}
+
+const RegisterForm = ({ onClickLogin }: RegisterFormsProps) => {
   const [registerUser] = useRegisterUserMutation();
 
   const {
@@ -39,8 +43,7 @@ const RegisterForm = () => {
       await registerUser(userCredentials).unwrap();
       // navigate
     } catch (error) {
-      console.log(error);
-      if (isUserCredentialsError(error)) {
+      if (error && typeof error === "object" && isUserCredentialsError(error)) {
         const msg = error.data.message;
         if (error.data.message.startsWith("Username")) {
           setError("userName", { type: "manual", message: msg });
@@ -76,6 +79,7 @@ const RegisterForm = () => {
               {errors.userName ? errors.userName?.message : "padding"}
             </span>
           </div>
+
           <div>
             <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="email">
               Email
@@ -93,8 +97,9 @@ const RegisterForm = () => {
               {errors.email ? errors.email?.message : "padding"}
             </span>
           </div>
+
           <div>
-            <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="password">
+            <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="registerPassword">
               Password
             </label>
             <input
@@ -103,13 +108,14 @@ const RegisterForm = () => {
               } appearance-none focus:bg-gray-200 focus:outline-none focus:shadow-outline transition-colors`}
               placeholder="Enter Password"
               type="password"
-              id="password"
+              id="registerPassword"
               {...register("password")}
             ></input>
             <span className={`text-xs ${errors.password ? "text-red-500" : "text-transparent"}`}>
               {errors.password ? errors.password?.message : "padding"}
             </span>
           </div>
+
           <div>
             <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="confirmPassword">
               Confirm Password
@@ -141,7 +147,14 @@ const RegisterForm = () => {
         </button>
       </div>
       <div className="flex justify-center">
-        Already a member?<button className="ml-1.5">Log in</button>
+        Already have an account?
+        <button
+          type="button"
+          className="ml-1.5 text-emerald-500 font-semibold underline underline-offset-2 hover:text-emerald-600 active:text-emerald-600 transition"
+          onClick={onClickLogin}
+        >
+          Log in
+        </button>
       </div>
     </form>
   );

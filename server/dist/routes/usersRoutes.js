@@ -34,19 +34,12 @@ router.post("/", [
 // @route		  POST /api/users/login
 // @access    Public
 router.post("/login", [
-    (0, express_validator_1.oneOf)([
-        (0, express_validator_1.check)("userName").notEmpty().withMessage("Please add required fields"),
-        (0, express_validator_1.check)("email")
-            .notEmpty()
-            .withMessage("Please add required fields")
-            .isEmail()
-            .withMessage("Received invalid fields"),
-    ]),
+    (0, express_validator_1.check)("usernameOrEmail").notEmpty().withMessage("Please add required fields"),
     (0, express_validator_1.check)("password", "Please add required fields").notEmpty(),
 ], errorMiddleware_1.validationErrorHandler, usersController_1.loginUser);
 // @desc		  Logout user
 // @route		  POST /api/users/logout
-// @access    Public
+// @access    Private
 router.post("/logout", authMiddleware_1.default, usersController_1.logoutUser);
 // @desc		  Fetch users
 // @route		  /api/users?search=

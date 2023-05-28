@@ -54,24 +54,22 @@ const registerUser = asyncHandler(async (req: Request, res: Response): Promise<v
 });
 
 const loginUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { userName, email, password } = req.body;
+  const { usernameOrEmail, password } = req.body;
 
-  const user: IUser | null = await User.findOne(
-    {
-      $or: [{ userName }, { email }],
-    },
-    "-password"
-  );
+  const user: IUser | null = await User.findOne({
+    $or: [{ userName: usernameOrEmail }, { email: usernameOrEmail }],
+  });
 
   if (!user) {
     res.status(404);
     throw new Error("Username or email not found");
   }
 
-  if (await user.matchPassword(password)) {
+  if (!(await user.matchPassword(password))) {
     res.status(400);
-    throw new Error("Wrong password");
+    throw new Error("Password is not correct");
   }
+
   const payload = {
     user: {
       _id: user._id,

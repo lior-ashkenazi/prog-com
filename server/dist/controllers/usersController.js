@@ -58,17 +58,17 @@ const registerUser = (0, express_async_handler_1.default)((req, res) => __awaite
 }));
 exports.registerUser = registerUser;
 const loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userName, email, password } = req.body;
+    const { usernameOrEmail, password } = req.body;
     const user = yield userModel_1.default.findOne({
-        $or: [{ userName }, { email }],
-    }, "-password");
+        $or: [{ userName: usernameOrEmail }, { email: usernameOrEmail }],
+    });
     if (!user) {
         res.status(404);
         throw new Error("Username or email not found");
     }
-    if (yield user.matchPassword(password)) {
+    if (!(yield user.matchPassword(password))) {
         res.status(400);
-        throw new Error("Wrong password");
+        throw new Error("Password is not correct");
     }
     const payload = {
         user: {
