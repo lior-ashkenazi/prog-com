@@ -12,7 +12,7 @@ export interface IAuthenticatedRequest extends Request {
 const auth = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (!req.header("Authorization")) {
-      res.status(401);
+      res.status(202);
       throw new Error("No authorization header");
     }
 

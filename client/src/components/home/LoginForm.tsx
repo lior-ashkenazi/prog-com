@@ -35,8 +35,6 @@ const LoginForm = ({ onClickChangeForm, onSubmitForm }: LoginFormsProps) => {
       await loginUser(userCredentials).unwrap();
       onSubmitForm();
     } catch (error) {
-      console.log(error);
-
       if (error && typeof error === "object" && isUserCredentialsError(error)) {
         const msg = error.data.message;
         if (error.data.message.startsWith("Username")) {

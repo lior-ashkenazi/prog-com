@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import { validationResult, Result, ValidationError } from "express-validator";
-import { MongooseError } from "mongoose";
 
 const notFound = (req: Request, res: Response, next: NextFunction) => {
   const error = new Error(`Not found - ${req.originalUrl}`);
