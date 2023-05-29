@@ -15,6 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const auth = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.header("Authorization")) {
+        res.status(401);
+        throw new Error("No authorization header");
+    }
     // Get token from header
     const token = req.header("Authorization").replace("Bearer ", "");
     // Check if not token

@@ -11,6 +11,11 @@ export interface IAuthenticatedRequest extends Request {
 
 const auth = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    if (!req.header("Authorization")) {
+      res.status(401);
+      throw new Error("No authorization header");
+    }
+
     // Get token from header
     const token = req.header("Authorization")!.replace("Bearer ", "");
 

@@ -13,8 +13,6 @@ const errorHandler = (err: any, req: Request, res: Response, next: NextFunction)
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message;
 
-  console.log(err);
-
   if (res.statusCode === 500) {
     message = "Server error";
   }

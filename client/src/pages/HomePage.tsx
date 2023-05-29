@@ -19,7 +19,7 @@ const HomePage = () => {
       <h1 className="font-mono text-[10rem] text-gray-50 font-semibold tracking-tighter drop-shadow-md outlined-text">
         ProgCom
       </h1>
-      <div className="items-center justify-center bg-gray-50 w-[28rem] rounded-md shadow-lg p-8">
+      <div className="flex flex-col items-center justify-center bg-gray-50 w-[28rem] rounded-md shadow-lg p-8">
         {isLogin ? (
           <LoginForm onClickChangeForm={onClickChangeForm} onSubmitForm={onSubmitForm} />
         ) : (
