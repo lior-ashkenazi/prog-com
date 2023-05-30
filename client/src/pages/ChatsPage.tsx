@@ -6,7 +6,10 @@ import ChatsUserList from "../components/chats/ChatsUserList";
 import ChatsSearchList from "../components/chats/ChatsSearchList";
 
 const ChatsPage = () => {
-  const [isSearch, setIsSearch] = useState<boolean>(false);
+  const [searchInput, setSearchInput] = useState<string>("");
+
+  const handleChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setSearchInput(e.target.value);
 
   return (
     <div
@@ -18,12 +21,12 @@ const ChatsPage = () => {
       </div>
       <div className="grid grid-cols-3">
         <div className="col-span-1">
-          <SearchBar setIsSearch={setIsSearch} />
+          <SearchBar input={searchInput} onChange={handleChangeSearchInput} />
         </div>
         <div className="bg-green-900 col-span-2">3</div>
       </div>
       <div className="grid grid-cols-3">
-        <div className="col-span-1">{!isSearch ? <ChatsUserList /> : <ChatsSearchList />}</div>
+        <div className="col-span-1">{!searchInput ? <ChatsUserList /> : <ChatsSearchList />}</div>
         <div className="bg-orange-900 col-span-2">3</div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { RootState, useAuthUserQuery } from "./store";
@@ -9,9 +9,14 @@ const App = () => {
   const token: string | null = useSelector((state: RootState) => state.auth.token);
   const { isLoading } = useAuthUserQuery();
 
+  const [authCheckComplete, setAuthCheckComplete] = useState(false);
+
   useEffect(() => {
-    if (token && !isLoading) {
+    if (!isLoading && token) {
       navigate("/chats");
+      setAuthCheckComplete(true);
+    } else if (!isLoading) {
+      setAuthCheckComplete(true);
     }
   }, [token, isLoading, navigate]);
 
@@ -34,7 +39,7 @@ const App = () => {
 
   return (
     <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] h-screen w-screen min-w-[75rem] flex items-center justify-center font-sans">
-      {isLoading ? <HomeSpinner /> : <Outlet />}
+      {!authCheckComplete ? <HomeSpinner /> : <Outlet />}
     </div>
   );
 };
