@@ -16,20 +16,20 @@ const accessChat = asyncHandler(async (req: Request, res: Response): Promise<voi
     isGroupChat: false,
     $and: [
       {
-        users: {
+        participants: {
           $elemMatch: { $eq: (req as IAuthenticatedRequest).user._id },
         },
       },
-      { users: { $elemMatch: { $eq: otherUserId } } },
+      { participants: { $elemMatch: { $eq: otherUserId } } },
     ],
-  }).populate("users", "-password");
+  }).populate("participants", "-password");
 
   // we check existingChats.length > 0
   // because of a race condition where mistakenly
   // two copies of the chat is created in our DB
   if (existingChats.length > 0) {
     let existingChat = existingChats[0];
-    existingChat.users = existingChat.users.filter(
+    existingChat.participants = existingChat.participants.filter(
       (userId) => userId.toString() !== (req as IAuthenticatedRequest).user._id.toString()
     );
     res.status(200).json({ chat: existingChat, type: "exists" });
@@ -37,17 +37,17 @@ const accessChat = asyncHandler(async (req: Request, res: Response): Promise<voi
     let chatData = {
       chatName: `${(req as IAuthenticatedRequest).user._id}-${otherUserId}`,
       isGroupChat: false,
-      users: [(req as IAuthenticatedRequest).user._id, otherUserId],
+      participants: [(req as IAuthenticatedRequest).user._id, otherUserId],
     };
 
     let newChat: IChat | null = await Chat.create(chatData);
-    newChat = await Chat.findOne({ _id: newChat._id }).populate("users", "-password");
+    newChat = await Chat.findOne({ _id: newChat._id }).populate("participants", "-password");
     if (!newChat) {
       res.status(500);
       throw new Error("Server error");
     }
 
-    newChat.users = newChat?.users.filter(
+    newChat.participants = newChat?.participants.filter(
       (userId) => userId.toString() !== (req as IAuthenticatedRequest).user._id.toString()
     );
     res.status(200).json({ chat: newChat, type: "new" });
@@ -56,9 +56,9 @@ const accessChat = asyncHandler(async (req: Request, res: Response): Promise<voi
 
 const fetchChats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const allUserChats: IChat[] = await Chat.find({
-    users: { $elemMatch: { $eq: (req as IAuthenticatedRequest).user._id } },
+    participants: { $elemMatch: { $eq: (req as IAuthenticatedRequest).user._id } },
   })
-    .populate("users", "-password")
+    .populate("participants", "-password")
     .populate("groupAdmin", "-password")
     .sort({ updatedAt: -1 });
 
@@ -66,25 +66,26 @@ const fetchChats = asyncHandler(async (req: Request, res: Response): Promise<voi
 });
 
 const createGroupChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { users, chatName }: { users: Schema.Types.ObjectId[]; chatName: string } = req.body;
+  const { participants, chatName }: { participants: Schema.Types.ObjectId[]; chatName: string } =
+    req.body;
 
-  users.unshift((req as IAuthenticatedRequest).user._id);
+  participants.unshift((req as IAuthenticatedRequest).user._id);
 
   let newGroupChat: IChat | null = await Chat.create({
     chatName,
-    users,
+    participants,
     isGroupChat: true,
     groupAdmin: (req as IAuthenticatedRequest).user,
   });
   newGroupChat = await Chat.findOne({ _id: newGroupChat._id })
-    .populate("users", "-password")
+    .populate("participants", "-password")
     .populate("groupAdmin", "-password");
 
   res.status(200).json({ chat: newGroupChat });
 });
 
 const updateGroupChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { chatId, chatName, users } = req.body;
+  const { chatId, chatName, participants } = req.body;
 
   const chat: IChat | null = await Chat.findById(chatId);
 
@@ -104,12 +105,12 @@ const updateGroupChat = asyncHandler(async (req: Request, res: Response): Promis
   }
 
   chat.chatName = chatName || chat.chatName;
-  chat.users = users || chat.users;
+  chat.participants = participants || chat.participants;
 
   await chat.save();
 
   const updatedChat = await Chat.findById(chat._id)
-    .populate("users", "-password")
+    .populate("participants", "-password")
     .populate("groupAdmin", "-password");
 
   res.json({ chat: updatedChat });

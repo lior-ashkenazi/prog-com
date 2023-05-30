@@ -17,7 +17,7 @@ const ChatsSearchList = ({ input }: ChatsSearchListProps) => {
   };
 
   const renderList = () =>
-    data?.participants.map((user: User, index: number) => (
+    data?.users.map((user: User, index: number) => (
       <ChatsListItem chat={potentialChat(user, index)} />
     ));
 

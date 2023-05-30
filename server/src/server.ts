@@ -79,9 +79,9 @@ io.on("connection", (socket) => {
     // chatId after population in route
     // is an OBJECT rather than ObjectId!
     let chat = newMessage.chatId;
-    if (!chat.users) return console.log("chat.users not defined");
+    if (!chat.participants) return console.log("chat.participants not defined");
 
-    chat.users.forEach((user: IUser) => {
+    chat.participants.forEach((user: IUser) => {
       if (user._id === newMessage.sender) return;
       socket.in(user._id).emit("message received", newMessage);
     });

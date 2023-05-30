@@ -24,65 +24,65 @@ const accessChat = (0, express_async_handler_1.default)((req, res) => __awaiter(
         isGroupChat: false,
         $and: [
             {
-                users: {
+                participants: {
                     $elemMatch: { $eq: req.user._id },
                 },
             },
-            { users: { $elemMatch: { $eq: otherUserId } } },
+            { participants: { $elemMatch: { $eq: otherUserId } } },
         ],
-    }).populate("users", "-password");
+    }).populate("participants", "-password");
     // we check existingChats.length > 0
     // because of a race condition where mistakenly
     // two copies of the chat is created in our DB
     if (existingChats.length > 0) {
         let existingChat = existingChats[0];
-        existingChat.users = existingChat.users.filter((userId) => userId.toString() !== req.user._id.toString());
+        existingChat.participants = existingChat.participants.filter((userId) => userId.toString() !== req.user._id.toString());
         res.status(200).json({ chat: existingChat, type: "exists" });
     }
     else {
         let chatData = {
             chatName: `${req.user._id}-${otherUserId}`,
             isGroupChat: false,
-            users: [req.user._id, otherUserId],
+            participants: [req.user._id, otherUserId],
         };
         let newChat = yield chatModel_1.default.create(chatData);
-        newChat = yield chatModel_1.default.findOne({ _id: newChat._id }).populate("users", "-password");
+        newChat = yield chatModel_1.default.findOne({ _id: newChat._id }).populate("participants", "-password");
         if (!newChat) {
             res.status(500);
             throw new Error("Server error");
         }
-        newChat.users = newChat === null || newChat === void 0 ? void 0 : newChat.users.filter((userId) => userId.toString() !== req.user._id.toString());
+        newChat.participants = newChat === null || newChat === void 0 ? void 0 : newChat.participants.filter((userId) => userId.toString() !== req.user._id.toString());
         res.status(200).json({ chat: newChat, type: "new" });
     }
 }));
 exports.accessChat = accessChat;
 const fetchChats = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const allUserChats = yield chatModel_1.default.find({
-        users: { $elemMatch: { $eq: req.user._id } },
+        participants: { $elemMatch: { $eq: req.user._id } },
     })
-        .populate("users", "-password")
+        .populate("participants", "-password")
         .populate("groupAdmin", "-password")
         .sort({ updatedAt: -1 });
     res.status(200).json({ chats: allUserChats });
 }));
 exports.fetchChats = fetchChats;
 const createGroupChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { users, chatName } = req.body;
-    users.unshift(req.user._id);
+    const { participants, chatName } = req.body;
+    participants.unshift(req.user._id);
     let newGroupChat = yield chatModel_1.default.create({
         chatName,
-        users,
+        participants,
         isGroupChat: true,
         groupAdmin: req.user,
     });
     newGroupChat = yield chatModel_1.default.findOne({ _id: newGroupChat._id })
-        .populate("users", "-password")
+        .populate("participants", "-password")
         .populate("groupAdmin", "-password");
     res.status(200).json({ chat: newGroupChat });
 }));
 exports.createGroupChat = createGroupChat;
 const updateGroupChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { chatId, chatName, users } = req.body;
+    const { chatId, chatName, participants } = req.body;
     const chat = yield chatModel_1.default.findById(chatId);
     if (!chat) {
         res.status(404);
@@ -97,10 +97,10 @@ const updateGroupChat = (0, express_async_handler_1.default)((req, res) => __awa
         throw new Error("Unauthorized user");
     }
     chat.chatName = chatName || chat.chatName;
-    chat.users = users || chat.users;
+    chat.participants = participants || chat.participants;
     yield chat.save();
     const updatedChat = yield chatModel_1.default.findById(chat._id)
-        .populate("users", "-password")
+        .populate("participants", "-password")
         .populate("groupAdmin", "-password");
     res.json({ chat: updatedChat });
 }));
