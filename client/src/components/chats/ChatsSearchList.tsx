@@ -1,5 +1,8 @@
 import { useFetchUsersQuery } from "../../store";
+import { User } from "../../types/userTypes";
+import { Chat } from "../../types/chatTypes";
 import ChatsListSkeleton from "./ChatsListSkeleton";
+import ChatsListItem from "./ChatsListItem";
 
 interface ChatsSearchListProps {
   input: string;
@@ -7,10 +10,20 @@ interface ChatsSearchListProps {
 
 const ChatsSearchList = ({ input }: ChatsSearchListProps) => {
   const { data, isLoading } = useFetchUsersQuery(input);
+  console.log(data);
+
+  const potentialChat = (user: User, index: number): Chat => {
+    return { _id: index.toString(), chatName: "", users: [user], isGroupChat: false };
+  };
+
+  const renderList = () =>
+    data?.users.map((user: User, index: number) => (
+      <ChatsListItem chat={potentialChat(user, index)} />
+    ));
 
   return (
     <div className="p-3 flex flex-col overscroll-y-auto">
-      {isLoading ? <ChatsListSkeleton /> : "hello"}
+      {isLoading ? <ChatsListSkeleton /> : renderList()}
     </div>
   );
 };

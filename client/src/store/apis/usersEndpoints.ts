@@ -38,7 +38,7 @@ export const usersEndpoints = apiSlice.injectEndpoints({
       },
     }),
     authUser: builder.query<AuthUserResponse, AuthUserRequest>({
-      query: () => "users",
+      query: () => "users/auth",
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         await queryFulfilled;
         dispatch(chatsEndpoints.endpoints.fetchChats.initiate());

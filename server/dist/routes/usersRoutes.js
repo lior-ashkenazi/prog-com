@@ -38,9 +38,9 @@ router.post("/login", [
     (0, express_validator_1.check)("password", "Please add required fields").notEmpty(),
 ], errorMiddleware_1.validationErrorHandler, usersController_1.loginUser);
 // @desc		  Auth user
-// @route		  GET /api/users
+// @route		  GET /api/users/auth
 // @access    Private
-router.get("/", authMiddleware_1.default, usersController_1.authUser);
+router.get("/auth", authMiddleware_1.default, usersController_1.authUser);
 // @desc		  Logout user
 // @route		  POST /api/users/logout
 // @access    Private

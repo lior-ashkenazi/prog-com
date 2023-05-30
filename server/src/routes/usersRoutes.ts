@@ -56,9 +56,9 @@ router.post(
 );
 
 // @desc		  Auth user
-// @route		  GET /api/users
+// @route		  GET /api/users/auth
 // @access    Private
-router.get("/", auth, authUser);
+router.get("/auth", auth, authUser);
 
 // @desc		  Logout user
 // @route		  POST /api/users/logout

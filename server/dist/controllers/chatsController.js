@@ -35,7 +35,9 @@ const accessChat = (0, express_async_handler_1.default)((req, res) => __awaiter(
     // because of a race condition where mistakenly
     // two copies of the chat is created in our DB
     if (existingChats.length > 0) {
-        res.status(200).json({ chat: existingChats[0], type: "exists" });
+        let existingChat = existingChats[0];
+        existingChat.users = existingChat.users.filter((userId) => userId.toString() !== req.user._id.toString());
+        res.status(200).json({ chat: existingChat, type: "exists" });
     }
     else {
         let chatData = {
@@ -45,6 +47,11 @@ const accessChat = (0, express_async_handler_1.default)((req, res) => __awaiter(
         };
         let newChat = yield chatModel_1.default.create(chatData);
         newChat = yield chatModel_1.default.findOne({ _id: newChat._id }).populate("users", "-password");
+        if (!newChat) {
+            res.status(500);
+            throw new Error("Server error");
+        }
+        newChat.users = newChat === null || newChat === void 0 ? void 0 : newChat.users.filter((userId) => userId.toString() !== req.user._id.toString());
         res.status(200).json({ chat: newChat, type: "new" });
     }
 }));

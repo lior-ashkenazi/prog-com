@@ -26,7 +26,9 @@ const ChatsPage = () => {
         <div className="bg-green-900 col-span-2">3</div>
       </div>
       <div className="grid grid-cols-3">
-        <div className="col-span-1">{!searchInput ? <ChatsUserList /> : <ChatsSearchList />}</div>
+        <div className="col-span-1">
+          {!searchInput ? <ChatsUserList /> : <ChatsSearchList input={searchInput} />}
+        </div>
         <div className="bg-orange-900 col-span-2">3</div>
       </div>
     </div>

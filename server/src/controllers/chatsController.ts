@@ -28,7 +28,11 @@ const accessChat = asyncHandler(async (req: Request, res: Response): Promise<voi
   // because of a race condition where mistakenly
   // two copies of the chat is created in our DB
   if (existingChats.length > 0) {
-    res.status(200).json({ chat: existingChats[0], type: "exists" });
+    let existingChat = existingChats[0];
+    existingChat.users = existingChat.users.filter(
+      (userId) => userId.toString() !== (req as IAuthenticatedRequest).user._id.toString()
+    );
+    res.status(200).json({ chat: existingChat, type: "exists" });
   } else {
     let chatData = {
       chatName: `${(req as IAuthenticatedRequest).user._id}-${otherUserId}`,
@@ -38,6 +42,14 @@ const accessChat = asyncHandler(async (req: Request, res: Response): Promise<voi
 
     let newChat: IChat | null = await Chat.create(chatData);
     newChat = await Chat.findOne({ _id: newChat._id }).populate("users", "-password");
+    if (!newChat) {
+      res.status(500);
+      throw new Error("Server error");
+    }
+
+    newChat.users = newChat?.users.filter(
+      (userId) => userId.toString() !== (req as IAuthenticatedRequest).user._id.toString()
+    );
     res.status(200).json({ chat: newChat, type: "new" });
   }
 });
