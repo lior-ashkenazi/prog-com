@@ -13,7 +13,7 @@ const ChatsPage = () => {
 
   return (
     <div
-      className="grid grid-rows-[auto_auto_1fr] bg-gray-100 h-full w-full mx-4 rounded-md"
+      className="grid grid-rows-[auto_auto_1fr] bg-gray-100 w-full mx-4 rounded-md"
       style={{ height: "calc(100vh - 2rem)" }}
     >
       <div className="bg-indigo-800">
@@ -25,8 +25,8 @@ const ChatsPage = () => {
         </div>
         <div className="bg-green-900 col-span-2">3</div>
       </div>
-      <div className="grid grid-cols-3">
-        <div className="col-span-1">
+      <div className="grid grid-cols-3 overflow-y-hidden">
+        <div className="col-span-1 overflow-y-auto">
           {!searchInput ? <ChatsUserList /> : <ChatsSearchList input={searchInput} />}
         </div>
         <div className="bg-orange-900 col-span-2">3</div>

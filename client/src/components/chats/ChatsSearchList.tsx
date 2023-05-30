@@ -22,9 +22,7 @@ const ChatsSearchList = ({ input }: ChatsSearchListProps) => {
     ));
 
   return (
-    <div className="p-3 flex flex-col overscroll-y-auto">
-      {isLoading ? <ChatsListSkeleton /> : renderList()}
-    </div>
+    <div className="p-3 flex flex-col">{isLoading ? <ChatsListSkeleton /> : renderList()}</div>
   );
 };
 

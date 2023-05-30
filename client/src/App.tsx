@@ -38,7 +38,7 @@ const App = () => {
   }, [navigate]);
 
   return (
-    <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] h-screen w-screen min-w-[75rem] flex items-center justify-center font-sans">
+    <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] h-screen w-screen min-w-[75rem] fixed flex items-center justify-center font-sans">
       {!authCheckComplete ? <HomeSpinner /> : <Outlet />}
     </div>
   );
