@@ -5,8 +5,8 @@ import auth from "../middleware/authMiddleware";
 import { validationErrorHandler } from "../middleware/errorMiddleware";
 
 import {
-  accessUserChat,
-  fetchUserChats,
+  accessChat,
+  fetchChats,
   createGroupChat,
   updateGroupChat,
 } from "../controllers/chatsController";
@@ -25,13 +25,13 @@ router.post(
     .withMessage("Received invalid fields"),
   auth,
   validationErrorHandler,
-  accessUserChat
+  accessChat
 );
 
 // @desc		    Get all the chats of a given user
 // @route		    GET /api/chats
 // @access      Private
-router.get("/", auth, fetchUserChats);
+router.get("/", auth, fetchChats);
 
 // @desc		    Create a new group chat
 // @route		    POST /api/chats/groups

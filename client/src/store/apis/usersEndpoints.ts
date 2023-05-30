@@ -8,8 +8,8 @@ import {
   AuthUserResponse,
   LogoutUserRequest,
   LogoutUserResponse,
-  FetchChatsRequest,
-  FetchChatsResponse,
+  FetchUsersRequest,
+  FetchUsersResponse,
 } from "./types/usersEndpointsTypes";
 import { chatsEndpoints } from "./chatsEndpoints";
 
@@ -23,7 +23,7 @@ export const usersEndpoints = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         await queryFulfilled;
-        dispatch(chatsEndpoints.endpoints.fetchUserChats.initiate());
+        dispatch(chatsEndpoints.endpoints.fetchChats.initiate());
       },
     }),
     loginUser: builder.mutation<LoginUserResponse, LoginUserRequest>({
@@ -34,14 +34,14 @@ export const usersEndpoints = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         await queryFulfilled;
-        dispatch(chatsEndpoints.endpoints.fetchUserChats.initiate());
+        dispatch(chatsEndpoints.endpoints.fetchChats.initiate());
       },
     }),
     authUser: builder.query<AuthUserResponse, AuthUserRequest>({
       query: () => "users",
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         await queryFulfilled;
-        dispatch(chatsEndpoints.endpoints.fetchUserChats.initiate());
+        dispatch(chatsEndpoints.endpoints.fetchChats.initiate());
       },
     }),
     logoutUser: builder.mutation<LogoutUserResponse, LogoutUserRequest>({
@@ -50,7 +50,7 @@ export const usersEndpoints = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
-    fetchUsers: builder.query<FetchChatsResponse, FetchChatsRequest>({
+    fetchUsers: builder.query<FetchUsersResponse, FetchUsersRequest>({
       query: (userName) => `users?search=${userName}`,
     }),
   }),

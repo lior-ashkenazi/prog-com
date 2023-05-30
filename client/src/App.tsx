@@ -10,10 +10,10 @@ const App = () => {
   const { isLoading } = useAuthUserQuery();
 
   useEffect(() => {
-    if (token) {
+    if (token && !isLoading) {
       navigate("/chats");
     }
-  }, [token, navigate]);
+  }, [token, isLoading, navigate]);
 
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {

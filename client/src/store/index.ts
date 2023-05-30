@@ -60,8 +60,8 @@ export const {
 } = usersEndpoints;
 export const { useSendMessageMutation, useFetchMessagesQuery } = messagesEndpoints;
 export const {
-  useAccessUserChatMutation,
-  useFetchUserChatsQuery,
+  useAccessChatMutation,
+  useFetchChatsQuery,
   useCreateGroupChatMutation,
   useUpdateGroupChatMutation,
 } = chatsEndpoints;

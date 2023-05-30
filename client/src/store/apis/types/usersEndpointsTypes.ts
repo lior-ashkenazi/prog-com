@@ -1,4 +1,4 @@
-import { User } from "../../types/userTypes";
+import { User } from "../../../types/userTypes";
 
 export type RegisterUserRequest = {
   userName: string;
@@ -29,6 +29,6 @@ export type LogoutUserResponse = void;
 
 export type LogoutUserRequest = void;
 
-export type FetchChatsRequest = string;
+export type FetchUsersRequest = string;
 
-export type FetchChatsResponse = { users: User[] };
+export type FetchUsersResponse = { users: User[] };

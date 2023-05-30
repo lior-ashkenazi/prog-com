@@ -38,6 +38,9 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         localStorage.setItem("prog-com-jwt", token);
       })
+      .addMatcher(usersEndpoints.endpoints.authUser.matchFulfilled, (state) => {
+        state.isAuthenticated = true;
+      })
       .addMatcher(usersEndpoints.endpoints.logoutUser.matchFulfilled, (state) => {
         state.token = null;
         state.isAuthenticated = false;

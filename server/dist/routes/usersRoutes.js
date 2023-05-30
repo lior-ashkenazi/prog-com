@@ -40,7 +40,7 @@ router.post("/login", [
 // @desc		  Auth user
 // @route		  GET /api/users
 // @access    Private
-router.post("/logout", authMiddleware_1.default, usersController_1.authUser);
+router.get("/", authMiddleware_1.default, usersController_1.authUser);
 // @desc		  Logout user
 // @route		  POST /api/users/logout
 // @access    Private

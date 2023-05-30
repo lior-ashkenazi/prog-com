@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { usersEndpoints } from "../apis/usersEndpoints";
 import { chatsEndpoints } from "../apis/chatsEndpoints";
 
-import { User } from "../types/userTypes";
-import { Chat } from "../types/chatTypes";
+import { User } from "../../types/userTypes";
+import { Chat } from "../../types/chatTypes";
 
 interface AppState {
   user: User | null;
@@ -42,7 +42,7 @@ const appSlice = createSlice({
       .addMatcher(usersEndpoints.endpoints.authUser.matchFulfilled, (state, action) => {
         state.user = action.payload.user;
       })
-      .addMatcher(chatsEndpoints.endpoints.fetchUserChats.matchFulfilled, (state, action) => {
+      .addMatcher(chatsEndpoints.endpoints.fetchChats.matchFulfilled, (state, action) => {
         state.chats = action.payload.chats;
       });
   },

@@ -1,15 +1,15 @@
-import { Chat } from "../../types/chatTypes";
+import { Chat } from "../../../types/chatTypes";
 
-export type AccessUserChatRequest = string;
+export type AccessChatRequest = string;
 
-export type AccessUserChatResponse = {
+export type AccessChatResponse = {
   chat: Chat;
   type: "new" | "exists";
 };
 
-export type FetchUserChatsRequest = void;
+export type FetchChatsRequest = void;
 
-export type FetchUserChatsResponse = {
+export type FetchChatsResponse = {
   chats: Chat[];
 };
 

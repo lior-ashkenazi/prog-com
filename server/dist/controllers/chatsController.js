@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateGroupChat = exports.createGroupChat = exports.fetchUserChats = exports.accessUserChat = void 0;
+exports.updateGroupChat = exports.createGroupChat = exports.fetchChats = exports.accessChat = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const chatModel_1 = __importDefault(require("../models/chatModel"));
-const accessUserChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const accessChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId: otherUserId } = req.body;
     // in the current version of the app
     // groups are *private*, they can only be accessed
@@ -48,8 +48,8 @@ const accessUserChat = (0, express_async_handler_1.default)((req, res) => __awai
         res.status(200).json({ chat: newChat, type: "new" });
     }
 }));
-exports.accessUserChat = accessUserChat;
-const fetchUserChats = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.accessChat = accessChat;
+const fetchChats = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const allUserChats = yield chatModel_1.default.find({
         users: { $elemMatch: { $eq: req.user._id } },
     })
@@ -58,7 +58,7 @@ const fetchUserChats = (0, express_async_handler_1.default)((req, res) => __awai
         .sort({ updatedAt: -1 });
     res.status(200).json({ chats: allUserChats });
 }));
-exports.fetchUserChats = fetchUserChats;
+exports.fetchChats = fetchChats;
 const createGroupChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { users, chatName } = req.body;
     users.unshift(req.user._id);

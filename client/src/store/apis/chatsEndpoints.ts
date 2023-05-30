@@ -1,9 +1,9 @@
 import { apiSlice } from "./apiSlice";
 import {
-  AccessUserChatRequest,
-  AccessUserChatResponse,
-  FetchUserChatsRequest,
-  FetchUserChatsResponse,
+  AccessChatRequest,
+  AccessChatResponse,
+  FetchChatsRequest as FetchChatsRequest,
+  FetchChatsResponse as FetchChatsResponse,
   CreateGroupChatRequest,
   CreateGroupChatResponse,
   UpdateGroupChatRequest,
@@ -12,7 +12,7 @@ import {
 
 export const chatsEndpoints = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    accessUserChat: builder.mutation<AccessUserChatResponse, AccessUserChatRequest>({
+    accessChat: builder.mutation<AccessChatResponse, AccessChatRequest>({
       query: (userId) => ({
         url: "chats",
         method: "POST",
@@ -25,7 +25,7 @@ export const chatsEndpoints = apiSlice.injectEndpoints({
         return [];
       },
     }),
-    fetchUserChats: builder.query<FetchUserChatsResponse, FetchUserChatsRequest>({
+    fetchChats: builder.query<FetchChatsResponse, FetchChatsRequest>({
       query: () => "chats",
       providesTags: [{ type: "Chats" }],
     }),

@@ -1,4 +1,4 @@
-import { Message, MessageModes } from "../../types/messageTypes";
+import { Message, MessageModes } from "../../../types/messageTypes";
 
 export type SendMessageRequest = {
   chatId: string;

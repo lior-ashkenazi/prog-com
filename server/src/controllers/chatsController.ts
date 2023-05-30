@@ -6,7 +6,7 @@ import Chat, { IChat } from "../models/chatModel";
 
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
-const accessUserChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+const accessChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const { userId: otherUserId } = req.body;
 
   // in the current version of the app
@@ -42,7 +42,7 @@ const accessUserChat = asyncHandler(async (req: Request, res: Response): Promise
   }
 });
 
-const fetchUserChats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+const fetchChats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const allUserChats: IChat[] = await Chat.find({
     users: { $elemMatch: { $eq: (req as IAuthenticatedRequest).user._id } },
   })
@@ -103,4 +103,4 @@ const updateGroupChat = asyncHandler(async (req: Request, res: Response): Promis
   res.json({ chat: updatedChat });
 });
 
-export { accessUserChat, fetchUserChats, createGroupChat, updateGroupChat };
+export { accessChat, fetchChats, createGroupChat, updateGroupChat };

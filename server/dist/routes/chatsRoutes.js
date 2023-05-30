@@ -16,11 +16,11 @@ router.post("/", (0, express_validator_1.check)("userId")
     .notEmpty()
     .withMessage("Please add required fields")
     .isMongoId()
-    .withMessage("Received invalid fields"), authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.accessUserChat);
+    .withMessage("Received invalid fields"), authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.accessChat);
 // @desc		    Get all the chats of a given user
 // @route		    GET /api/chats
 // @access      Private
-router.get("/", authMiddleware_1.default, chatsController_1.fetchUserChats);
+router.get("/", authMiddleware_1.default, chatsController_1.fetchChats);
 // @desc		    Create a new group chat
 // @route		    POST /api/chats/groups
 // @access      Private
