@@ -8,7 +8,7 @@ const chatSchema = new mongoose_1.Schema({
         minLength: 1,
         maxLength: 200,
     },
-    users: [
+    participants: [
         {
             type: mongoose_1.Types.ObjectId,
             ref: "User",

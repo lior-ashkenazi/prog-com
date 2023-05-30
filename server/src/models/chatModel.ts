@@ -2,7 +2,7 @@ import { Document, Schema, Types, model, Model } from "mongoose";
 
 export interface IChat extends Document {
   chatName: string;
-  users: Schema.Types.ObjectId[];
+  participants: Schema.Types.ObjectId[];
   isGroupChat: boolean;
   groupAdmin?: Schema.Types.ObjectId | null;
   // TODO - maybe notification of last message
@@ -16,7 +16,7 @@ const chatSchema: Schema = new Schema<IChat>(
       minLength: 1,
       maxLength: 200,
     },
-    users: [
+    participants: [
       {
         type: Types.ObjectId,
         ref: "User",

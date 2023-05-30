@@ -24,7 +24,7 @@ const sendMessage = (0, express_async_handler_1.default)((req, res) => __awaiter
         res.status(404);
         throw new Error("Resource not found");
     }
-    if (!chat.users.includes(req.user._id)) {
+    if (!chat.participants.includes(req.user._id)) {
         res.status(403);
         throw new Error("Unauthorized request");
     }
@@ -39,7 +39,7 @@ const sendMessage = (0, express_async_handler_1.default)((req, res) => __awaiter
     newMessage = yield newMessage.populate("sender", "userName avatar email");
     newMessage = yield newMessage.populate("chatId");
     newMessage = yield newMessage.populate({
-        path: "chatId.users",
+        path: "chatId.participants",
         select: "username avatar email",
     });
     // TODO Latest message feature
@@ -53,7 +53,7 @@ const fetchMessages = (0, express_async_handler_1.default)((req, res) => __await
         res.status(404);
         throw new Error("Resource not found");
     }
-    if (!chat.users.includes(req.user._id)) {
+    if (!chat.participants.includes(req.user._id)) {
         res.status(403);
         throw new Error("Unauthorized request");
     }

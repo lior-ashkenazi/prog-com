@@ -17,7 +17,7 @@ const sendMessage = asyncHandler(async (req: Request, res: Response): Promise<vo
     throw new Error("Resource not found");
   }
 
-  if (!chat.users.includes((req as IAuthenticatedRequest).user._id)) {
+  if (!chat.participants.includes((req as IAuthenticatedRequest).user._id)) {
     res.status(403);
     throw new Error("Unauthorized request");
   }
@@ -34,7 +34,7 @@ const sendMessage = asyncHandler(async (req: Request, res: Response): Promise<vo
   newMessage = await newMessage.populate("sender", "userName avatar email");
   newMessage = await newMessage.populate("chatId");
   newMessage = await newMessage.populate({
-    path: "chatId.users",
+    path: "chatId.participants",
     select: "username avatar email",
   });
   // TODO Latest message feature
@@ -51,7 +51,7 @@ const fetchMessages = asyncHandler(async (req: Request, res: Response): Promise<
     throw new Error("Resource not found");
   }
 
-  if (!chat.users.includes((req as IAuthenticatedRequest).user._id)) {
+  if (!chat.participants.includes((req as IAuthenticatedRequest).user._id)) {
     res.status(403);
     throw new Error("Unauthorized request");
   }

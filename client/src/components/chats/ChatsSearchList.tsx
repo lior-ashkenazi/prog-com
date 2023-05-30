@@ -13,11 +13,11 @@ const ChatsSearchList = ({ input }: ChatsSearchListProps) => {
   console.log(data);
 
   const potentialChat = (user: User, index: number): Chat => {
-    return { _id: index.toString(), chatName: "", users: [user], isGroupChat: false };
+    return { _id: index.toString(), chatName: "", participants: [user], isGroupChat: false };
   };
 
   const renderList = () =>
-    data?.users.map((user: User, index: number) => (
+    data?.participants.map((user: User, index: number) => (
       <ChatsListItem chat={potentialChat(user, index)} />
     ));
 
