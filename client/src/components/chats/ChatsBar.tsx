@@ -12,10 +12,10 @@ const ChatsBar = () => {
 
   return (
     <>
-      <div className="col-span-1">
+      <div className="col-span-1 border-r border-b">
         <SearchBar input={searchInput} onChange={handleChangeSearchInput} />
       </div>
-      <div className="col-span-1 overflow-y-auto">
+      <div className="col-span-1 overflow-y-auto border-r">
         {!searchInput ? <UsersList /> : <SearchList input={searchInput} />}
       </div>
     </>

@@ -1,5 +1,6 @@
 import PageHeader from "../components/chats/PageHeader";
 import ChatsBar from "../components/chats/ChatsBar";
+import ChatBox from "../components/chats/ChatBox";
 
 const ChatsPage = () => {
   return (
@@ -10,8 +11,7 @@ const ChatsPage = () => {
       <PageHeader />
       <div className="grid grid-cols-3 grid-rows-[auto_1fr] grid-flow-col overflow-y-hidden">
         <ChatsBar />
-        <div className="bg-green-900 col-span-2">3</div>
-        <div className="bg-orange-900 col-span-2">4</div>
+        <ChatBox />
       </div>
     </div>
   );

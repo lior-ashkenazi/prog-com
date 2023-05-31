@@ -50,7 +50,7 @@ export function isUserCredentialsError(obj: object): obj is UserCredentialsError
 export default store;
 
 export { setToken, removeToken } from "./slices/authSlice";
-export { setUser, setSelectedChat, setChats } from "./slices/appSlice";
+export { setUser, setSelectedChat } from "./slices/appSlice";
 
 export const {
   useRegisterUserMutation,

@@ -1,41 +1,25 @@
-import { useSelector } from "react-redux";
-
+import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
-import { getShortFormatDate } from "../../utils/formatDate";
-import { RootState, useAccessChatMutation } from "../../store";
+import { useAccessChatMutation } from "../../store";
+import { getShortFormatDate, getOtherUserId, getChatName } from "../../utils";
 
 interface ListItemProps {
+  user: User;
   chat: Chat;
   itemIndex: number;
   isClicked: boolean;
   handleClickedColor: (index: number) => void;
 }
 
-const ListItem = ({ chat, itemIndex, isClicked, handleClickedColor }: ListItemProps) => {
-  const user = useSelector((state) => (state as RootState).app.user);
-
-  const userId = user ? user._id : "";
-  const otherUserId =
-    userId === chat.participants[0]._id
-      ? chat.participants[1].userName
-      : chat.participants[0].userName;
-
+const ListItem = ({ user, chat, itemIndex, isClicked, handleClickedColor }: ListItemProps) => {
   const [accessChat] = useAccessChatMutation();
 
   const handleClick = async () => {
     handleClickedColor(itemIndex);
 
-    // try {
-    //   await accessChat(otherUserId).unwrap();
-    // } catch (error) {
-    //   console.error(error);
-    // }
-  };
+    const otherUserId = getOtherUserId(user, chat);
 
-  const renderChatName = (chat: Chat) => {
-    if (chat.isGroupChat) return chat.chatName;
-
-    return otherUserId;
+    await accessChat(otherUserId).unwrap();
   };
 
   return (
@@ -46,7 +30,7 @@ const ListItem = ({ chat, itemIndex, isClicked, handleClickedColor }: ListItemPr
       onClick={handleClick}
     >
       <span className="flex flex-col text-left">
-        <span className="font-semibold text-lg">{renderChatName(chat)}</span>
+        <span className="font-semibold text-lg">{getChatName(user, chat)}</span>
         <span className="text-sm text-opacity-60 text-gray-900">Maybe last message</span>
       </span>
       <span
