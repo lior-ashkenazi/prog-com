@@ -42,6 +42,10 @@ const appSlice = createSlice({
       .addMatcher(usersEndpoints.endpoints.authUser.matchFulfilled, (state, action) => {
         state.user = action.payload.user;
       })
+      .addMatcher(chatsEndpoints.endpoints.accessChat.matchFulfilled, (state, action) => {
+        // accessChat returns an object with property "chat"
+        state.selectedChat = action.payload.chat;
+      })
       .addMatcher(chatsEndpoints.endpoints.fetchChats.matchFulfilled, (state, action) => {
         state.chats = action.payload.chats;
       });

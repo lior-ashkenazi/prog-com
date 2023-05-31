@@ -13,10 +13,10 @@ import {
 export const chatsEndpoints = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     accessChat: builder.mutation<AccessChatResponse, AccessChatRequest>({
-      query: (userId) => ({
+      query: (otherUserId) => ({
         url: "chats",
         method: "POST",
-        body: { userId }, // otherUserId!
+        body: { userId: otherUserId },
       }),
       invalidatesTags: (result) => {
         if (result?.type === "new") {
