@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { LoadingContext } from "../../context/LoadingContext";
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
 import { useAccessChatMutation } from "../../store";
@@ -12,10 +14,12 @@ interface ListItemProps {
 }
 
 const ListItem = ({ user, chat, itemIndex, isClicked, handleClickedColor }: ListItemProps) => {
+  const { setChatBoxIsLoading } = useContext(LoadingContext);
   const [accessChat] = useAccessChatMutation();
 
   const handleClick = async () => {
     handleClickedColor(itemIndex);
+    setChatBoxIsLoading(true);
 
     const otherUserId = getOtherUserId(user, chat);
 

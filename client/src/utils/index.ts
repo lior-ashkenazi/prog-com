@@ -7,9 +7,6 @@ const getShortFormatDate = (date: Date) => {
 };
 
 const getOtherUserAttribute = (user: User, chat: Chat, attr: "_id" | "userName") => {
-  console.log(user);
-  console.log(chat);
-
   if (chat.participants.length === 1) return chat.participants[0][attr];
   return user._id === chat.participants[0]._id
     ? chat.participants[1][attr]
