@@ -1,5 +1,5 @@
-const ChatsUserList = () => {
+const UsersList = () => {
   return <div className="p-3 overscroll-y-auto">ChatsUserList</div>;
 };
 
-export default ChatsUserList;
+export default UsersList;

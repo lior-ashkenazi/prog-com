@@ -4,11 +4,11 @@ import { Chat } from "../../types/chatTypes";
 import { getShortFormatDate } from "../../utils/formatDate";
 import { RootState } from "../../store";
 
-interface ChatsListItemProps {
+interface ListItemProps {
   chat: Chat;
 }
 
-const ChatsListItem = ({ chat }: ChatsListItemProps) => {
+const ListItem = ({ chat }: ListItemProps) => {
   const user = useSelector((state) => (state as RootState).app.user);
 
   const renderChatName = (chat: Chat) => {
@@ -36,4 +36,4 @@ const ChatsListItem = ({ chat }: ChatsListItemProps) => {
   );
 };
 
-export default ChatsListItem;
+export default ListItem;

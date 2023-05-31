@@ -1,7 +1,7 @@
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-const ChatsListSkeleton = () => {
+const ListSkeleton = () => {
   const skeletonCount = 10;
 
   const skeletons = Array.from({ length: skeletonCount }, (_, index) => (
@@ -11,4 +11,4 @@ const ChatsListSkeleton = () => {
   return <div>{skeletons}</div>;
 };
 
-export default ChatsListSkeleton;
+export default ListSkeleton;
