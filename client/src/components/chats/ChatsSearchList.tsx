@@ -10,7 +10,6 @@ interface ChatsSearchListProps {
 
 const ChatsSearchList = ({ input }: ChatsSearchListProps) => {
   const { data, isLoading } = useFetchUsersQuery(input);
-  console.log(data);
 
   const potentialChat = (user: User, index: number): Chat => {
     return { _id: index.toString(), chatName: "", participants: [user], isGroupChat: false };
