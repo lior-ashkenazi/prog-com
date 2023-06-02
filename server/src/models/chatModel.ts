@@ -4,7 +4,7 @@ export interface IChat extends Document {
   chatName: string;
   participants: Schema.Types.ObjectId[];
   isGroupChat: boolean;
-  groupAdmin?: Schema.Types.ObjectId | null;
+  groupAdmin?: Schema.Types.ObjectId;
   // TODO - maybe notification of last message
 }
 
@@ -29,18 +29,8 @@ const chatSchema: Schema = new Schema<IChat>(
 
     groupAdmin: {
       type: Types.ObjectId,
+      required: false,
       ref: "User",
-      validate: [
-        {
-          validator: function (this: IChat, value: Types.ObjectId) {
-            if (!this.isGroupChat) {
-              return null;
-            }
-            return value ? true : false;
-          },
-          message: "groupAdmin is required for group chats",
-        },
-      ],
     },
   },
   { timestamps: true }

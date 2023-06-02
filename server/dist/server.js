@@ -57,8 +57,8 @@ io.on("connection", (socket) => {
     });
     // Join chat
     socket.on("access chat", (chat) => {
-        socket.join(chat);
-        console.log(`User accessed chat ${chat}`);
+        socket.join(chat._id);
+        console.log(`User accessed chat ${chat._id}`);
     });
     // Send new message
     socket.on("send message", (newMessage) => {
@@ -72,14 +72,14 @@ io.on("connection", (socket) => {
                 return;
             socket.in(user._id).emit("message received", newMessage);
         });
-        // Start typing
-        socket.on("start typing", (chat) => {
-            socket.in(chat).emit("start typing");
-        });
-        // Stop typing
-        socket.on("stop typing", (chat) => {
-            socket.in(chat).emit("stop typing");
-        });
+    });
+    // Start typing
+    socket.on("start typing", (chat, user) => {
+        socket.in(chat).emit(`${user.userName} start typing`);
+    });
+    // Stop typing
+    socket.on("stop typing", (chat, user) => {
+        socket.in(chat).emit(`${user.userName} stop typing`);
     });
     socket.off("setup", (user) => {
         console.log("USER DISCONNECTED");

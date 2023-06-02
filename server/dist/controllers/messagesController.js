@@ -28,13 +28,8 @@ const sendMessage = (0, express_async_handler_1.default)((req, res) => __awaiter
         res.status(403);
         throw new Error("Unauthorized request");
     }
-    const messageData = {
-        chatId,
-        sender: req.user._id,
-        content,
-        mode,
-        language,
-    };
+    const messageData = Object.assign({ chatId, sender: req.user._id, content,
+        mode }, (language && { language }));
     let newMessage = yield messageModel_1.default.create(messageData);
     newMessage = yield newMessage.populate("sender", "userName avatar email");
     newMessage = yield newMessage.populate("chatId");

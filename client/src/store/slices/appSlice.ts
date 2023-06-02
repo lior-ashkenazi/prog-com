@@ -7,12 +7,12 @@ import { Chat } from "../../types/chatTypes";
 
 interface AppState {
   user: User | null;
-  selectedChat: Chat | null;
+  chat: Chat | null;
 }
 
 const initialState: AppState = {
   user: null,
-  selectedChat: null,
+  chat: null,
 };
 
 const appSlice = createSlice({
@@ -22,8 +22,8 @@ const appSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
-    setSelectedChat: (state, action: PayloadAction<Chat>) => {
-      state.selectedChat = action.payload;
+    setChat: (state, action: PayloadAction<Chat>) => {
+      state.chat = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -39,11 +39,11 @@ const appSlice = createSlice({
       })
       .addMatcher(chatsEndpoints.endpoints.accessChat.matchFulfilled, (state, action) => {
         // accessChat returns an object with property "chat"
-        state.selectedChat = action.payload.chat;
+        state.chat = action.payload.chat;
       });
   },
 });
 
-export const { setUser, setSelectedChat } = appSlice.actions;
+export const { setUser, setChat } = appSlice.actions;
 
 export default appSlice.reducer;

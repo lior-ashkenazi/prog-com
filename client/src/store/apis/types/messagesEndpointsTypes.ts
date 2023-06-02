@@ -1,10 +1,8 @@
-import { Message, MessageModes } from "../../../types/messageTypes";
+import { Message } from "../../../types/messageTypes";
 
-export type SendMessageRequest = {
-  chatId: string;
-  content: string;
-} & MessageModes;
-
+export type SendMessageRequest =
+  | { mode: string; content: string; chatId: string; sender: string }
+  | { mode: string; content: string; language: string; chatId: string; sender: string };
 export type SendMessageResponse = {
   message: Message;
 };

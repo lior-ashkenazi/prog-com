@@ -27,7 +27,6 @@ export enum ELanguage {
   scala,
   kotlin,
   rust,
-  php,
   typescript,
 }
 
@@ -63,7 +62,6 @@ const messageSchema: Schema = new Schema<IMessage>(
         "scala",
         "kotlin",
         "rust",
-        "php",
         "typescript",
       ],
     },

@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRegisterUserMutation, isUserCredentialsError } from "../../store";
+import { useRegisterUserMutation, isServerError } from "../../store";
 
 const registerFormValidationSchema = z
   .object({
@@ -45,7 +45,7 @@ const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) =
       await registerUser(userCredentials).unwrap();
       onSubmitForm();
     } catch (error) {
-      if (error && typeof error === "object" && isUserCredentialsError(error)) {
+      if (error && typeof error === "object" && isServerError(error)) {
         const msg = error.data.message;
         if (error.data.message.startsWith("Username")) {
           setError("userName", { type: "manual", message: msg });

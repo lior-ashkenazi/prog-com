@@ -22,8 +22,7 @@ var ELanguage;
     ELanguage[ELanguage["scala"] = 9] = "scala";
     ELanguage[ELanguage["kotlin"] = 10] = "kotlin";
     ELanguage[ELanguage["rust"] = 11] = "rust";
-    ELanguage[ELanguage["php"] = 12] = "php";
-    ELanguage[ELanguage["typescript"] = 13] = "typescript";
+    ELanguage[ELanguage["typescript"] = 12] = "typescript";
 })(ELanguage = exports.ELanguage || (exports.ELanguage = {}));
 const messageSchema = new mongoose_1.Schema({
     sender: {
@@ -55,7 +54,6 @@ const messageSchema = new mongoose_1.Schema({
             "scala",
             "kotlin",
             "rust",
-            "php",
             "typescript",
         ],
     },

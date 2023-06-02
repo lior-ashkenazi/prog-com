@@ -27,7 +27,7 @@ const sendMessage = asyncHandler(async (req: Request, res: Response): Promise<vo
     sender: (req as IAuthenticatedRequest).user._id,
     content,
     mode,
-    language,
+    ...(language && { language }),
   };
 
   let newMessage: IMessage = await Message.create(messageData);

@@ -7,6 +7,8 @@ import { Server } from "socket.io";
 
 // Interfaces
 import { IUser } from "./models/userModel";
+import { IMessage } from "./models/messageModel";
+import { IChat } from "./models/chatModel";
 
 // Error handling
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
@@ -70,8 +72,8 @@ io.on("connection", (socket) => {
 
   // Join chat
   socket.on("access chat", (chat) => {
-    socket.join(chat);
-    console.log(`User accessed chat ${chat}`);
+    socket.join(chat._id);
+    console.log(`User accessed chat ${chat._id}`);
   });
 
   // Send new message
@@ -85,19 +87,19 @@ io.on("connection", (socket) => {
       if (user._id === newMessage.sender) return;
       socket.in(user._id).emit("message received", newMessage);
     });
-
-    // Start typing
-    socket.on("start typing", (chat) => {
-      socket.in(chat).emit("start typing");
-    });
-
-    // Stop typing
-    socket.on("stop typing", (chat) => {
-      socket.in(chat).emit("stop typing");
-    });
   });
 
-  socket.off("setup", (user: IUser) => {
+  // Start typing
+  socket.on("start typing", (chat, user) => {
+    socket.in(chat).emit(`${user.userName} start typing`);
+  });
+
+  // Stop typing
+  socket.on("stop typing", (chat, user) => {
+    socket.in(chat).emit(`${user.userName} stop typing`);
+  });
+
+  socket.off("setup", (user) => {
     console.log("USER DISCONNECTED");
     socket.leave(user._id);
   });

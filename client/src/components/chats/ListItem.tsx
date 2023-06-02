@@ -28,7 +28,7 @@ const ListItem = ({ user, chat, itemIndex, isClicked, handleClickedColor }: List
 
   return (
     <button
-      className={`inline-block px-4 py-1 h-20 flex items-center justify-between hover:bg-gray-200 active:bg-gray-300 transition-colors rounded-t-sm border-b border-gray-400 border-opacity-50 last:border-b-0 ${
+      className={`inline-block px-6 py-1 h-20 flex items-center justify-between hover:bg-gray-200 active:bg-gray-300 transition-colors rounded-t-sm border-b border-gray-400 border-opacity-50 last:border-b-0 ${
         isClicked && "bg-gray-300 hover:bg-gray-300"
       }`}
       onClick={handleClick}

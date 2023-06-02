@@ -36,7 +36,7 @@ const SearchList = ({ input }: SearchListProps) => {
     ));
 
   return (
-    <div className="p-3 flex flex-col">{!isLoading && user ? renderList() : <ListSkeleton />}</div>
+    <div className="py-3 flex flex-col">{!isLoading && user ? renderList() : <ListSkeleton />}</div>
   );
 };
 

@@ -25,7 +25,7 @@ export type AppDispatch = typeof store.dispatch;
 
 export type RootState = ReturnType<typeof store.getState>;
 
-type UserCredentialsError = {
+type ServerError = {
   status: number;
   data: {
     message: string;
@@ -33,7 +33,7 @@ type UserCredentialsError = {
   };
 };
 
-export function isUserCredentialsError(obj: object): obj is UserCredentialsError {
+export function isServerError(obj: object): obj is ServerError {
   return (
     typeof obj === "object" &&
     obj !== null &&
@@ -50,7 +50,7 @@ export function isUserCredentialsError(obj: object): obj is UserCredentialsError
 export default store;
 
 export { setToken, removeToken } from "./slices/authSlice";
-export { setUser, setSelectedChat } from "./slices/appSlice";
+export { setUser, setChat } from "./slices/appSlice";
 
 export const {
   useRegisterUserMutation,

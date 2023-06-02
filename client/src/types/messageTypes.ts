@@ -1,13 +1,13 @@
 export type Message = {
   _id: string;
+  chatId: string;
   sender: string;
   content: string;
-  chatId: string;
-} & MessageModes;
+  mode: MessageModes;
+  language?: MessageCodeLanguage;
+};
 
-export type MessageModes =
-  | { mode: "text" | "math" }
-  | { mode: "code"; language: MessageCodeLanguage };
+export type MessageModes = "text" | "math" | "code";
 
 export type MessageCodeLanguage =
   | "cpp"
@@ -22,5 +22,4 @@ export type MessageCodeLanguage =
   | "scala"
   | "kotlin"
   | "rust"
-  | "php"
   | "typescript";

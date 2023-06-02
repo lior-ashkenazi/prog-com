@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useLoginUserMutation, isUserCredentialsError } from "../../store";
+import { useLoginUserMutation, isServerError } from "../../store";
 
 const loginFormValidationSchema = z.object({
   usernameOrEmail: z.string().min(1, { message: "Username or email is required" }),
@@ -35,7 +35,7 @@ const LoginForm = ({ onClickChangeForm, onSubmitForm }: LoginFormsProps) => {
       await loginUser(userCredentials).unwrap();
       onSubmitForm();
     } catch (error) {
-      if (error && typeof error === "object" && isUserCredentialsError(error)) {
+      if (error && typeof error === "object" && isServerError(error)) {
         const msg = error.data.message;
         if (error.data.message.startsWith("Username")) {
           setError("usernameOrEmail", { type: "manual", message: msg });
