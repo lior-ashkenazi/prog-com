@@ -12,6 +12,7 @@ import { ruby } from "@codemirror/legacy-modes/mode/ruby";
 import { swift } from "@codemirror/legacy-modes/mode/swift";
 import { go } from "@codemirror/legacy-modes/mode/go";
 import { rust } from "@codemirror/legacy-modes/mode/rust";
+import EmojiPicker from "emoji-picker-react";
 
 import { User } from "../../types/userTypes";
 import { MessageModes } from "../../types/messageTypes";
@@ -52,6 +53,7 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   const [math, setMath] = useState<string>("");
   const [code, setCode] = useState<string>("");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("C++");
+  const [openEmoji, setOpenEmoji] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -131,28 +133,58 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   };
 
   return (
-    <form className="p-8 flex" onSubmit={handleSubmit}>
+    <form className="py-4 px-8 flex flex-col relative" onSubmit={handleSubmit}>
+      <div
+        className={`absolute -top-72 left-0 transition-transform origin-bottom-left scale-y-${
+          openEmoji ? "1" : "0"
+        }`}
+      >
+        <EmojiPicker
+          width="20rem"
+          height="18rem"
+          previewConfig={{ showPreview: false }}
+          onEmojiClick={(emojiData) => setText(text + emojiData.emoji)}
+        />
+      </div>
+
       <div className="flex-grow relative my-1 mx-6">
         <button
-          className={`p-1 ${mode === "text" && "bg-gray-300"} rounded`}
+          className={`p-1 ${mode === "text" && "bg-gray-300"} rounded transition-colors`}
           onClick={() => setMode("text")}
         >
           <BsChatDots style={{ color: "#1e1b4b" }} />
         </button>
         <button
-          className={`p-1 ${mode === "math" && "bg-gray-300"} rounded`}
-          onClick={() => setMode("math")}
+          className={`p-1 ${mode === "math" && "bg-gray-300"} rounded transition-colors`}
+          onClick={() => {
+            setOpenEmoji(false);
+            setMode("math");
+          }}
         >
           <TbMathFunction style={{ color: "#1e1b4b" }} />
         </button>
         <button
-          className={`p-1 ${mode === "code" && "bg-gray-300"} rounded`}
-          onClick={() => setMode("code")}
+          className={`p-1 ${mode === "code" && "bg-gray-300"} rounded transition-colors`}
+          onClick={() => {
+            setOpenEmoji(false);
+            setMode("code");
+          }}
         >
           <BsCodeSlash style={{ color: "#1e1b4b" }} />
         </button>
-        <button className="absolute -left-6 top-6" disabled={mode !== "text"}>
-          <BsEmojiSmile style={{ color: `${mode === "text" ? "#1e1b4b" : "#f3f4f6"}` }} />
+        <button
+          className="absolute -left-6 top-6"
+          onClick={() => setOpenEmoji(!openEmoji)}
+          disabled={mode !== "text"}
+        >
+          <BsEmojiSmile
+            style={{
+              color: `${mode === "text" ? (openEmoji ? "#a5b4fc" : "#1e1b4b") : "#f3f4f6"}`,
+              transition: "color",
+              transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+              transitionDuration: "150ms",
+            }}
+          />
         </button>
         {renderInput()}
         <button type="submit" className={`absolute -right-8 bottom-${mode === "text" ? "1" : "0"}`}>
