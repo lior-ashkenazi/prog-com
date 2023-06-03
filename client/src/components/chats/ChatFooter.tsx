@@ -55,6 +55,8 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("C++");
   const [openEmoji, setOpenEmoji] = useState<boolean>(false);
 
+  console.log(mode);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -133,7 +135,7 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   };
 
   return (
-    <form className="py-4 px-8 flex flex-col relative" onSubmit={handleSubmit}>
+    <form id="messageForm" className="py-4 px-8 flex flex-col relative" onSubmit={handleSubmit}>
       <div
         className={`absolute -top-72 left-0 transition-transform origin-bottom-left scale-y-${
           openEmoji ? "1" : "0"
@@ -149,12 +151,14 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
 
       <div className="flex-grow relative my-1 mx-6">
         <button
+          type="button"
           className={`p-1 ${mode === "text" && "bg-gray-300"} rounded transition-colors`}
           onClick={() => setMode("text")}
         >
           <BsChatDots style={{ color: "#1e1b4b" }} />
         </button>
         <button
+          type="button"
           className={`p-1 ${mode === "math" && "bg-gray-300"} rounded transition-colors`}
           onClick={() => {
             setOpenEmoji(false);
@@ -164,6 +168,7 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
           <TbMathFunction style={{ color: "#1e1b4b" }} />
         </button>
         <button
+          type="button"
           className={`p-1 ${mode === "code" && "bg-gray-300"} rounded transition-colors`}
           onClick={() => {
             setOpenEmoji(false);
@@ -173,13 +178,13 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
           <BsCodeSlash style={{ color: "#1e1b4b" }} />
         </button>
         <button
-          className="absolute -left-6 top-6"
+          className={`absolute -left-6 top-6 ${mode !== "text" && "opacity-0"}`}
           onClick={() => setOpenEmoji(!openEmoji)}
           disabled={mode !== "text"}
         >
           <BsEmojiSmile
             style={{
-              color: `${mode === "text" ? (openEmoji ? "#a5b4fc" : "#1e1b4b") : "#f3f4f6"}`,
+              color: openEmoji ? "#a5b4fc" : "#1e1b4b",
               transition: "color",
               transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
               transitionDuration: "150ms",
@@ -187,7 +192,15 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
           />
         </button>
         {renderInput()}
-        <button type="submit" className={`absolute -right-8 bottom-${mode === "text" ? "1" : "0"}`}>
+        <button
+          type="submit"
+          className={`absolute -right-8 bottom-${mode === "text" ? "1" : "0"}`}
+          disabled={
+            (mode === "text" && text === "") ||
+            (mode === "math" && math === "") ||
+            (mode === "code" && code === "")
+          }
+        >
           <IoSend style={{ color: "#1e1b4b" }} />
         </button>
       </div>
