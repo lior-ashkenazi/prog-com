@@ -1,14 +1,7 @@
-import { useEffect, useState, useContext } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-import { LoadingContext } from "../../context/LoadingContext";
-import {
-  RootState,
-  useFetchMessagesQuery,
-  useSendMessageMutation,
-  isServerError,
-} from "../../store";
+import { useFetchMessagesQuery, useSendMessageMutation, isServerError } from "../../store";
 
 import ChatHeader from "./ChatHeader";
 import ChatBody from "./ChatBody";
@@ -21,25 +14,21 @@ import { SendMessageType } from "./ChatFooter";
 
 const ENDPOINT = import.meta.env.VITE_ENDPOINT as string;
 
-const ChatBox = () => {
-  const user: User | null = useSelector((state) => (state as RootState).app.user);
-  const chat: Chat | null = useSelector((state) => (state as RootState).app.chat);
+interface ChatBoxProps {
+  user: User;
+  chat: Chat;
+}
 
+const ChatBox = ({ user, chat }: ChatBoxProps) => {
   const {
     data: messages,
     refetch: refetchMessages,
     error: fetchMessagesError,
-  } = useFetchMessagesQuery(chat ? chat._id : "");
+  } = useFetchMessagesQuery(chat._id);
   const [sendMessage, { error: sendError }] = useSendMessageMutation();
-  // TODO
 
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const { chatBoxIsLoading, setChatBoxIsLoading } = useContext(LoadingContext);
   const [sendMessageError, setSendMessageError] = useState<string>("");
-
-  useEffect(() => {
-    setChatBoxIsLoading(!!chat);
-  }, [chat, setChatBoxIsLoading]);
 
   useEffect(() => {
     const socket = io(ENDPOINT);
@@ -77,25 +66,13 @@ const ChatBox = () => {
     }
   };
 
-  return chat && user ? (
+  return (
     <>
-      <>
-        <ChatHeader user={user} chat={chat} />
-        <div className="col-span-2 grid grid grid-rows-[1fr_auto]">
-          <ChatBody />
-          <ChatFooter user={user} chat={chat} handleSendMessage={handleSendMessage} />
-        </div>
-      </>
-    </>
-  ) : (
-    <>
-      {chatBoxIsLoading ? (
-        <div className="col-span-2 row-span-full bg-blue-900"></div>
-      ) : (
-        <div className="col-span-2 row-span-full flex items-center justify-center">
-          <span className="font-medium">Select a chat to start messaging</span>
-        </div>
-      )}
+      <ChatHeader user={user} chat={chat} />
+      <div className="col-span-2 grid grid grid-rows-[1fr_auto]">
+        <ChatBody />
+        <ChatFooter user={user} chat={chat} handleSendMessage={handleSendMessage} />
+      </div>
     </>
   );
 };

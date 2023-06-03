@@ -1,7 +1,7 @@
 import { LoadingProvider } from "../context/LoadingContext";
 import PageHeader from "../components/chats/PageHeader";
 import ChatsBar from "../components/chats/ChatsBar";
-import ChatBox from "../components/chats/ChatBox";
+import ChatBoxContainer from "../components/chats/ChatBoxContainer";
 
 const ChatsPage = () => {
   return (
@@ -13,7 +13,7 @@ const ChatsPage = () => {
         <PageHeader />
         <div className="grid grid-cols-3 grid-rows-[auto_1fr] grid-flow-col overflow-y-hidden">
           <ChatsBar />
-          <ChatBox />
+          <ChatBoxContainer />
         </div>
       </div>
     </LoadingProvider>
