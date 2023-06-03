@@ -1,28 +1,16 @@
 import { useState } from "react";
-import { BsEmojiSmile, BsChatDots, BsCodeSlash } from "react-icons/bs";
-import { TbMathFunction } from "react-icons/tb";
-import { IoSend } from "react-icons/io5";
-import { addStyles, EditableMathField } from "react-mathquill";
-import CodeMirror from "@uiw/react-codemirror";
-import { StreamLanguage } from "@codemirror/language";
-import { cpp, java, c, csharp, scala, kotlin } from "@codemirror/legacy-modes/mode/clike";
-import { python } from "@codemirror/legacy-modes/mode/python";
-import { javascript, typescript } from "@codemirror/legacy-modes/mode/javascript";
-import { ruby } from "@codemirror/legacy-modes/mode/ruby";
-import { swift } from "@codemirror/legacy-modes/mode/swift";
-import { go } from "@codemirror/legacy-modes/mode/go";
-import { rust } from "@codemirror/legacy-modes/mode/rust";
-import EmojiPicker from "emoji-picker-react";
+import { BsEmojiSmile } from "react-icons/bs";
 
 import { User } from "../../types/userTypes";
-import { MessageModes } from "../../types/messageTypes";
+import { MessageModes, SendMessageType } from "../../types/messageTypes";
 import { Chat } from "../../types/chatTypes";
 
-addStyles();
-
-export type SendMessageType =
-  | { mode: string; content: string; chatId: string; sender: string }
-  | { mode: string; content: string; language: string; chatId: string; sender: string };
+import TextArea from "./TextArea";
+import MathArea from "./MathArea";
+import CodeArea from "./CodeArea";
+import TextEmojiPicker from "./TextEmojiPicker";
+import ModeButtons from "./ModeButtons";
+import SendMessageButton from "./SendMessageButton";
 
 interface ChatFooterProps {
   user: User;
@@ -31,22 +19,6 @@ interface ChatFooterProps {
   //   sendMessageLoading: boolean;
 }
 
-const languagesMap = {
-  "C++": cpp,
-  Java: java,
-  Python: python,
-  C: c,
-  "C#": csharp,
-  JavaScript: javascript,
-  Ruby: ruby,
-  Swift: swift,
-  Go: go,
-  Scala: scala,
-  Kotlin: kotlin,
-  Rust: rust,
-  TypeScript: typescript,
-};
-
 const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   const [mode, setMode] = useState<MessageModes>("text");
   const [text, setText] = useState<string>("");
@@ -54,8 +26,6 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   const [code, setCode] = useState<string>("");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("C++");
   const [openEmoji, setOpenEmoji] = useState<boolean>(false);
-
-  console.log(mode);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -83,100 +53,28 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   const renderInput = () => {
     switch (mode) {
       case "text":
-        return (
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Type a message."
-            className="h-24 py-2 px-3 w-full rounded-md border-0 outline-none resize-none"
-          />
-        );
+        return <TextArea text={text} setText={setText} />;
       case "math":
-        return (
-          <EditableMathField
-            latex={math}
-            onChange={(mathField) => setMath(mathField.latex())}
-            config={{ autoCommands: "pi theta sqrt sum", autoOperatorNames: "sin cos lim" }}
-            className="h-16 py-5 px-3 w-full rounded-md border-0 outline-none text-justify"
-          />
-        );
+        return <MathArea math={math} setMath={setMath} />;
       case "code":
         return (
-          <div className="flex relative">
-            <CodeMirror
-              value={code}
-              height="150px"
-              theme="dark"
-              readOnly={false}
-              extensions={[
-                StreamLanguage.define(languagesMap[selectedLanguage as keyof typeof languagesMap]),
-              ]}
-              onChange={(value) => {
-                setCode(value);
-              }}
-              className="w-full rounded-md border-0 outline-none"
-            />
-            <div className="h-40 absolute right-0 -top-6">
-              <select
-                className="overflow-auto rounded-sm"
-                onChange={(e) => setSelectedLanguage(e.target.value)}
-                value={selectedLanguage}
-              >
-                {Object.keys(languagesMap).map((language) => (
-                  <option key={language} value={language}>
-                    {language}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <CodeArea
+            readOnly={false}
+            code={code}
+            setCode={setCode}
+            selectedLanguage={selectedLanguage}
+            setSelectedLanguage={setSelectedLanguage}
+          />
         );
     }
   };
 
   return (
     <form id="messageForm" className="py-4 px-8 flex flex-col relative" onSubmit={handleSubmit}>
-      <div
-        className={`absolute -top-72 left-0 transition-transform origin-bottom-left scale-y-${
-          openEmoji ? "1" : "0"
-        }`}
-      >
-        <EmojiPicker
-          width="20rem"
-          height="18rem"
-          previewConfig={{ showPreview: false }}
-          onEmojiClick={(emojiData) => setText(text + emojiData.emoji)}
-        />
-      </div>
+      <TextEmojiPicker openEmoji={openEmoji} text={text} setText={setText} />
 
       <div className="flex-grow relative my-1 mx-6">
-        <button
-          type="button"
-          className={`p-1 ${mode === "text" && "bg-gray-300"} rounded transition-colors`}
-          onClick={() => setMode("text")}
-        >
-          <BsChatDots style={{ color: "#1e1b4b" }} />
-        </button>
-        <button
-          type="button"
-          className={`p-1 ${mode === "math" && "bg-gray-300"} rounded transition-colors`}
-          onClick={() => {
-            setOpenEmoji(false);
-            setMode("math");
-          }}
-        >
-          <TbMathFunction style={{ color: "#1e1b4b" }} />
-        </button>
-        <button
-          type="button"
-          className={`p-1 ${mode === "code" && "bg-gray-300"} rounded transition-colors`}
-          onClick={() => {
-            setOpenEmoji(false);
-            setMode("code");
-          }}
-        >
-          <BsCodeSlash style={{ color: "#1e1b4b" }} />
-        </button>
+        <ModeButtons mode={mode} setMode={setMode} />
         <button
           className={`absolute -left-6 top-6 ${mode !== "text" && "opacity-0"}`}
           onClick={() => setOpenEmoji(!openEmoji)}
@@ -192,17 +90,13 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
           />
         </button>
         {renderInput()}
-        <button
-          type="submit"
-          className={`absolute -right-8 bottom-${mode === "text" ? "1" : "0"}`}
-          disabled={
-            (mode === "text" && text === "") ||
-            (mode === "math" && math === "") ||
-            (mode === "code" && code === "")
-          }
-        >
-          <IoSend style={{ color: "#1e1b4b" }} />
-        </button>
+        <SendMessageButton
+          mode={mode}
+          text={text}
+          math={math}
+          code={code}
+          setOpenEmoji={setOpenEmoji}
+        />
       </div>
     </form>
   );

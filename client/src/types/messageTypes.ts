@@ -23,3 +23,7 @@ export type MessageCodeLanguage =
   | "kotlin"
   | "rust"
   | "typescript";
+
+export type SendMessageType =
+  | { mode: string; content: string; chatId: string; sender: string }
+  | { mode: string; content: string; language: string; chatId: string; sender: string };

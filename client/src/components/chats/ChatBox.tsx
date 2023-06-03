@@ -8,9 +8,8 @@ import ChatBody from "./ChatBody";
 import ChatFooter from "./ChatFooter";
 
 import { User } from "../../types/userTypes";
+import { SendMessageType } from "../../types/messageTypes";
 import { Chat } from "../../types/chatTypes";
-
-import { SendMessageType } from "./ChatFooter";
 
 const ENDPOINT = import.meta.env.VITE_ENDPOINT as string;
 
