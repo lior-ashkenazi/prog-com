@@ -80,14 +80,11 @@ io.on("connection", (socket) => {
   socket.on("new message", (chat, newMessage) => {
     // newMessage is a IMessage that is populated
     // so newMessage.chat is well defined
-    console.log("message: " + newMessage);
-    console.log("chat: " + chat);
 
     if (!chat.participants) return console.log("chat.participants not defined");
 
     chat.participants.forEach((user: IUser) => {
-      console.log(`${user}`);
-
+      // if (user._id === newMessage.sender._id) return;
       socket.in(user._id).emit("message received", newMessage);
     });
   });

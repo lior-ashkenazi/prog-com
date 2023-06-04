@@ -37,7 +37,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   }, [data]);
 
   useEffect(() => {
-    socketRef.current = io(ENDPOINT);
+    socketRef.current = io(ENDPOINT, { forceNew: true });
     console.log(ENDPOINT);
 
     socketRef.current.emit("setup", user);
@@ -61,15 +61,15 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
 
     return () => {
       socketRef.current!.off("setup"); //eslint-disable-line
+      socketRef.current!.disconnect(); //eslint-disable-line
     };
-  }, []);
+  }, [chat, user]);
 
   const handleSendMessage = async (message: SendMessageType) => {
     try {
       const { message: populatedMessage } = await sendMessage(message).unwrap();
       setSendMessageError("");
       socketRef.current!.emit("new message", chat, populatedMessage); //eslint-disable-line
-      console.log("hello");
       setMessages((prev) => [...prev, populatedMessage]);
     } catch (error) {
       if (error && typeof error === "object" && isServerError(error)) {

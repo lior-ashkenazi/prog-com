@@ -1,4 +1,5 @@
 import { addStyles, EditableMathField } from "react-mathquill";
+import { MathComponent } from "mathjax-react";
 
 addStyles();
 
@@ -9,11 +10,13 @@ interface MathAreaProps {
 }
 
 const MathArea = ({ readOnly, math, setMath }: MathAreaProps) => {
-  return (
+  return readOnly ? (
+    <MathComponent tex={math} />
+  ) : (
     <EditableMathField
       latex={math}
       onChange={(mathField) => {
-        !readOnly && (setMath as React.Dispatch<React.SetStateAction<string>>)(mathField.latex());
+        (setMath as React.Dispatch<React.SetStateAction<string>>)(mathField.latex());
       }}
       config={{ autoCommands: "pi theta sqrt sum", autoOperatorNames: "sin cos lim" }}
       className="h-16 py-5 px-3 w-full rounded-md border-0 outline-none text-justify"
