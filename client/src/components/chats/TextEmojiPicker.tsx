@@ -1,12 +1,13 @@
-import { useEffect, useState, RefObject } from "react";
+import { useEffect, useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 
 interface TextEmojiPickerProps {
-  textRef: RefObject<HTMLTextAreaElement>;
   openEmoji: boolean;
+  text: string;
+  setText: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const TextEmojiPicker = ({ textRef, openEmoji }: TextEmojiPickerProps) => {
+const TextEmojiPicker = ({ openEmoji, text, setText }: TextEmojiPickerProps) => {
   const [displayClass, setDisplayClass] = useState<"scale-y-1" | "scale-y-0">("scale-y-0");
 
   useEffect(() => {
@@ -21,9 +22,7 @@ const TextEmojiPicker = ({ textRef, openEmoji }: TextEmojiPickerProps) => {
         width="20rem"
         height="18rem"
         previewConfig={{ showPreview: false }}
-        onEmojiClick={(emojiData) => {
-          if (textRef.current) textRef.current.value += emojiData.emoji;
-        }}
+        onEmojiClick={(emojiData) => setText(text + emojiData.emoji)}
       />
     </div>
   );

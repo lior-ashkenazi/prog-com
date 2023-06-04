@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { BsEmojiSmile } from "react-icons/bs";
 import { IoSend } from "react-icons/io5";
 
@@ -21,26 +21,24 @@ interface ChatFooterProps {
 
 const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   const [mode, setMode] = useState<MessageModes>("text");
-  const textRef = useRef<HTMLTextAreaElement>(null);
-  const mathRef = useRef<string>("");
+  const [text, setText] = useState<string>("");
+  const [math, setMath] = useState<string>("");
   const [code, setCode] = useState<string>("");
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageKeys>("cpp");
+  const [messageSent, setMessageSent] = useState<boolean>(false);
   const [openEmoji, setOpenEmoji] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!textRef.current) return;
-
     const identifiers = { chatId: chat._id, sender: user._id };
     let message;
     switch (mode) {
       case "text":
-        message = { ...identifiers, mode: "text", content: textRef.current.value };
-        textRef.current.value = "";
+        message = { ...identifiers, mode: "text", content: text };
         break;
       case "math":
-        message = { ...identifiers, mode: "math", content: mathRef.current };
+        message = { ...identifiers, mode: "math", content: math };
         break;
       case "code":
         message = {
@@ -53,17 +51,24 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
     }
 
     await handleSendMessage(message);
-    textRef.current.value = "";
-    mathRef.current = "";
-    setCode("");
+    setMessageSent(true);
   };
+
+  useEffect(() => {
+    if (messageSent) {
+      setText("");
+      setMath("");
+      setCode("");
+      setMessageSent(false);
+    }
+  }, [messageSent]);
 
   const renderInput = () => {
     switch (mode) {
       case "text":
-        return <TextArea textRef={textRef} />;
+        return <TextArea text={text} setText={setText} />;
       case "math":
-        return <MathArea readOnly={false} mathRef={mathRef} />;
+        return <MathArea readOnly={false} math={math} setMath={setMath} />;
       case "code":
         return (
           <CodeArea
@@ -79,7 +84,7 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
 
   return (
     <form id="messageForm" className="py-6 px-8 flex flex-col relative" onSubmit={handleSubmit}>
-      <TextEmojiPicker openEmoji={openEmoji} textRef={textRef} />
+      <TextEmojiPicker openEmoji={openEmoji} text={text} setText={setText} />
       <div className="absolute top-0 left-0">
         <ModeButtons mode={mode} setMode={setMode} />
       </div>
@@ -105,8 +110,8 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
           className={`absolute -right-8 bottom-0`}
           onClick={() => setOpenEmoji(false)}
           disabled={
-            (mode === "text" && textRef.current && textRef.current.value === "") ||
-            (mode === "math" && mathRef.current === "") ||
+            (mode === "text" && text === "") ||
+            (mode === "math" && math === "") ||
             (mode === "code" && code === "")
           }
         >

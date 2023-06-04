@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 import CodeMirror from "@uiw/react-codemirror";
 import { StreamLanguage } from "@codemirror/language";
 import { cpp, java, c, csharp, scala, kotlin } from "@codemirror/legacy-modes/mode/clike";
@@ -57,23 +59,30 @@ const CodeArea = ({
   selectedLanguage,
   setSelectedLanguage,
 }: CodeAreaProps) => {
-  console.log(selectedLanguage);
+  const codeRef = useRef<string>("ref");
+
+  useEffect(() => {
+    codeRef.current = code;
+  }, [code]);
 
   return (
     <div className="flex relative">
-      <div className="w-full">
+      <div
+        className="w-full"
+        onBlur={() => {
+          setCode && setCode(codeRef.current);
+        }}
+      >
         {readOnly && (
           <span className="font-semibold">{languagesDropdownMap[selectedLanguage]}</span>
         )}
         <CodeMirror
           value={code}
-          height="150px"
+          height={readOnly ? "auto" : "120px"}
           theme="dark"
           readOnly={readOnly}
           extensions={[StreamLanguage.define(languagesStreamParserMap[selectedLanguage])]}
-          onChange={(value) => {
-            (setCode as React.Dispatch<React.SetStateAction<string>>)(value);
-          }}
+          onChange={(value) => (codeRef.current = value)}
           className="w-full rounded-md border-0 outline-none"
         />
       </div>
