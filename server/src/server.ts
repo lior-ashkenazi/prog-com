@@ -61,42 +61,45 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("Socket is in action");
+  console.log("SOCKET IS IN ACTION");
 
   // Setup on
   socket.on("setup", (user: IUser) => {
     socket.join(user._id);
-    console.log(user.userName, "USER CONNECTED");
-    socket.emit("connected");
+    console.log(user.userName, " CONNECTED");
+    socket.emit("CONNECTED");
   });
 
   // Join chat
-  socket.on("access chat", (chat) => {
+  socket.on("access chat", (chat: IChat) => {
     socket.join(chat._id);
-    console.log(`User accessed chat ${chat._id}`);
+    console.log(`USER ACCESSED CHAT ${chat._id}`);
   });
 
   // Send new message
-  socket.on("send message", (newMessage) => {
-    // chatId after population in route
-    // is an OBJECT rather than ObjectId!
-    let chat = newMessage.chatId;
+  socket.on("new message", (chat, newMessage) => {
+    // newMessage is a IMessage that is populated
+    // so newMessage.chat is well defined
+    console.log("message: " + newMessage);
+    console.log("chat: " + chat);
+
     if (!chat.participants) return console.log("chat.participants not defined");
 
     chat.participants.forEach((user: IUser) => {
-      if (user._id === newMessage.sender) return;
+      console.log(`${user}`);
+
       socket.in(user._id).emit("message received", newMessage);
     });
   });
 
   // Start typing
-  socket.on("start typing", (chat, user) => {
-    socket.in(chat).emit(`${user.userName} start typing`);
+  socket.on("typing", (chat, user) => {
+    socket.in(chat._id).emit("typing", user);
   });
 
   // Stop typing
   socket.on("stop typing", (chat, user) => {
-    socket.in(chat).emit(`${user.userName} stop typing`);
+    socket.in(chat._id).emit("stop typing", user);
   });
 
   socket.off("setup", (user) => {

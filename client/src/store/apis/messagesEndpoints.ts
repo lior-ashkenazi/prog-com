@@ -14,11 +14,9 @@ export const messagesEndpoints = apiSlice.injectEndpoints({
         method: "POST",
         body: messageDetails,
       }),
-      invalidatesTags: [{ type: "Messages" }],
     }),
     fetchMessages: builder.query<FetchMessagesResponse, FetchMessagesRequest>({
       query: (chatId) => `messages/${chatId}`,
-      providesTags: [{ type: "Messages" }],
     }),
   }),
 });

@@ -11,9 +11,9 @@ import { rust } from "@codemirror/legacy-modes/mode/rust";
 interface CodeAreaProps {
   readOnly: boolean;
   code: string;
-  setCode: React.Dispatch<React.SetStateAction<string>>;
+  setCode?: React.Dispatch<React.SetStateAction<string>>;
   selectedLanguage: string;
-  setSelectedLanguage: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedLanguage?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const languagesMap = {
@@ -50,14 +50,16 @@ const CodeArea = ({
           StreamLanguage.define(languagesMap[selectedLanguage as keyof typeof languagesMap]),
         ]}
         onChange={(value) => {
-          setCode(value);
+          (setCode as React.Dispatch<React.SetStateAction<string>>)(value);
         }}
         className="w-full rounded-md border-0 outline-none"
       />
       <div className="h-40 absolute right-0 -top-6">
         <select
           className="overflow-auto rounded-sm"
-          onChange={(e) => setSelectedLanguage(e.target.value)}
+          onChange={(e) =>
+            (setSelectedLanguage as React.Dispatch<React.SetStateAction<string>>)(e.target.value)
+          }
           value={selectedLanguage}
         >
           {Object.keys(languagesMap).map((language) => (

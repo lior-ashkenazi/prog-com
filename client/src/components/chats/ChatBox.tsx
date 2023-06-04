@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import io from "socket.io-client";
+import { useEffect, useState, useRef } from "react";
+import { io, Socket } from "socket.io-client";
 
 import { useFetchMessagesQuery, useSendMessageMutation, isServerError } from "../../store";
 
@@ -8,7 +8,7 @@ import ChatBody from "./ChatBody";
 import ChatFooter from "./ChatFooter";
 
 import { User } from "../../types/userTypes";
-import { SendMessageType } from "../../types/messageTypes";
+import { Message, SendMessageType } from "../../types/messageTypes";
 import { Chat } from "../../types/chatTypes";
 
 const ENDPOINT = import.meta.env.VITE_ENDPOINT as string;
@@ -19,45 +19,58 @@ interface ChatBoxProps {
 }
 
 const ChatBox = ({ user, chat }: ChatBoxProps) => {
+  const socketRef = useRef<Socket | null>(null);
+
   const {
-    data: messages,
+    data,
     refetch: refetchMessages,
     error: fetchMessagesError,
   } = useFetchMessagesQuery(chat._id);
   const [sendMessage, { error: sendError }] = useSendMessageMutation();
 
-  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [typing, setTyping] = useState<string>("");
   const [sendMessageError, setSendMessageError] = useState<string>("");
 
   useEffect(() => {
-    const socket = io(ENDPOINT);
-    socket.on("message received", () => {
-      refetchMessages();
+    if (data?.messages) setMessages(data?.messages);
+  }, [data]);
+
+  useEffect(() => {
+    socketRef.current = io(ENDPOINT);
+    console.log(ENDPOINT);
+
+    socketRef.current.emit("setup", user);
+    socketRef.current.emit("access chat", chat);
+
+    socketRef.current.on("message received", (message: Message) => {
+      console.log("message received");
+
+      setMessages((prev) => [...prev, message]);
+
+      console.log("set messages");
     });
 
-    socket.on("start typing", () => {
-      setIsTyping(true);
+    socketRef.current.on("typing", (user) => {
+      setTyping(user.userName);
     });
 
-    socket.on("stop typing", () => {
-      setIsTyping(false);
+    socketRef.current.on("stop typing", () => {
+      setTyping("");
     });
 
     return () => {
-      socket.off("message received");
-      socket.off("start typing");
-      socket.off("stop typing");
+      socketRef.current!.off("setup"); //eslint-disable-line
     };
-  }, [refetchMessages]);
+  }, []);
 
   const handleSendMessage = async (message: SendMessageType) => {
-    if (message.mode === "text" && message.content.trim() === "") {
-      return;
-    }
-
     try {
-      await sendMessage(message).unwrap();
+      const { message: populatedMessage } = await sendMessage(message).unwrap();
       setSendMessageError("");
+      socketRef.current!.emit("new message", chat, populatedMessage); //eslint-disable-line
+      console.log("hello");
+      setMessages((prev) => [...prev, populatedMessage]);
     } catch (error) {
       if (error && typeof error === "object" && isServerError(error)) {
         setSendMessageError(error.data.message);
@@ -66,13 +79,15 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   };
 
   return (
-    <>
-      <ChatHeader user={user} chat={chat} />
-      <div className="col-span-2 grid grid grid-rows-[1fr_auto]">
-        <ChatBody />
-        <ChatFooter user={user} chat={chat} handleSendMessage={handleSendMessage} />
-      </div>
-    </>
+    messages && (
+      <>
+        <ChatHeader user={user} chat={chat} />
+        <div className="col-span-2 grid grid grid-rows-[1fr_auto]">
+          <ChatBody user={user} messages={messages} chat={chat} />
+          <ChatFooter user={user} chat={chat} handleSendMessage={handleSendMessage} />
+        </div>
+      </>
+    )
   );
 };
 

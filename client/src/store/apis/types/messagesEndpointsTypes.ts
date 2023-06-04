@@ -8,5 +8,4 @@ export type SendMessageResponse = {
 };
 
 export type FetchMessagesRequest = string;
-
 export type FetchMessagesResponse = { messages: Message[] };

@@ -55,7 +55,7 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
       case "text":
         return <TextArea text={text} setText={setText} />;
       case "math":
-        return <MathArea math={math} setMath={setMath} />;
+        return <MathArea readOnly={false} math={math} setMath={setMath} />;
       case "code":
         return (
           <CodeArea

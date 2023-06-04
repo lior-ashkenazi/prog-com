@@ -1,7 +1,10 @@
+import { User } from "./userTypes";
+import { Chat } from "./chatTypes";
+
 export type Message = {
   _id: string;
-  chatId: string;
-  sender: string;
+  chatId: Chat;
+  sender: User;
   content: string;
   mode: MessageModes;
   language?: MessageCodeLanguage;
