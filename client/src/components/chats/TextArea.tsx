@@ -9,7 +9,7 @@ const TextArea = ({ text, setText }: TextAreaProps) => {
       value={text}
       onChange={(e) => setText(e.target.value)}
       placeholder="Type a message."
-      className="h-24 py-2 px-3 w-full rounded-md border-0 outline-none resize-none"
+      className="h-28 py-2 px-3 w-full rounded-md border-0 outline-none resize-none"
     />
   );
 };

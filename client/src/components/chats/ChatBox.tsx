@@ -85,7 +85,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     messages && (
       <>
         <ChatHeader user={user} chat={chat} />
-        <div className="col-span-2 grid grid grid-rows-[385px_auto]">
+        <div className="col-span-2 grid grid grid-rows-[400px_auto]">
           <ChatBody user={user} messages={messages} />
           <ChatFooter user={user} chat={chat} handleSendMessage={handleSendMessage} />
         </div>

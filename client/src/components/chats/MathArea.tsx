@@ -19,7 +19,7 @@ const MathArea = ({ readOnly, math, setMath }: MathAreaProps) => {
         (setMath as React.Dispatch<React.SetStateAction<string>>)(mathField.latex());
       }}
       config={{ autoCommands: "pi theta sqrt sum", autoOperatorNames: "sin cos lim" }}
-      className="h-16 py-5 px-3 w-full rounded-md border-0 outline-none text-justify"
+      className="h-28 py-10 px-3 w-full rounded-md border-0 outline-none text-justify"
     />
   );
 };

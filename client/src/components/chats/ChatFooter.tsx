@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BsEmojiSmile } from "react-icons/bs";
+import { IoSend } from "react-icons/io5";
 
 import { User } from "../../types/userTypes";
 import { MessageModes, SendMessageType } from "../../types/messageTypes";
@@ -10,7 +11,6 @@ import MathArea from "./MathArea";
 import CodeArea, { LanguageKeys } from "./CodeArea";
 import TextEmojiPicker from "./TextEmojiPicker";
 import ModeButtons from "./ModeButtons";
-import SendMessageButton from "./SendMessageButton";
 
 interface ChatFooterProps {
   user: User;
@@ -75,13 +75,14 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   };
 
   return (
-    <form id="messageForm" className="py-4 px-8 flex flex-col relative" onSubmit={handleSubmit}>
+    <form id="messageForm" className="py-6 px-8 flex flex-col relative" onSubmit={handleSubmit}>
       <TextEmojiPicker openEmoji={openEmoji} text={text} setText={setText} />
-
-      <div className="flex-grow relative my-1 mx-6">
+      <div className="absolute top-0 left-0">
         <ModeButtons mode={mode} setMode={setMode} />
+      </div>
+      <div className="relative my-4 mx-6">
         <button
-          className={`absolute -left-6 top-6 ${mode !== "text" && "opacity-0"}`}
+          className={`absolute -left-7 top-1 ${mode !== "text" && "opacity-0"}`}
           onClick={() => setOpenEmoji(!openEmoji)}
           disabled={mode !== "text"}
         >
@@ -95,13 +96,18 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
           />
         </button>
         {renderInput()}
-        <SendMessageButton
-          mode={mode}
-          text={text}
-          math={math}
-          code={code}
-          setOpenEmoji={setOpenEmoji}
-        />
+        <button
+          type="submit"
+          className={`absolute -right-8 bottom-0`}
+          onClick={() => setOpenEmoji(false)}
+          disabled={
+            (mode === "text" && text === "") ||
+            (mode === "math" && math === "") ||
+            (mode === "code" && code === "")
+          }
+        >
+          <IoSend style={{ color: "#1e1b4b" }} />
+        </button>
       </div>
     </form>
   );
