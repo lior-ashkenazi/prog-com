@@ -5,22 +5,21 @@ addStyles();
 
 interface MathAreaProps {
   readOnly: boolean;
-  math: string;
-  setMath?: React.Dispatch<React.SetStateAction<string>>;
+  mathRef?: React.MutableRefObject<string>;
+  renderedMath?: string;
 }
 
-const MathArea = ({ readOnly, math, setMath }: MathAreaProps) => {
+const MathArea = ({ readOnly, mathRef, renderedMath }: MathAreaProps) => {
   return readOnly ? (
     <div className="overflow-x-auto">
-      <MathComponent tex={math} />
+      <MathComponent tex={renderedMath || ""} />
     </div>
   ) : (
     <EditableMathField
-      latex={math}
+      latex={mathRef && mathRef.current}
       onChange={(mathField) => {
-        (setMath as React.Dispatch<React.SetStateAction<string>>)(mathField.latex());
+        if (mathRef) mathRef.current = mathField.latex();
       }}
-      config={{ autoCommands: "pi theta sqrt sum", autoOperatorNames: "sin cos lim" }}
       className="h-28 py-10 px-3 w-full rounded-md border-0 outline-none text-justify"
     />
   );

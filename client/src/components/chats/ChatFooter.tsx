@@ -22,7 +22,7 @@ interface ChatFooterProps {
 const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   const [mode, setMode] = useState<MessageModes>("text");
   const textRef = useRef<HTMLTextAreaElement>(null);
-  const [math, setMath] = useState<string>("");
+  const mathRef = useRef<string>("");
   const [code, setCode] = useState<string>("");
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageKeys>("cpp");
   const [openEmoji, setOpenEmoji] = useState<boolean>(false);
@@ -40,7 +40,7 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
         textRef.current.value = "";
         break;
       case "math":
-        message = { ...identifiers, mode: "math", content: math };
+        message = { ...identifiers, mode: "math", content: mathRef.current };
         break;
       case "code":
         message = {
@@ -54,7 +54,7 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
 
     await handleSendMessage(message);
     textRef.current.value = "";
-    setMath("");
+    mathRef.current = "";
     setCode("");
   };
 
@@ -63,7 +63,7 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
       case "text":
         return <TextArea textRef={textRef} />;
       case "math":
-        return <MathArea readOnly={false} math={math} setMath={setMath} />;
+        return <MathArea readOnly={false} mathRef={mathRef} />;
       case "code":
         return (
           <CodeArea
@@ -106,7 +106,7 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
           onClick={() => setOpenEmoji(false)}
           disabled={
             (mode === "text" && textRef.current && textRef.current.value === "") ||
-            (mode === "math" && math === "") ||
+            (mode === "math" && mathRef.current === "") ||
             (mode === "code" && code === "")
           }
         >
