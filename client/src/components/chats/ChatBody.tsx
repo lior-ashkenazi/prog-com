@@ -40,12 +40,12 @@ const ChatBody = ({ user, messages }: ChatBodyProps) => {
   };
 
   return (
-    <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] overflow-y-auto flex flex-col gap-y-2">
+    <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] overflow-y-auto flex flex-col gap-y-1 p-4">
       {messages &&
         messages.map((message) => (
-          <div key={message._id}>
+          <div key={message._id} className="flex justify-end">
             <div
-              className={`p-2 rounded-md ${
+              className={`p-3 rounded-md max-w-xl ${
                 user._id === message.sender._id
                   ? "bg-emerald-200 self-end"
                   : "bg-amber-200 self-start"

@@ -11,7 +11,9 @@ interface MathAreaProps {
 
 const MathArea = ({ readOnly, math, setMath }: MathAreaProps) => {
   return readOnly ? (
-    <MathComponent tex={math} />
+    <div className="overflow-x-auto">
+      <MathComponent tex={math} />
+    </div>
   ) : (
     <EditableMathField
       latex={math}
