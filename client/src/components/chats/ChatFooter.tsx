@@ -7,7 +7,7 @@ import { Chat } from "../../types/chatTypes";
 
 import TextArea from "./TextArea";
 import MathArea from "./MathArea";
-import CodeArea from "./CodeArea";
+import CodeArea, { LanguageKeys } from "./CodeArea";
 import TextEmojiPicker from "./TextEmojiPicker";
 import ModeButtons from "./ModeButtons";
 import SendMessageButton from "./SendMessageButton";
@@ -24,7 +24,7 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   const [text, setText] = useState<string>("");
   const [math, setMath] = useState<string>("");
   const [code, setCode] = useState<string>("");
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("C++");
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageKeys>("cpp");
   const [openEmoji, setOpenEmoji] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,7 +40,12 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
         message = { ...identifiers, mode: "math", content: math };
         break;
       case "code":
-        message = { ...identifiers, mode: "code", content: math, language: selectedLanguage };
+        message = {
+          ...identifiers,
+          mode: "code",
+          content: code,
+          language: selectedLanguage,
+        };
         break;
     }
 

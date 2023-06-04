@@ -32,6 +32,7 @@ const validationErrorHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const errors: Result<ValidationError> = validationResult(req);
     if (!errors.isEmpty()) {
+      errors.array().forEach((error) => console.log(error));
       res.status(400).json({ errors: errors.array() });
       throw new Error("Bad request");
     }

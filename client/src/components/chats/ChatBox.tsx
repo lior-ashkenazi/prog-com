@@ -67,6 +67,9 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
 
   const handleSendMessage = async (message: SendMessageType) => {
     try {
+      console.log("step 1");
+      console.log(message);
+
       const { message: populatedMessage } = await sendMessage(message).unwrap();
       setSendMessageError("");
       socketRef.current!.emit("new message", chat, populatedMessage); //eslint-disable-line
@@ -82,8 +85,8 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     messages && (
       <>
         <ChatHeader user={user} chat={chat} />
-        <div className="col-span-2 grid grid grid-rows-[1fr_auto]">
-          <ChatBody user={user} messages={messages} chat={chat} />
+        <div className="col-span-2 grid grid grid-rows-[385px_auto]">
+          <ChatBody user={user} messages={messages} />
           <ChatFooter user={user} chat={chat} handleSendMessage={handleSendMessage} />
         </div>
       </>

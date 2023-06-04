@@ -41,6 +41,7 @@ exports.errorHandler = errorHandler;
 const validationErrorHandler = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
+        errors.array().forEach((error) => console.log(error));
         res.status(400).json({ errors: errors.array() });
         throw new Error("Bad request");
     }

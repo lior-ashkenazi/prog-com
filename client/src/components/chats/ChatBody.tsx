@@ -2,18 +2,16 @@ import { useEffect, useRef } from "react";
 
 import { User } from "../../types/userTypes";
 import { Message } from "../../types/messageTypes";
-import { Chat } from "../../types/chatTypes";
 
 import MathArea from "./MathArea";
-import CodeArea from "./CodeArea";
+import CodeArea, { LanguageKeys } from "./CodeArea";
 
 interface ChatBodyProps {
   user: User;
   messages: Message[];
-  chat: Chat;
 }
 
-const ChatBody = ({ user, messages, chat }: ChatBodyProps) => {
+const ChatBody = ({ user, messages }: ChatBodyProps) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
@@ -35,7 +33,7 @@ const ChatBody = ({ user, messages, chat }: ChatBodyProps) => {
           <CodeArea
             readOnly={true}
             code={message.content}
-            selectedLanguage={message.language as string}
+            selectedLanguage={message.language as LanguageKeys}
           />
         );
     }
