@@ -2,8 +2,25 @@ import dayjs from "dayjs";
 import { User } from "../types/userTypes";
 import { Chat } from "../types/chatTypes";
 
-const getShortFormatDate = (date: Date) => {
-  return dayjs(date).format("DD/MM/YYYY");
+const getShortFormatDate = (dateString: Date) => {
+  const date = dayjs(dateString);
+  const today = dayjs();
+
+  const diffDays = today.diff(date, "day");
+
+  console.log(diffDays);
+
+  if (diffDays === 0) {
+    return "Today";
+  } else if (diffDays === 1) {
+    return `Yesterday`;
+  } else if (diffDays >= 1 && diffDays <= 6) {
+    return `${diffDays} days ago`;
+  } else if (diffDays === 7) {
+    return "A week ago";
+  } else {
+    return date.format("DD/MM/YYYY");
+  }
 };
 
 const getOtherUserAttribute = (user: User, chat: Chat, attr: "_id" | "userName" | "avatar") => {

@@ -8,6 +8,7 @@ export type Message = {
   content: string;
   mode: MessageModes;
   language?: MessageCodeLanguage;
+  createdAt: Date;
 };
 
 export type MessageModes = "text" | "math" | "code";

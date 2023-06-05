@@ -5,6 +5,7 @@ import { Message } from "../../types/messageTypes";
 
 import MathArea from "./MathArea";
 import CodeArea, { LanguageKeys } from "./CodeArea";
+import { getShortFormatDate } from "../../utils";
 
 interface ChatBodyProps {
   user: User;
@@ -39,22 +40,37 @@ const ChatBody = ({ user, messages }: ChatBodyProps) => {
     }
   };
 
+  let lastMessageDate = "";
+
   return (
     <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] overflow-y-auto flex flex-col gap-y-1 p-4 border-r-8 border-r-gray-100">
       {messages &&
-        messages.map((message) => (
-          <div key={message._id} className="flex justify-end">
-            <div
-              className={`p-3 rounded-md max-w-xl ${
-                user._id === message.sender._id
-                  ? "bg-emerald-200 self-end"
-                  : "bg-amber-200 self-start"
-              }`}
-            >
-              {renderMessage(message)}
+        messages.map((message) => {
+          const messageDate = getShortFormatDate(message.createdAt);
+          const renderDate = lastMessageDate !== messageDate;
+          lastMessageDate = messageDate;
+
+          return (
+            <div key={message._id}>
+              {renderDate && (
+                <div className="w-full flex items-center justify-center">
+                  <span className="bg-gray-200 m-1 w-fit p-2 rounded-md">{messageDate}</span>
+                </div>
+              )}
+              <div className="flex justify-end">
+                <div
+                  className={`p-3 rounded-md max-w-xl ${
+                    user._id === message.sender._id
+                      ? "bg-emerald-200 self-end"
+                      : "bg-amber-200 self-start"
+                  }`}
+                >
+                  {renderMessage(message)}
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       <div ref={messagesEndRef}></div>
     </div>
   );
