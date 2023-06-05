@@ -5,7 +5,7 @@ import { Message } from "../../types/messageTypes";
 
 import MathArea from "./MathArea";
 import CodeArea, { LanguageKeys } from "./CodeArea";
-import { getShortFormatDate } from "../../utils";
+import { getMessageHour, getShortFormatDate } from "../../utils";
 
 interface ChatBodyProps {
   user: User;
@@ -66,7 +66,9 @@ const ChatBody = ({ user, messages }: ChatBodyProps) => {
                   }`}
                 >
                   {renderMessage(message)}
-                  <div className="m-0.5 text-xs text-opacity-70 text-black text-right">14:00</div>
+                  <div className="m-0.5 text-xs text-opacity-70 text-black text-right">
+                    {getMessageHour(message.createdAt)}
+                  </div>
                 </div>
               </div>
             </div>

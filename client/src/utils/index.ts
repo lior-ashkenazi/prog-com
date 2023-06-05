@@ -8,8 +8,6 @@ const getShortFormatDate = (dateString: Date) => {
 
   const diffDays = today.diff(date, "day");
 
-  console.log(diffDays);
-
   if (diffDays === 0) {
     return "Today";
   } else if (diffDays === 1) {
@@ -22,6 +20,8 @@ const getShortFormatDate = (dateString: Date) => {
     return date.format("DD/MM/YYYY");
   }
 };
+
+const getMessageHour = (date: Date) => dayjs(date).format("HH:mm");
 
 const getOtherUserAttribute = (user: User, chat: Chat, attr: "_id" | "userName" | "avatar") => {
   if (chat.participants.length === 1) return chat.participants[0][attr];
@@ -46,4 +46,4 @@ const getChatAvatar = (user: User, chat: Chat) => {
   return getOtherUserAvatar(user, chat);
 };
 
-export { getShortFormatDate, getOtherUserId, getChatName, getChatAvatar };
+export { getShortFormatDate, getMessageHour, getOtherUserId, getChatName, getChatAvatar };
