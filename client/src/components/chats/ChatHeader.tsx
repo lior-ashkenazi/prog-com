@@ -16,8 +16,9 @@ const ChatHeader = ({ user, chat }: ChatHeaderProps) => {
           alt="Header Avatar"
           className="w-10 h-10 rounded-full"
         />
-        <span>
+        <span className="flex flex-col text-left">
           <span className="font-medium">{getChatName(user, chat)}</span>
+          <span className="text-xs text-opacity-60 text-gray-900">Maybe is typing</span>
         </span>
       </div>
     </div>

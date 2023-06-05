@@ -3,7 +3,7 @@ import { LoadingContext } from "../../context/LoadingContext";
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
 import { useAccessChatMutation } from "../../store";
-import { getShortFormatDate, getOtherUserId, getChatName } from "../../utils";
+import { getShortFormatDate, getOtherUserId, getChatName, getChatAvatar } from "../../utils";
 
 interface ListItemProps {
   user: User;
@@ -33,10 +33,17 @@ const ListItem = ({ user, chat, itemIndex, isClicked, handleClickedColor }: List
       }`}
       onClick={handleClick}
     >
-      <span className="flex flex-col text-left">
-        <span className="font-semibold text-lg">{getChatName(user, chat)}</span>
-        <span className="text-sm text-opacity-60 text-gray-900">Maybe last message</span>
-      </span>
+      <div className="flex items-center justify-center gap-x-6">
+        <img
+          src={getChatAvatar(user, chat)}
+          alt="Header Avatar"
+          className="w-11 h-11 rounded-full"
+        />
+        <span className="flex flex-col text-left">
+          <span className="font-semibold text-lg">{getChatName(user, chat)}</span>
+          <span className="text-sm text-opacity-60 text-gray-900">Maybe last message</span>
+        </span>
+      </div>
       <span
         className={`inline-block h-full mt-3 text-sm ${!chat?.updatedAt && "text-transparent"}`}
       >
