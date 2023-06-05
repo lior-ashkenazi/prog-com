@@ -5,6 +5,7 @@ export interface IChat extends Document {
   participants: Schema.Types.ObjectId[];
   isGroupChat: boolean;
   groupAdmin?: Schema.Types.ObjectId;
+  avatar: string;
   // TODO - maybe notification of last message
 }
 
@@ -31,6 +32,10 @@ const chatSchema: Schema = new Schema<IChat>(
       type: Types.ObjectId,
       required: false,
       ref: "User",
+    },
+    avatar: {
+      type: String,
+      required: false,
     },
   },
   { timestamps: true }

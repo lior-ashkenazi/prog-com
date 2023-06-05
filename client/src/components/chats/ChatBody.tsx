@@ -40,7 +40,7 @@ const ChatBody = ({ user, messages }: ChatBodyProps) => {
   };
 
   return (
-    <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] overflow-y-auto flex flex-col gap-y-1 p-4">
+    <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] overflow-y-auto flex flex-col gap-y-1 p-4 border-r-8 border-r-gray-100">
       {messages &&
         messages.map((message) => (
           <div key={message._id} className="flex justify-end">

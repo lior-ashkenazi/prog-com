@@ -71,11 +71,16 @@ const createGroupChat = asyncHandler(async (req: Request, res: Response): Promis
 
   participants.unshift((req as IAuthenticatedRequest).user._id);
 
+  let seed =
+    Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  const avatar: string = `https://robohash.org/${seed}`;
+
   let newGroupChat: IChat | null = await Chat.create({
     chatName,
     participants,
     isGroupChat: true,
     groupAdmin: (req as IAuthenticatedRequest).user,
+    avatar,
   });
   newGroupChat = await Chat.findOne({ _id: newGroupChat._id })
     .populate("participants", "-password")

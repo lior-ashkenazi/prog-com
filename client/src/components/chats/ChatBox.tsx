@@ -38,7 +38,6 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
 
   useEffect(() => {
     socketRef.current = io(ENDPOINT, { forceNew: true });
-    console.log(ENDPOINT);
 
     socketRef.current.emit("setup", user);
     socketRef.current.emit("access chat", chat);

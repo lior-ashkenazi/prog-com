@@ -30,7 +30,6 @@ const userSchema: Schema = new Schema<IUser>(
     avatar: {
       type: String,
       required: true,
-      // TODO generate avatars!!!
     },
   },
   { timestamps: true }

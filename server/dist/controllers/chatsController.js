@@ -69,11 +69,14 @@ exports.fetchChats = fetchChats;
 const createGroupChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { participants, chatName } = req.body;
     participants.unshift(req.user._id);
+    let seed = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const avatar = `https://robohash.org/${seed}`;
     let newGroupChat = yield chatModel_1.default.create({
         chatName,
         participants,
         isGroupChat: true,
         groupAdmin: req.user,
+        avatar,
     });
     newGroupChat = yield chatModel_1.default.findOne({ _id: newGroupChat._id })
         .populate("participants", "-password")

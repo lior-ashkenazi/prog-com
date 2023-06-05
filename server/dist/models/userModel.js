@@ -33,7 +33,6 @@ const userSchema = new mongoose_1.Schema({
     avatar: {
         type: String,
         required: true,
-        // TODO generate avatars!!!
     },
 }, { timestamps: true });
 userSchema.methods.matchPassword = function (password) {

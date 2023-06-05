@@ -23,6 +23,10 @@ const chatSchema = new mongoose_1.Schema({
         required: false,
         ref: "User",
     },
+    avatar: {
+        type: String,
+        required: false,
+    },
 }, { timestamps: true });
 const Chat = (0, mongoose_1.model)("Chat", chatSchema);
 exports.default = Chat;

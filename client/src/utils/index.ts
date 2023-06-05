@@ -6,7 +6,7 @@ const getShortFormatDate = (date: Date) => {
   return dayjs(date).format("DD/MM/YYYY");
 };
 
-const getOtherUserAttribute = (user: User, chat: Chat, attr: "_id" | "userName") => {
+const getOtherUserAttribute = (user: User, chat: Chat, attr: "_id" | "userName" | "avatar") => {
   if (chat.participants.length === 1) return chat.participants[0][attr];
   return user._id === chat.participants[0]._id
     ? chat.participants[1][attr]
@@ -17,9 +17,16 @@ const getOtherUserId = (user: User, chat: Chat) => getOtherUserAttribute(user, c
 
 const getOtherUserName = (user: User, chat: Chat) => getOtherUserAttribute(user, chat, "userName");
 
+const getOtherUserAvatar = (user: User, chat: Chat) => getOtherUserAttribute(user, chat, "avatar");
+
 const getChatName = (user: User, chat: Chat) => {
   if (chat.isGroupChat) return chat.chatName;
   return getOtherUserName(user, chat);
 };
 
-export { getShortFormatDate, getOtherUserId, getChatName };
+const getChatAvatar = (user: User, chat: Chat) => {
+  if (chat.isGroupChat) return chat.avatar;
+  return getOtherUserAvatar(user, chat);
+};
+
+export { getShortFormatDate, getOtherUserId, getChatName, getChatAvatar };
