@@ -41,7 +41,7 @@ const ListItem = ({ user, chat, itemIndex, isClicked, handleClickedColor }: List
         />
         <span className="flex flex-col text-left">
           <span className="font-semibold text-lg">{getChatName(user, chat)}</span>
-          <span className="text-sm text-opacity-60 text-gray-900">Maybe last message</span>
+          <span className="text-sm text-opacity-60 text-black">Maybe last message</span>
         </span>
       </div>
       <span

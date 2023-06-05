@@ -66,6 +66,7 @@ const ChatBody = ({ user, messages }: ChatBodyProps) => {
                   }`}
                 >
                   {renderMessage(message)}
+                  <div className="m-0.5 text-xs text-opacity-70 text-black text-right">14:00</div>
                 </div>
               </div>
             </div>

@@ -83,7 +83,7 @@ const CodeArea = ({
           readOnly={readOnly}
           extensions={[StreamLanguage.define(languagesStreamParserMap[selectedLanguage])]}
           onChange={(value) => (codeRef.current = value)}
-          className="w-full rounded-md border-0 outline-none"
+          className="w-full rounded-md border-0 outline-none overflow-x-auto"
         />
       </div>
       {!readOnly && (

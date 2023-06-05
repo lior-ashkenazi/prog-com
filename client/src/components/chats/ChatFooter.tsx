@@ -83,12 +83,16 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
   };
 
   return (
-    <form id="messageForm" className="py-6 px-8 flex flex-col relative" onSubmit={handleSubmit}>
+    <form
+      id="messageForm"
+      className="pt-7 pb-5 px-8 flex flex-col relative justify-center"
+      onSubmit={handleSubmit}
+    >
       <TextEmojiPicker openEmoji={openEmoji} text={text} setText={setText} />
       <div className="absolute top-0 left-0">
         <ModeButtons mode={mode} setMode={setMode} />
       </div>
-      <div className="relative my-4 mx-6">
+      <div className="relative mx-6 w-[55rem]">
         <button
           type="button"
           className={`absolute -left-7 top-1 ${mode !== "text" && "opacity-0"}`}
@@ -115,7 +119,16 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
             (mode === "code" && code === "")
           }
         >
-          <IoSend style={{ color: "#1e1b4b" }} />
+          <IoSend
+            style={{
+              color:
+                (mode === "text" && text === "") ||
+                (mode === "math" && math === "") ||
+                (mode === "code" && code === "")
+                  ? "#a5b4fc"
+                  : "#1e1b4b",
+            }}
+          />
         </button>
       </div>
     </form>

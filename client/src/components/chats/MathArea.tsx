@@ -36,7 +36,7 @@ const MathArea = ({ readOnly, math, setMath }: MathAreaProps) => {
         key={key}
         latex={mathRef.current}
         config={{ autoCommands: "pi theta sqrt sum" }}
-        className="h-28 py-10 px-3 w-full rounded-md border-0 outline-none text-justify"
+        className="h-28 py-10 px-3 w-full rounded-md border-0 outline-none text-justify overflow-x-auto"
         onChange={(mathField) => {
           mathRef.current = mathField.latex();
         }}
