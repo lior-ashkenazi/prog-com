@@ -8,11 +8,13 @@ const getShortFormatDate = (dateString: Date) => {
 
   const diffDays = today.diff(date, "day");
 
-  if (diffDays === 0) {
+  console.log("diffDays: " + diffDays);
+
+  if (today.isSame(date, "day")) {
     return "Today";
-  } else if (diffDays === 1) {
+  } else if (0 <= diffDays && diffDays <= 1) {
     return `Yesterday`;
-  } else if (diffDays >= 1 && diffDays <= 6) {
+  } else if (1 < diffDays && diffDays <= 6) {
     return `${diffDays} days ago`;
   } else if (diffDays === 7) {
     return "A week ago";
