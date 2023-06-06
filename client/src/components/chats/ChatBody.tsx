@@ -1,4 +1,4 @@
-import { useEffect, useRef, forwardRef, createRef, useImperativeHandle } from "react";
+import { useEffect, useState, useRef, forwardRef, createRef, useImperativeHandle } from "react";
 
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -21,6 +21,23 @@ const ChatBody = forwardRef(
   ({ user, messages, messagesIsLoading, messagesIsError }: ChatBodyProps, ref) => {
     const messageRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const divRef = useRef<HTMLDivElement | null>(null);
+    const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
+
+    useEffect(() => {
+      const checkOverflow = () => {
+        const div = divRef.current;
+        if (div) {
+          const overflow = div.offsetHeight < div.scrollHeight || div.offsetWidth < div.scrollWidth;
+          setIsOverflowing(overflow);
+        }
+      };
+
+      window.addEventListener("resize", checkOverflow);
+      checkOverflow();
+
+      return () => window.removeEventListener("resize", checkOverflow);
+    }, []);
 
     const scrollToBottom = () => {
       messagesEndRef.current?.scrollIntoView();
@@ -64,9 +81,10 @@ const ChatBody = forwardRef(
 
     return (
       <div
-        className={`bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] overflow-y-auto flex flex-col gap-y-1 p-4 border-r-8 border-r-gray-100 ${
-          messagesIsLoading && "items-end"
-        }`}
+        ref={divRef}
+        className={`bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] overflow-y-auto flex flex-col gap-y-1 p-4 ${
+          !isOverflowing && "border-r-8 border-r-gray-100"
+        } ${messagesIsLoading && "items-end"}`}
       >
         {messagesIsLoading ? (
           <Skeleton
