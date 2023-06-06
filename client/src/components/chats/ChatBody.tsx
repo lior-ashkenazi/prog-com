@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import { User } from "../../types/userTypes";
 import { Message } from "../../types/messageTypes";
 
@@ -10,9 +13,10 @@ import { getMessageHour, getShortFormatDate } from "../../utils";
 interface ChatBodyProps {
   user: User;
   messages: Message[];
+  messagesIsLoading: boolean;
 }
 
-const ChatBody = ({ user, messages }: ChatBodyProps) => {
+const ChatBody = ({ user, messages, messagesIsLoading }: ChatBodyProps) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
@@ -43,8 +47,23 @@ const ChatBody = ({ user, messages }: ChatBodyProps) => {
   let lastMessageDate = "";
 
   return (
-    <div className="bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] overflow-y-auto flex flex-col gap-y-1 p-4 border-r-8 border-r-gray-100">
-      {messages &&
+    <div
+      className={`bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] overflow-y-auto flex flex-col gap-y-1 p-4 border-r-8 border-r-gray-100 ${
+        messagesIsLoading && "items-end"
+      }`}
+    >
+      {messagesIsLoading ? (
+        <Skeleton
+          width={500}
+          height={50}
+          count={6}
+          style={{
+            opacity: 0.9,
+            marginBottom: "0.5rem",
+          }}
+        />
+      ) : (
+        messages &&
         messages.map((message) => {
           const messageDate = getShortFormatDate(message.createdAt);
           const renderDate = lastMessageDate !== messageDate;
@@ -73,7 +92,8 @@ const ChatBody = ({ user, messages }: ChatBodyProps) => {
               </div>
             </div>
           );
-        })}
+        })
+      )}
       <div ref={messagesEndRef}></div>
     </div>
   );
