@@ -8,6 +8,7 @@ import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
 
 import ChatBox from "./ChatBox";
+import LoadingChatBox from "./LoadingChatBox";
 
 const ChatBoxContainer = () => {
   const user: User | null = useSelector((state) => (state as RootState).app.user);
@@ -24,7 +25,7 @@ const ChatBoxContainer = () => {
   ) : (
     <>
       {chatBoxIsLoading ? (
-        <div className="col-span-2 row-span-full bg-blue-900"></div>
+        <LoadingChatBox />
       ) : (
         <div className="col-span-2 row-span-full flex items-center justify-center">
           <span className="font-medium">Select a chat to start messaging</span>
