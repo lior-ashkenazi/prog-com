@@ -82,7 +82,10 @@ const CodeArea = ({
           theme="dark"
           readOnly={readOnly}
           extensions={[StreamLanguage.define(languagesStreamParserMap[selectedLanguage])]}
-          onChange={(value) => (codeRef.current = value)}
+          onChange={(value) => {
+            codeRef.current = value;
+            codeRef.current === "" && setCode && setCode(codeRef.current);
+          }}
           className="w-full rounded-md border-0 outline-none overflow-x-auto"
         />
       </div>

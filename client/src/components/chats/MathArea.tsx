@@ -39,6 +39,7 @@ const MathArea = ({ readOnly, math, setMath }: MathAreaProps) => {
         className="h-28 py-10 px-3 w-full rounded-md border-0 outline-none text-justify overflow-x-auto"
         onChange={(mathField) => {
           mathRef.current = mathField.latex();
+          mathRef.current === "" && setMath && setMath(mathRef.current);
         }}
       />
     </div>

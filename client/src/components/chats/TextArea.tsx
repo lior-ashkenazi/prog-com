@@ -18,6 +18,7 @@ const TextArea = ({ text, setText }: TextAreaProps) => {
       placeholder="Type a message."
       className="h-28 py-2 px-3 w-full rounded-md border-0 outline-none resize-none"
       onBlur={() => setText(!textRef.current ? "" : textRef.current.value)}
+      onChange={() => textRef.current && textRef.current.value === "" && setText("")}
     />
   );
 };
