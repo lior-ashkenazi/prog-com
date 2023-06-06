@@ -8,24 +8,17 @@ interface MessagesListItemProps {
 }
 
 const MessagesListItem = ({ message, handleSearchClick, searchQuery }: MessagesListItemProps) => {
-  const queryRegex = new RegExp(`${searchQuery}`, "gi");
+  const words = message.content.split(" ");
 
-  const messageSegments = message.content.split(queryRegex);
-
-  // use JSX.Element[] instead of any[]
-  const highlightedMessage: JSX.Element[] = [];
-
-  messageSegments.forEach((segment, i) => {
-    highlightedMessage.push(<span key={i}>{segment}</span>);
-
-    if (i !== messageSegments.length - 1) {
-      highlightedMessage.push(
-        <span key={`highlight-${i}`} className="font-bold text-indigo-600">
-          {searchQuery}
-        </span>
-      );
-    }
-  });
+  const highlightedMessage = words
+    .map((word) => {
+      if (word.toLowerCase().includes(searchQuery.toLowerCase())) {
+        return `<span class="font-bold text-indigo-600">${word}</span>`;
+      } else {
+        return word;
+      }
+    })
+    .join(" ");
 
   return (
     <button
@@ -36,7 +29,7 @@ const MessagesListItem = ({ message, handleSearchClick, searchQuery }: MessagesL
         <span className="text-black text-opacity-70 text-sm">
           {getShortFormatDate(message.createdAt)}
         </span>
-        <span>{highlightedMessage}</span>
+        <span dangerouslySetInnerHTML={{ __html: highlightedMessage }} />
       </div>
     </button>
   );
