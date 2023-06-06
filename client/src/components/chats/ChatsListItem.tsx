@@ -5,7 +5,7 @@ import { Chat } from "../../types/chatTypes";
 import { useAccessChatMutation } from "../../store";
 import { getShortFormatDate, getOtherUserId, getChatName, getChatAvatar } from "../../utils";
 
-interface ListItemProps {
+interface ChatsListItemProps {
   user: User;
   chat: Chat;
   itemIndex: number;
@@ -13,7 +13,13 @@ interface ListItemProps {
   handleClickedColor: (index: number) => void;
 }
 
-const ListItem = ({ user, chat, itemIndex, isClicked, handleClickedColor }: ListItemProps) => {
+const ChatsListItem = ({
+  user,
+  chat,
+  itemIndex,
+  isClicked,
+  handleClickedColor,
+}: ChatsListItemProps) => {
   const { setChatBoxIsLoading } = useContext(LoadingContext);
   const [accessChat] = useAccessChatMutation();
 
@@ -53,4 +59,4 @@ const ListItem = ({ user, chat, itemIndex, isClicked, handleClickedColor }: List
   );
 };
 
-export default ListItem;
+export default ChatsListItem;

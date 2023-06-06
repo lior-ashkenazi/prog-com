@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 
-import { useFetchMessagesQuery, useSendMessageMutation, isServerError } from "../../store";
+import { useFetchMessagesQuery, useSendMessageMutation } from "../../store";
 
 import ChatHeader from "./ChatHeader";
 import ChatBody from "./ChatBody";
@@ -10,12 +10,17 @@ import ChatFooter from "./ChatFooter";
 import { User } from "../../types/userTypes";
 import { Message, SendMessageType } from "../../types/messageTypes";
 import { Chat } from "../../types/chatTypes";
+import ChatSearchWindow from "./ChatSearchWindow";
 
 const ENDPOINT = import.meta.env.VITE_ENDPOINT as string;
 
 interface ChatBoxProps {
   user: User;
   chat: Chat;
+}
+
+interface ChatBodyHandle {
+  scrollToMessage: (index: number) => void;
 }
 
 const ChatBox = ({ user, chat }: ChatBoxProps) => {
@@ -31,6 +36,9 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [typing, setTyping] = useState<string>("");
+
+  const [searchWindowVisible, setSearchWindowVisible] = useState<boolean>(false);
+  const chatBodyRef = useRef<ChatBodyHandle | null>(null); // create a ref
 
   useEffect(() => {
     if (data?.messages) setMessages(data?.messages);
@@ -65,34 +73,55 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   }, [chat, user]);
 
   const handleSendMessage = async (message: SendMessageType) => {
-    console.log("step 1");
-    console.log(message);
-
     const { message: populatedMessage } = await sendMessage(message).unwrap();
 
     socketRef.current!.emit("new message", chat, populatedMessage); //eslint-disable-line
     setMessages((prev) => [...prev, populatedMessage]);
   };
 
+  const handleSearchClick = (messageId: string) => {
+    setSearchWindowVisible(false);
+
+    const index = messages.findIndex((message) => message._id === messageId);
+    if (index !== -1) {
+      chatBodyRef.current?.scrollToMessage(index);
+    }
+  };
+
   return (
     messages && (
       <>
-        <ChatHeader user={user} chat={chat} />
-        <div className="col-span-2 grid grid grid-rows-[400px_auto] overflow-y-auto">
-          <ChatBody
-            user={user}
-            messages={messages}
-            messagesIsLoading={messagesIsLoading}
-            messagesIsError={messagesIsError}
-          />
-          <ChatFooter
-            user={user}
-            chat={chat}
-            handleSendMessage={handleSendMessage}
-            sendMessageIsLoading={sendMessageIsLoading}
-            sendMessageIsError={sendMessageIsError}
-          />
-        </div>
+        {!searchWindowVisible ? (
+          <>
+            <div className="col-span-2">
+              <ChatHeader user={user} chat={chat} setSearchWindowVisible={setSearchWindowVisible} />
+            </div>
+            <div className="col-span-2 grid grid grid-rows-[400px_auto] overflow-y-auto">
+              <ChatBody
+                ref={chatBodyRef}
+                user={user}
+                messages={messages}
+                messagesIsLoading={messagesIsLoading}
+                messagesIsError={messagesIsError}
+              />
+              <ChatFooter
+                user={user}
+                chat={chat}
+                handleSendMessage={handleSendMessage}
+                sendMessageIsLoading={sendMessageIsLoading}
+                sendMessageIsError={sendMessageIsError}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <ChatSearchWindow
+              setSearchWindowVisible={setSearchWindowVisible}
+              messages={messages}
+              handleSearchClick={handleSearchClick}
+            />
+          </>
+        )}
       </>
     )
   );

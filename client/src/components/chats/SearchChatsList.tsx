@@ -4,17 +4,17 @@ import { useSelector } from "react-redux";
 import { RootState, useFetchUsersQuery } from "../../store";
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
-import ListSkeleton from "./ListSkeleton";
-import ListItem from "./ListItem";
+import ChatsListSkeleton from "./ChatsListSkeleton";
+import ChatsListItem from "./ChatsListItem";
 
-interface SearchListProps {
-  input: string;
+interface SearchChatsListProps {
+  searchQuery: string;
 }
 
-const SearchList = ({ input }: SearchListProps) => {
+const SearchChatsList = ({ searchQuery }: SearchChatsListProps) => {
   const user = useSelector((state) => (state as RootState).app.user);
 
-  const { data, isLoading } = useFetchUsersQuery(input);
+  const { data, isLoading } = useFetchUsersQuery(searchQuery);
   const [selectedItem, setSelectedItem] = useState<number>();
 
   const handleClickedColor = (index: number) => setSelectedItem(index);
@@ -25,7 +25,7 @@ const SearchList = ({ input }: SearchListProps) => {
 
   const renderList = () =>
     data?.users.map((user: User, index: number) => (
-      <ListItem
+      <ChatsListItem
         key={index}
         user={user}
         chat={potentialChat(user, index)}
@@ -36,8 +36,8 @@ const SearchList = ({ input }: SearchListProps) => {
     ));
 
   return (
-    <div className="py-3 flex flex-col">{!isLoading && user ? renderList() : <ListSkeleton />}</div>
+    <div className="flex flex-col">{!isLoading && user ? renderList() : <ChatsListSkeleton />}</div>
   );
 };
 
-export default SearchList;
+export default SearchChatsList;

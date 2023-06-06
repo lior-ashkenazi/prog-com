@@ -8,8 +8,6 @@ const getShortFormatDate = (dateString: Date) => {
 
   const diffDays = today.diff(date, "day");
 
-  console.log("diffDays: " + diffDays);
-
   if (today.isSame(date, "day")) {
     return "Today";
   } else if (0 <= diffDays && diffDays <= 1) {

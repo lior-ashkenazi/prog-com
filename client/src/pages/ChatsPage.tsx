@@ -7,7 +7,7 @@ const ChatsPage = () => {
   return (
     <LoadingProvider>
       <div
-        className="grid grid-rows-[auto_1fr] bg-gray-100 w-full mx-4 rounded-sm"
+        className="grid grid-rows-[auto_1fr] bg-gray-100 w-full mx-4"
         style={{ height: "calc(100vh - 2rem)" }}
       >
         <PageHeader />

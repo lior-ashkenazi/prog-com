@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import SearchBar from "./SearchBar";
 import UsersList from "./UsersList";
-import SearchList from "./SearchList";
+import SearchChatsList from "./SearchChatsList";
 
 const ChatsBar = () => {
   const [searchInput, setSearchInput] = useState<string>("");
@@ -13,10 +13,10 @@ const ChatsBar = () => {
   return (
     <>
       <div className="col-span-1 border-r border-b">
-        <SearchBar input={searchInput} onChange={handleChangeSearchInput} />
+        <SearchBar searchQuery={searchInput} onChange={handleChangeSearchInput} mode="chats" />
       </div>
       <div className="col-span-1 overflow-y-auto border-r">
-        {!searchInput ? <UsersList /> : <SearchList input={searchInput} />}
+        {!searchInput ? <UsersList /> : <SearchChatsList searchQuery={searchInput} />}
       </div>
     </>
   );

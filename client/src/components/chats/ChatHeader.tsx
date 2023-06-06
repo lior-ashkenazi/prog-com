@@ -1,3 +1,5 @@
+import { HiSearch } from "react-icons/hi";
+
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
 import { getChatAvatar, getChatName } from "../../utils";
@@ -5,11 +7,12 @@ import { getChatAvatar, getChatName } from "../../utils";
 interface ChatHeaderProps {
   user: User;
   chat: Chat;
+  setSearchWindowVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ChatHeader = ({ user, chat }: ChatHeaderProps) => {
+const ChatHeader = ({ user, chat, setSearchWindowVisible }: ChatHeaderProps) => {
   return (
-    <div className="col-span-2 px-4 flex">
+    <div className="p-4 flex justify-between">
       <div className="flex items-center justify-center gap-x-4">
         <img
           src={getChatAvatar(user, chat)}
@@ -21,6 +24,14 @@ const ChatHeader = ({ user, chat }: ChatHeaderProps) => {
           <span className="text-xs text-opacity-60 text-gray-900">Maybe is typing</span>
         </span>
       </div>
+      <button onClick={() => setSearchWindowVisible(true)}>
+        <HiSearch
+          size={28}
+          style={{
+            color: "#1e1b4b",
+          }}
+        />
+      </button>
     </div>
   );
 };
