@@ -24,7 +24,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   const {
     data,
     isLoading: messagesIsLoading,
-    error: fetchMessagesError,
+    isError: messagesIsError,
   } = useFetchMessagesQuery(chat._id);
   const [sendMessage, { error: sendError }] = useSendMessageMutation();
 
@@ -85,7 +85,12 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
       <>
         <ChatHeader user={user} chat={chat} />
         <div className="col-span-2 grid grid grid-rows-[400px_auto] overflow-y-auto">
-          <ChatBody user={user} messages={messages} messagesIsLoading={messagesIsLoading} />
+          <ChatBody
+            user={user}
+            messages={messages}
+            messagesIsLoading={messagesIsLoading}
+            messagesIsError={messagesIsError}
+          />
           <ChatFooter user={user} chat={chat} handleSendMessage={handleSendMessage} />
         </div>
       </>
