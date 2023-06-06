@@ -16,10 +16,17 @@ interface ChatFooterProps {
   user: User;
   chat: Chat;
   handleSendMessage: (message: SendMessageType) => Promise<void>;
-  //   sendMessageLoading: boolean;
+  sendMessageIsLoading: boolean;
+  sendMessageIsError: boolean;
 }
 
-const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
+const ChatFooter = ({
+  user,
+  chat,
+  handleSendMessage,
+  sendMessageIsLoading,
+  sendMessageIsError,
+}: ChatFooterProps) => {
   const [mode, setMode] = useState<MessageModes>("text");
   const [text, setText] = useState<string>("");
   const [math, setMath] = useState<string>("");
@@ -89,6 +96,11 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
       onSubmit={handleSubmit}
     >
       <TextEmojiPicker openEmoji={openEmoji} text={text} setText={setText} />
+      {sendMessageIsError && (
+        <div className="m-0.5 text-xs text-opacity-70 text-black text-right bg-red-600">
+          There was problem fetching messages.
+        </div>
+      )}
       <div className="absolute top-0 left-0">
         <ModeButtons mode={mode} setMode={setMode} />
       </div>
@@ -116,7 +128,9 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
           disabled={
             (mode === "text" && text === "") ||
             (mode === "math" && math === "") ||
-            (mode === "code" && code === "")
+            (mode === "code" && code === "") ||
+            sendMessageIsLoading ||
+            sendMessageIsError
           }
         >
           <IoSend
@@ -124,7 +138,9 @@ const ChatFooter = ({ user, chat, handleSendMessage }: ChatFooterProps) => {
               color:
                 (mode === "text" && text === "") ||
                 (mode === "math" && math === "") ||
-                (mode === "code" && code === "")
+                (mode === "code" && code === "") ||
+                sendMessageIsLoading ||
+                sendMessageIsError
                   ? "#a5b4fc"
                   : "#1e1b4b",
             }}

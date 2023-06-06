@@ -26,11 +26,11 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     isLoading: messagesIsLoading,
     isError: messagesIsError,
   } = useFetchMessagesQuery(chat._id);
-  const [sendMessage, { error: sendError }] = useSendMessageMutation();
+  const [sendMessage, { isLoading: sendMessageIsLoading, isError: sendMessageIsError }] =
+    useSendMessageMutation();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [typing, setTyping] = useState<string>("");
-  const [sendMessageError, setSendMessageError] = useState<string>("");
 
   useEffect(() => {
     if (data?.messages) setMessages(data?.messages);
@@ -65,19 +65,13 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   }, [chat, user]);
 
   const handleSendMessage = async (message: SendMessageType) => {
-    try {
-      console.log("step 1");
-      console.log(message);
+    console.log("step 1");
+    console.log(message);
 
-      const { message: populatedMessage } = await sendMessage(message).unwrap();
-      setSendMessageError("");
-      socketRef.current!.emit("new message", chat, populatedMessage); //eslint-disable-line
-      setMessages((prev) => [...prev, populatedMessage]);
-    } catch (error) {
-      if (error && typeof error === "object" && isServerError(error)) {
-        setSendMessageError(error.data.message);
-      }
-    }
+    const { message: populatedMessage } = await sendMessage(message).unwrap();
+
+    socketRef.current!.emit("new message", chat, populatedMessage); //eslint-disable-line
+    setMessages((prev) => [...prev, populatedMessage]);
   };
 
   return (
@@ -91,7 +85,13 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
             messagesIsLoading={messagesIsLoading}
             messagesIsError={messagesIsError}
           />
-          <ChatFooter user={user} chat={chat} handleSendMessage={handleSendMessage} />
+          <ChatFooter
+            user={user}
+            chat={chat}
+            handleSendMessage={handleSendMessage}
+            sendMessageIsLoading={sendMessageIsLoading}
+            sendMessageIsError={sendMessageIsError}
+          />
         </div>
       </>
     )
