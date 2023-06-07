@@ -93,6 +93,7 @@ const ChatFooter = ({
             setCode={setCode}
             selectedLanguage={selectedLanguage}
             setSelectedLanguage={setSelectedLanguage}
+            handleUserTyping={handleUserTyping}
           />
         );
     }

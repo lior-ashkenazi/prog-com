@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-
 import { debounce } from "lodash";
 
 import { addStyles, EditableMathField, StaticMathField, MathField } from "react-mathquill";

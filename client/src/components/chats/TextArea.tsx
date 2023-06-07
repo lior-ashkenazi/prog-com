@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { debounce } from "lodash";
 
 interface TextAreaProps {
   text: string;
@@ -13,13 +14,17 @@ const TextArea = ({ text, setText, handleUserTyping }: TextAreaProps) => {
     if (textRef.current) textRef.current.value = text;
   }, [text]);
 
+  const debouncedHandleUserTyping = useRef(
+    debounce((isUserTyping: boolean) => handleUserTyping(isUserTyping), 500)
+  ).current;
+
   const handleBlur = () => {
-    handleUserTyping(false);
+    debouncedHandleUserTyping(false);
     setText(!textRef.current ? "" : textRef.current.value);
   };
 
   const handleChange = () => {
-    handleUserTyping(true);
+    debouncedHandleUserTyping(true);
     if (textRef.current && textRef.current.value === "") {
       setText("");
     }

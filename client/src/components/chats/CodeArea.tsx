@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { debounce } from "lodash";
 
 import CodeMirror from "@uiw/react-codemirror";
 import { StreamLanguage } from "@codemirror/language";
@@ -50,6 +51,7 @@ interface CodeAreaProps {
   setCode?: React.Dispatch<React.SetStateAction<string>>;
   selectedLanguage: LanguageKeys;
   setSelectedLanguage?: React.Dispatch<React.SetStateAction<LanguageKeys>>;
+  handleUserTyping?: (isUserTyping: boolean) => void;
 }
 
 const CodeArea = ({
@@ -58,6 +60,7 @@ const CodeArea = ({
   setCode,
   selectedLanguage,
   setSelectedLanguage,
+  handleUserTyping,
 }: CodeAreaProps) => {
   const codeRef = useRef<string>("ref");
 
@@ -65,11 +68,22 @@ const CodeArea = ({
     codeRef.current = code;
   }, [code]);
 
+  const debouncedHandleUserTyping = useRef(
+    debounce((isUserTyping: boolean) => handleUserTyping && handleUserTyping(isUserTyping), 500)
+  ).current;
+
+  const handleChange = (value: string) => {
+    debouncedHandleUserTyping(true);
+    codeRef.current = value;
+    codeRef.current === "" && setCode && setCode(codeRef.current);
+  };
+
   return (
     <div className="flex relative">
       <div
         className="w-full"
         onBlur={() => {
+          debouncedHandleUserTyping(false);
           setCode && setCode(codeRef.current);
         }}
       >
@@ -82,10 +96,7 @@ const CodeArea = ({
           theme="dark"
           readOnly={readOnly}
           extensions={[StreamLanguage.define(languagesStreamParserMap[selectedLanguage])]}
-          onChange={(value) => {
-            codeRef.current = value;
-            codeRef.current === "" && setCode && setCode(codeRef.current);
-          }}
+          onChange={handleChange}
           className="w-full rounded-md border-0 outline-none overflow-x-auto"
         />
       </div>
