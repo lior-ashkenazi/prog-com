@@ -35,7 +35,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     useSendMessageMutation();
 
   const [messages, setMessages] = useState<Message[]>([]);
-  const [typing, setTyping] = useState<string>("");
+  const [typingText, setTypingText] = useState<string>("");
 
   const [searchWindowVisible, setSearchWindowVisible] = useState<boolean>(false);
   const chatBodyRef = useRef<ChatBodyHandle | null>(null); // create a ref
@@ -46,6 +46,9 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
 
   useEffect(() => {
     socketRef.current = io(ENDPOINT, { forceNew: true });
+
+    console.log(ENDPOINT);
+    console.log(socketRef.current);
 
     socketRef.current.emit("setup", user);
     socketRef.current.emit("access chat", chat);
@@ -59,11 +62,13 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     });
 
     socketRef.current.on("typing", (user) => {
-      setTyping(user.userName);
+      console.log("step 2" + user);
+
+      setTypingText(user.userName);
     });
 
     socketRef.current.on("stop typing", () => {
-      setTyping("");
+      setTypingText("");
     });
 
     return () => {
@@ -71,6 +76,16 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
       socketRef.current!.disconnect(); //eslint-disable-line
     };
   }, [chat, user]);
+
+  const handleUserTyping = (isUserTyping: boolean) => {
+    console.log("step 1 " + isUserTyping);
+
+    if (isUserTyping) {
+      socketRef.current!.emit("typing", chat, user); //eslint-disable-line
+    } else {
+      socketRef.current!.emit("stop typing", chat, user); //eslint-disable-line
+    }
+  };
 
   const handleSendMessage = async (message: SendMessageType) => {
     const { message: populatedMessage } = await sendMessage(message).unwrap();
@@ -94,7 +109,12 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
         {!searchWindowVisible ? (
           <>
             <div className="col-span-2">
-              <ChatHeader user={user} chat={chat} setSearchWindowVisible={setSearchWindowVisible} />
+              <ChatHeader
+                user={user}
+                chat={chat}
+                setSearchWindowVisible={setSearchWindowVisible}
+                typingText={typingText}
+              />
             </div>
             <div className="col-span-2 grid grid grid-rows-[400px_auto] overflow-y-auto">
               <ChatBody
@@ -110,6 +130,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
                 handleSendMessage={handleSendMessage}
                 sendMessageIsLoading={sendMessageIsLoading}
                 sendMessageIsError={sendMessageIsError}
+                handleUserTyping={handleUserTyping}
               />
             </div>
           </>

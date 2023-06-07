@@ -18,6 +18,7 @@ interface ChatFooterProps {
   handleSendMessage: (message: SendMessageType) => Promise<void>;
   sendMessageIsLoading: boolean;
   sendMessageIsError: boolean;
+  handleUserTyping: (isUserTyping: boolean) => void;
 }
 
 const ChatFooter = ({
@@ -26,6 +27,7 @@ const ChatFooter = ({
   handleSendMessage,
   sendMessageIsLoading,
   sendMessageIsError,
+  handleUserTyping,
 }: ChatFooterProps) => {
   const [mode, setMode] = useState<MessageModes>("text");
   const [text, setText] = useState<string>("");
@@ -73,7 +75,7 @@ const ChatFooter = ({
   const renderInput = () => {
     switch (mode) {
       case "text":
-        return <TextArea text={text} setText={setText} />;
+        return <TextArea text={text} setText={setText} handleUserTyping={handleUserTyping} />;
       case "math":
         return <MathArea readOnly={false} math={math} setMath={setMath} />;
       case "code":
@@ -97,7 +99,7 @@ const ChatFooter = ({
     >
       <TextEmojiPicker openEmoji={openEmoji} text={text} setText={setText} />
       {sendMessageIsError && (
-        <div className="m-0.5 text-xs text-opacity-70 text-black text-right bg-red-600">
+        <div className="m-0.5 text-opacity-70 text-black text-right bg-red-600 absolute -top-1/2 -left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-sm">
           There was problem fetching messages.
         </div>
       )}
