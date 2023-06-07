@@ -114,12 +114,14 @@ const ChatBody = forwardRef(
                     <span className="bg-gray-200 m-1 w-fit p-2 rounded-md">{messageDate}</span>
                   </div>
                 )}
-                <div className="flex justify-end">
+                <div
+                  className={`flex ${
+                    user._id === message.sender._id ? "justify-end" : "justify-start"
+                  }`}
+                >
                   <div
                     className={`p-3 rounded-md max-w-xl ${
-                      user._id === message.sender._id
-                        ? "bg-emerald-200 self-end"
-                        : "bg-amber-200 self-start"
+                      user._id === message.sender._id ? "bg-emerald-200" : "bg-amber-200"
                     }`}
                   >
                     {renderMessage(message)}

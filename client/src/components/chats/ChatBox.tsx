@@ -58,8 +58,8 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
       console.log("set messages");
     });
 
-    socketRef.current.on("typing", (user) => {
-      setTypingText(user.userName);
+    socketRef.current.on("typing", (otherUser) => {
+      otherUser._id !== user._id && setTypingText(otherUser.userName);
     });
 
     socketRef.current.on("stop typing", () => {
