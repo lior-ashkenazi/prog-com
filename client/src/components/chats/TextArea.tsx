@@ -18,7 +18,7 @@ const TextArea = ({ text, setText, handleUserTyping }: TextAreaProps) => {
     setText(!textRef.current ? "" : textRef.current.value);
   };
 
-  const handleTyping = () => {
+  const handleChange = () => {
     handleUserTyping(true);
     if (textRef.current && textRef.current.value === "") {
       setText("");
@@ -31,7 +31,7 @@ const TextArea = ({ text, setText, handleUserTyping }: TextAreaProps) => {
       placeholder="Type a message."
       className="h-28 py-2 px-3 w-full rounded-md border-0 outline-none resize-none"
       onBlur={handleBlur}
-      onChange={handleTyping}
+      onChange={handleChange}
     />
   );
 };

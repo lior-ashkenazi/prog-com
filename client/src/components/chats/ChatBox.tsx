@@ -47,9 +47,6 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   useEffect(() => {
     socketRef.current = io(ENDPOINT, { forceNew: true });
 
-    console.log(ENDPOINT);
-    console.log(socketRef.current);
-
     socketRef.current.emit("setup", user);
     socketRef.current.emit("access chat", chat);
 
@@ -62,8 +59,6 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     });
 
     socketRef.current.on("typing", (user) => {
-      console.log("step 2" + user);
-
       setTypingText(user.userName);
     });
 
@@ -78,8 +73,6 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   }, [chat, user]);
 
   const handleUserTyping = (isUserTyping: boolean) => {
-    console.log("step 1 " + isUserTyping);
-
     if (isUserTyping) {
       socketRef.current!.emit("typing", chat, user); //eslint-disable-line
     } else {

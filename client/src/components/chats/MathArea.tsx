@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 
-import { addStyles, EditableMathField, StaticMathField } from "react-mathquill";
+import { debounce } from "lodash";
+
+import { addStyles, EditableMathField, StaticMathField, MathField } from "react-mathquill";
 
 addStyles();
 
@@ -8,11 +10,16 @@ interface MathAreaProps {
   readOnly: boolean;
   math: string;
   setMath?: React.Dispatch<React.SetStateAction<string>>;
+  handleUserTyping?: (isTyping: boolean) => void;
 }
 
-const MathArea = ({ readOnly, math, setMath }: MathAreaProps) => {
+const MathArea = ({ readOnly, math, setMath, handleUserTyping }: MathAreaProps) => {
   const mathRef = useRef<string>("");
   const [key, setKey] = useState<number>(0);
+
+  const debouncedUserTyping = useRef(
+    debounce(() => handleUserTyping && handleUserTyping(false), 1000)
+  ).current;
 
   useEffect(() => {
     mathRef.current = math;
@@ -21,6 +28,16 @@ const MathArea = ({ readOnly, math, setMath }: MathAreaProps) => {
       setKey((prevKey) => prevKey + 1);
     }
   }, [math]);
+
+  const handleChange = (mathField: MathField) => {
+    mathRef.current = mathField.latex();
+    mathRef.current === "" && setMath && setMath(mathRef.current);
+
+    if (handleUserTyping) {
+      handleUserTyping(true);
+      debouncedUserTyping();
+    }
+  };
 
   return readOnly ? (
     <div className="overflow-x-auto">
@@ -37,10 +54,7 @@ const MathArea = ({ readOnly, math, setMath }: MathAreaProps) => {
         latex={mathRef.current}
         config={{ autoCommands: "pi theta sqrt sum" }}
         className="h-28 py-10 px-3 w-full rounded-md border-0 outline-none text-justify overflow-x-auto"
-        onChange={(mathField) => {
-          mathRef.current = mathField.latex();
-          mathRef.current === "" && setMath && setMath(mathRef.current);
-        }}
+        onChange={handleChange}
       />
     </div>
   );

@@ -77,7 +77,14 @@ const ChatFooter = ({
       case "text":
         return <TextArea text={text} setText={setText} handleUserTyping={handleUserTyping} />;
       case "math":
-        return <MathArea readOnly={false} math={math} setMath={setMath} />;
+        return (
+          <MathArea
+            readOnly={false}
+            math={math}
+            setMath={setMath}
+            handleUserTyping={handleUserTyping}
+          />
+        );
       case "code":
         return (
           <CodeArea
