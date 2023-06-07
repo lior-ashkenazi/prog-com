@@ -32,6 +32,7 @@ const SearchChatsList = ({ searchQuery }: SearchChatsListProps) => {
         itemIndex={index}
         isClicked={selectedItem === index}
         handleClickedColor={handleClickedColor}
+        isSearch
       />
     ));
 

@@ -1,8 +1,10 @@
 import { useContext } from "react";
+import { useDispatch } from "react-redux";
+
+import { AppDispatch, setChat, useAccessChatMutation } from "../../store";
 import { LoadingContext } from "../../context/LoadingContext";
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
-import { useAccessChatMutation } from "../../store";
 import { getShortFormatDate, getOtherUserId, getChatName, getChatAvatar } from "../../utils";
 
 interface ChatsListItemProps {
@@ -11,6 +13,7 @@ interface ChatsListItemProps {
   itemIndex: number;
   isClicked: boolean;
   handleClickedColor: (index: number) => void;
+  isSearch: boolean;
 }
 
 const ChatsListItem = ({
@@ -19,17 +22,23 @@ const ChatsListItem = ({
   itemIndex,
   isClicked,
   handleClickedColor,
+  isSearch,
 }: ChatsListItemProps) => {
   const { setChatBoxIsLoading } = useContext(LoadingContext);
+  const dispatch: AppDispatch = useDispatch();
   const [accessChat] = useAccessChatMutation();
 
   const handleClick = async () => {
     handleClickedColor(itemIndex);
     setChatBoxIsLoading(true);
 
-    const otherUserId = getOtherUserId(user, chat);
+    if (isSearch && user) {
+      const otherUserId = getOtherUserId(user, chat);
 
-    await accessChat(otherUserId).unwrap();
+      await accessChat(otherUserId).unwrap();
+    } else {
+      dispatch(setChat(chat));
+    }
   };
 
   return (
@@ -40,11 +49,7 @@ const ChatsListItem = ({
       onClick={handleClick}
     >
       <div className="flex items-center justify-center gap-x-6">
-        <img
-          src={getChatAvatar(user, chat)}
-          alt="Header Avatar"
-          className="w-11 h-11 rounded-full"
-        />
+        <img src={getChatAvatar(user, chat)} alt="Chat Avatar" className="w-11 h-11 rounded-full" />
         <span className="flex flex-col text-left">
           <span className="font-semibold text-lg">{getChatName(user, chat)}</span>
           <span className="text-sm text-opacity-60 text-black">Maybe last message</span>
@@ -53,7 +58,7 @@ const ChatsListItem = ({
       <span
         className={`inline-block h-full mt-3 text-sm ${!chat?.updatedAt && "text-transparent"}`}
       >
-        {chat?.updatedAt ? getShortFormatDate(chat?.updatedAt) : "padding"}
+        {/* {chat?.updatedAt ? getShortFormatDate(chat?.updatedAt) : "padding"} */}
       </span>
     </button>
   );

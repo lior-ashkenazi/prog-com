@@ -108,7 +108,7 @@ const ChatFooter = ({
       <TextEmojiPicker openEmoji={openEmoji} text={text} setText={setText} />
       {sendMessageIsError && (
         <div className="m-0.5 text-opacity-70 text-black text-right bg-red-600 absolute -top-1/2 -left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-sm">
-          There was problem fetching messages.
+          Error with fetching messages.
         </div>
       )}
       <div className="absolute top-0 left-0">

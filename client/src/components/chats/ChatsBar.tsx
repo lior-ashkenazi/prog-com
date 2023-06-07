@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import SearchBar from "./SearchBar";
-import UsersList from "./UsersList";
+import ChatsList from "./ChatsList";
 import SearchChatsList from "./SearchChatsList";
 
 const ChatsBar = () => {
@@ -16,7 +16,7 @@ const ChatsBar = () => {
         <SearchBar searchQuery={searchInput} onChange={handleChangeSearchInput} mode="chats" />
       </div>
       <div className="col-span-1 overflow-y-auto border-r">
-        {!searchInput ? <UsersList /> : <SearchChatsList searchQuery={searchInput} />}
+        {!searchInput ? <ChatsList /> : <SearchChatsList searchQuery={searchInput} />}
       </div>
     </>
   );

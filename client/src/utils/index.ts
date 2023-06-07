@@ -38,12 +38,12 @@ const getOtherUserAvatar = (user: User, chat: Chat) => getOtherUserAttribute(use
 
 const getChatName = (user: User, chat: Chat) => {
   if (chat.isGroupChat) return chat.chatName;
-  return getOtherUserName(user, chat);
+  return user && getOtherUserName(user, chat);
 };
 
 const getChatAvatar = (user: User, chat: Chat) => {
   if (chat.isGroupChat) return chat.avatar;
-  return getOtherUserAvatar(user, chat);
+  return user && getOtherUserAvatar(user, chat);
 };
 
 export { getShortFormatDate, getMessageHour, getOtherUserId, getChatName, getChatAvatar };
