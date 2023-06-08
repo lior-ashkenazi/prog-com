@@ -12,16 +12,14 @@ import { languagesLowercaseToUppercaseMap } from "../../types/messageTypes";
 interface ChatsListItemProps {
   user: User;
   chat: Chat;
-  itemIndex: number;
   isClicked: boolean;
-  handleClickedColor: (index: number) => void;
+  handleClickedColor: (id: string) => void;
   isSearch: boolean;
 }
 
 const ChatsListItem = ({
   user,
   chat,
-  itemIndex,
   isClicked,
   handleClickedColor,
   isSearch,
@@ -31,7 +29,7 @@ const ChatsListItem = ({
   const [accessChat] = useAccessChatMutation();
 
   const handleClick = async () => {
-    handleClickedColor(itemIndex);
+    handleClickedColor(chat._id);
     setChatBoxIsLoading(true);
 
     if (isSearch && user) {
