@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState, useFetchChatsQuery } from "../../store";
@@ -8,6 +8,7 @@ import { Chat } from "../../types/chatTypes";
 
 import ChatsListItem from "./ChatsListItem";
 import ChatsListSkeleton from "./ChatsListSkeleton";
+import { SocketContext } from "../../context/SocketContext";
 
 const ChatsList = () => {
   const user: User | null = useSelector((state) => (state as RootState).app.user);
@@ -18,11 +19,10 @@ const ChatsList = () => {
     isError: chatsIsError,
     refetch: refetchChats,
   } = useFetchChatsQuery();
-  const [selectedItem, setSelectedItem] = useState<number>();
+  const { chats, setChats, socket, connectSocket } = useContext(SocketContext);
+  const [selectedItem, setSelectedItem] = useState<number>(-1);
 
   const handleClickedColor = (index: number) => setSelectedItem(index);
-
-  const [chats, setChats] = useState<Chat[]>([]);
 
   useEffect(() => {
     refetchChats();
@@ -30,7 +30,11 @@ const ChatsList = () => {
 
   useEffect(() => {
     if (data?.chats) setChats(data?.chats);
-  }, [data]);
+  }, [data, setChats]);
+
+  useEffect(() => {
+    user && !socket && connectSocket(user);
+  }, [user, socket, connectSocket]);
 
   const renderList = () =>
     chats.map(

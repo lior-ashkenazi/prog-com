@@ -60,6 +60,7 @@ const fetchChats = asyncHandler(async (req: Request, res: Response): Promise<voi
   })
     .populate("participants", "-password")
     .populate("groupAdmin", "-password")
+    .populate("lastMessageId", "-password")
     .sort({ updatedAt: -1 });
 
   res.status(200).json({ chats: allUserChats });

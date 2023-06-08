@@ -33,16 +33,9 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
   const [receivedMessage, setReceivedMessage] = useState<Message | null>(null);
 
   const connectSocket = (user: User) => {
-    if (!user) return;
+    socketRef.current = io(ENDPOINT);
+    console.log(socketRef.current);
 
-    if (socketRef.current) {
-      socketRef.current.close();
-    }
-
-    console.log("step 1");
-    console.log(user);
-
-    socketRef.current = io(ENDPOINT, { forceNew: true });
     socketRef.current.emit("setup", user._id);
     socketRef.current.on("message received", (message: Message) => {
       console.log("step 2");
@@ -60,6 +53,10 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
       });
       setReceivedMessage(message);
     });
+
+    return () => {
+      socketRef.current!.close(); //eslint-disable-line
+    };
   };
 
   useEffect(() => {

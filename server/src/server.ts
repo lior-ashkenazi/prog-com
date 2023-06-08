@@ -85,7 +85,7 @@ io.on("connection", (socket) => {
 
     chat.participants.forEach((user: IUser) => {
       // if (user._id === newMessage.sender._id) return;
-      socket.in(user._id).emit("message received", newMessage);
+      io.to(user._id).emit("message received", newMessage);
     });
   });
 

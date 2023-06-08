@@ -62,6 +62,7 @@ const fetchChats = (0, express_async_handler_1.default)((req, res) => __awaiter(
     })
         .populate("participants", "-password")
         .populate("groupAdmin", "-password")
+        .populate("lastMessageId", "-password")
         .sort({ updatedAt: -1 });
     res.status(200).json({ chats: allUserChats });
 }));

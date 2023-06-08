@@ -37,7 +37,10 @@ const sendMessage = asyncHandler(async (req: Request, res: Response): Promise<vo
     path: "chatId.participants",
     select: "username avatar email",
   });
-  // TODO Latest message feature
+
+  chat.lastMessageId = newMessage._id;
+  await chat.save();
+
   res.json({ message: newMessage });
 });
 

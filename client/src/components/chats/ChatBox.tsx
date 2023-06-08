@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from "react";
-import { io, Socket } from "socket.io-client";
+import { useEffect, useState, useContext, useRef } from "react";
 
 import { useFetchMessagesQuery, useSendMessageMutation } from "../../store";
+import { SocketContext } from "../../context/SocketContext";
 
 import ChatHeader from "./ChatHeader";
 import ChatBody from "./ChatBody";
@@ -11,8 +11,6 @@ import { User } from "../../types/userTypes";
 import { Message, SendMessageType } from "../../types/messageTypes";
 import { Chat } from "../../types/chatTypes";
 import ChatSearchWindow from "./ChatSearchWindow";
-
-const ENDPOINT = import.meta.env.VITE_ENDPOINT as string;
 
 interface ChatBoxProps {
   user: User;
@@ -24,8 +22,6 @@ interface ChatBodyHandle {
 }
 
 const ChatBox = ({ user, chat }: ChatBoxProps) => {
-  const socketRef = useRef<Socket | null>(null);
-
   const {
     data,
     isLoading: messagesIsLoading,
@@ -35,6 +31,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   } = useFetchMessagesQuery(chat._id);
   const [sendMessage, { isLoading: sendMessageIsLoading, isError: sendMessageIsError }] =
     useSendMessageMutation();
+  const { socket, connectSocket } = useContext(SocketContext);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [typingText, setTypingText] = useState<string>("");
@@ -42,6 +39,10 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   const [searchWindowVisible, setSearchWindowVisible] = useState<boolean>(false);
   const [messageToScrollTo, setMessageToScrollTo] = useState<number>(-1);
   const chatBodyRef = useRef<ChatBodyHandle | null>(null); // create a ref
+
+  useEffect(() => {
+    user && !socket && connectSocket(user);
+  }, [user, socket, connectSocket]);
 
   useEffect(() => {
     refetchMessages();
@@ -54,27 +55,33 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   }, [data]);
 
   useEffect(() => {
-    socketRef.current = io(ENDPOINT, { forceNew: true });
+    if (!socket) return;
 
-    socketRef.current.emit("setup", user);
-    socketRef.current.emit("access chat", chat);
+    socket.emit("setup", user);
+    socket.emit("access chat", chat);
 
-    socketRef.current.on("message received", (message: Message) => {
+    const messageReceivedHandler = (message: Message) => {
       setMessages((prev) => [...prev, message]);
-    });
+    };
 
-    socketRef.current.on("typing", (otherUser) => {
+    const typingHandler = (otherUser: User) => {
       otherUser._id !== user._id && setTypingText(otherUser.userName);
-    });
+    };
 
-    socketRef.current.on("stop typing", () => {
+    const stopTypingHandler = () => {
       setTypingText("");
-    });
+    };
+
+    socket.on("message received", messageReceivedHandler);
+    socket.on("typing", typingHandler);
+    socket.on("stop typing", stopTypingHandler);
 
     return () => {
-      socketRef.current!.disconnect(); //eslint-disable-line
+      socket.off("message received", messageReceivedHandler);
+      socket.off("typing", typingHandler);
+      socket.off("stop typing", stopTypingHandler);
     };
-  }, [chat, user]);
+  }, [chat, user, socket, connectSocket]);
 
   useEffect(() => {
     if (!searchWindowVisible && messageToScrollTo !== -1) {
@@ -85,17 +92,16 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
 
   const handleUserTyping = (isUserTyping: boolean) => {
     if (isUserTyping) {
-      socketRef.current!.emit("typing", chat, user); //eslint-disable-line
+      socket && socket.emit("typing", chat, user); //eslint-disable-line
     } else {
-      socketRef.current!.emit("stop typing", chat, user); //eslint-disable-line
+      socket && socket.emit("stop typing", chat, user); //eslint-disable-line
     }
   };
 
   const handleSendMessage = async (message: SendMessageType) => {
     const { message: populatedMessage } = await sendMessage(message).unwrap();
 
-    socketRef.current!.emit("new message", chat, populatedMessage); //eslint-disable-line
-    setMessages((prev) => [...prev, populatedMessage]);
+    socket && socket.emit("new message", chat, populatedMessage); //eslint-disable-line
   };
 
   const handleSearchClick = (messageId: string) => {

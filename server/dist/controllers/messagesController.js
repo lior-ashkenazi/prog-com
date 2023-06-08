@@ -37,7 +37,8 @@ const sendMessage = (0, express_async_handler_1.default)((req, res) => __awaiter
         path: "chatId.participants",
         select: "username avatar email",
     });
-    // TODO Latest message feature
+    chat.lastMessageId = newMessage._id;
+    yield chat.save();
     res.json({ message: newMessage });
 }));
 exports.sendMessage = sendMessage;

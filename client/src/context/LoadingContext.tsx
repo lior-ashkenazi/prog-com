@@ -5,10 +5,12 @@ interface LoadingContextState {
   setChatBoxIsLoading: (isLoading: boolean) => void;
 }
 
-const LoadingContext = createContext<LoadingContextState>({
+const defaultLoadingContextValue = {
   chatBoxIsLoading: false,
   setChatBoxIsLoading: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-});
+};
+
+const LoadingContext = createContext<LoadingContextState>(defaultLoadingContextValue);
 
 interface LoadingProviderProps {
   children: React.ReactNode;

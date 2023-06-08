@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
             return console.log("chat.participants not defined");
         chat.participants.forEach((user) => {
             // if (user._id === newMessage.sender._id) return;
-            socket.in(user._id).emit("message received", newMessage);
+            io.to(user._id).emit("message received", newMessage);
         });
     });
     // Start typing
