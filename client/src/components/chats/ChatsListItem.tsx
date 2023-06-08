@@ -6,7 +6,7 @@ import { LoadingContext } from "../../context/LoadingContext";
 import { User } from "../../types/userTypes";
 import { Message } from "../../types/messageTypes";
 import { Chat } from "../../types/chatTypes";
-import { getShortFormatDate, getOtherUserId, getChatName, getChatAvatar } from "../../utils";
+import { getMessageDate, getOtherUserId, getChatName, getChatAvatar } from "../../utils";
 import { languagesLowercaseToUppercaseMap } from "../../types/messageTypes";
 
 interface ChatsListItemProps {
@@ -66,9 +66,7 @@ const ChatsListItem = ({
         </span>
       </div>
       <span className={`mb-4 text-sm ${!chat?.lastMessageId?.createdAt && "text-transparent"}`}>
-        {chat?.lastMessageId?.createdAt
-          ? getShortFormatDate(chat.lastMessageId.createdAt)
-          : "padding"}
+        {chat?.lastMessageId?.createdAt ? getMessageDate(chat.lastMessageId.createdAt) : "padding"}
       </span>
     </button>
   );

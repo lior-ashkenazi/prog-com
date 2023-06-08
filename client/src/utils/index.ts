@@ -2,8 +2,8 @@ import dayjs from "dayjs";
 import { User } from "../types/userTypes";
 import { Chat } from "../types/chatTypes";
 
-const getShortFormatDate = (dateString: Date) => {
-  const date = dayjs(dateString);
+const getShortFormatDate = (dateArg: Date) => {
+  const date = dayjs(dateArg);
   const today = dayjs();
 
   const diffDays = today.diff(date, "day");
@@ -19,6 +19,13 @@ const getShortFormatDate = (dateString: Date) => {
   } else {
     return date.format("DD/MM/YYYY");
   }
+};
+
+const getMessageDate = (dateArg: Date) => {
+  const date = dayjs(dateArg);
+  const today = dayjs();
+
+  return today.isSame(date, "day") ? date.format("HH:mm") : getShortFormatDate(dateArg);
 };
 
 const getMessageHour = (date: Date) => dayjs(date).format("HH:mm");
@@ -46,4 +53,11 @@ const getChatAvatar = (user: User, chat: Chat) => {
   return user && getOtherUserAvatar(user, chat);
 };
 
-export { getShortFormatDate, getMessageHour, getOtherUserId, getChatName, getChatAvatar };
+export {
+  getShortFormatDate,
+  getMessageDate,
+  getMessageHour,
+  getOtherUserId,
+  getChatName,
+  getChatAvatar,
+};

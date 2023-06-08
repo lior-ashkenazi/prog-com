@@ -1,5 +1,5 @@
 import { Message } from "../../types/messageTypes";
-import { getShortFormatDate } from "../../utils";
+import { getMessageDate } from "../../utils";
 
 interface MessagesListItemProps {
   message: Message;
@@ -27,7 +27,7 @@ const MessagesListItem = ({ message, handleSearchClick, searchQuery }: MessagesL
     >
       <div className="flex flex-col items-start">
         <span className="text-black text-opacity-70 text-sm">
-          {getShortFormatDate(message.createdAt)}
+          {getMessageDate(message.createdAt)}
         </span>
         <span dangerouslySetInnerHTML={{ __html: highlightedMessage }} />
       </div>
