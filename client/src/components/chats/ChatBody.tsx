@@ -14,11 +14,15 @@ interface ChatBodyProps {
   user: User;
   messages: Message[];
   messagesIsLoading: boolean;
+  messagesIsFetching: boolean;
   messagesIsError: boolean;
 }
 
 const ChatBody = forwardRef(
-  ({ user, messages, messagesIsLoading, messagesIsError }: ChatBodyProps, ref) => {
+  (
+    { user, messages, messagesIsLoading, messagesIsFetching, messagesIsError }: ChatBodyProps,
+    ref
+  ) => {
     const messageRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const divRef = useRef<HTMLDivElement | null>(null);
@@ -86,7 +90,7 @@ const ChatBody = forwardRef(
           !isOverflowing && "border-r-8 border-r-gray-100"
         } ${messagesIsLoading && "items-end"}`}
       >
-        {messagesIsLoading ? (
+        {messagesIsLoading || messagesIsFetching ? (
           <Skeleton
             width={500}
             height={50}

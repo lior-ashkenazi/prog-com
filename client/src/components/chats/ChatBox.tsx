@@ -26,10 +26,14 @@ interface ChatBodyHandle {
 const ChatBox = ({ user, chat }: ChatBoxProps) => {
   const socketRef = useRef<Socket | null>(null);
 
+  console.log(chat._id);
+
   const {
     data,
     isLoading: messagesIsLoading,
+    isFetching: messagesIsFetching,
     isError: messagesIsError,
+    refetch: refetchMessages,
   } = useFetchMessagesQuery(chat._id);
   const [sendMessage, { isLoading: sendMessageIsLoading, isError: sendMessageIsError }] =
     useSendMessageMutation();
@@ -41,7 +45,13 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   const chatBodyRef = useRef<ChatBodyHandle | null>(null); // create a ref
 
   useEffect(() => {
-    if (data?.messages) setMessages(data?.messages);
+    refetchMessages();
+  }, [refetchMessages, chat._id]);
+
+  useEffect(() => {
+    if (data?.messages) {
+      setMessages(data?.messages);
+    }
   }, [data]);
 
   useEffect(() => {
@@ -51,11 +61,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     socketRef.current.emit("access chat", chat);
 
     socketRef.current.on("message received", (message: Message) => {
-      console.log("message received");
-
       setMessages((prev) => [...prev, message]);
-
-      console.log("set messages");
     });
 
     socketRef.current.on("typing", (otherUser) => {
@@ -67,7 +73,6 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     });
 
     return () => {
-      socketRef.current!.off("setup"); //eslint-disable-line
       socketRef.current!.disconnect(); //eslint-disable-line
     };
   }, [chat, user]);
@@ -82,6 +87,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
 
   const handleSendMessage = async (message: SendMessageType) => {
     const { message: populatedMessage } = await sendMessage(message).unwrap();
+    console.log(message);
 
     socketRef.current!.emit("new message", chat, populatedMessage); //eslint-disable-line
     setMessages((prev) => [...prev, populatedMessage]);
@@ -115,6 +121,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
                 user={user}
                 messages={messages}
                 messagesIsLoading={messagesIsLoading}
+                messagesIsFetching={messagesIsFetching}
                 messagesIsError={messagesIsError}
               />
               <ChatFooter

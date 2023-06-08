@@ -6,10 +6,7 @@ import ChatBoxContainer from "../components/chats/ChatBoxContainer";
 const ChatsPage = () => {
   return (
     <LoadingProvider>
-      <div
-        className="grid grid-rows-[auto_1fr] bg-gray-100 w-full mx-4"
-        style={{ height: "calc(100vh - 2rem)" }}
-      >
+      <div className="grid grid-rows-[auto_1fr] bg-gray-100 w-full h-full">
         <PageHeader />
         <div className="grid grid-cols-3 grid-rows-[auto_1fr] grid-flow-col overflow-y-hidden">
           <ChatsBar />

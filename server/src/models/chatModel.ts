@@ -6,7 +6,7 @@ export interface IChat extends Document {
   isGroupChat: boolean;
   groupAdmin?: Schema.Types.ObjectId;
   avatar: string;
-  // TODO - maybe notification of last message
+  // TODO - maybe last message
 }
 
 const chatSchema: Schema = new Schema<IChat>(
