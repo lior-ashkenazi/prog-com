@@ -50,7 +50,7 @@ const ChatsList = () => {
 
   return (
     <div className="flex flex-col">
-      {user && !chatsIsLoading && chatsIsFetching ? (
+      {user && !chatsIsLoading && !chatsIsFetching ? (
         renderList()
       ) : chatsIsError ? (
         <div className="inline-block px-6 py-1 h-20 flex items-center justify-between transition-colors rounded-t-sm text-red-600">
