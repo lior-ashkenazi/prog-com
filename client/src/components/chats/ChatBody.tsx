@@ -44,10 +44,6 @@ const ChatBody = forwardRef(
       return () => window.removeEventListener("resize", checkOverflow);
     }, []);
 
-    const scrollToBottom = () => {
-      messagesEndRef.current?.scrollIntoView();
-    };
-
     useEffect(() => {
       messageRefs.current = messageRefs.current.slice(0, messages.length);
 
@@ -56,8 +52,19 @@ const ChatBody = forwardRef(
           messageRefs.current[i] = createRef<HTMLDivElement>();
         }
       });
-      scrollToBottom();
     }, [messages]);
+
+    useEffect(() => {
+      const chatBody = divRef.current;
+      if (chatBody) {
+        const observer = new MutationObserver(() => {
+          chatBody.scrollTop = chatBody.scrollHeight;
+        });
+
+        observer.observe(chatBody, { childList: true });
+        return () => observer.disconnect();
+      }
+    }, []);
 
     useImperativeHandle(ref, () => ({
       scrollToMessage: (index: number) => {
