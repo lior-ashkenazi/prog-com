@@ -11,6 +11,8 @@ interface SocketContextState {
   socket: Socket | null;
   chats: Chat[];
   setChats: React.Dispatch<SetStateAction<Chat[]>>;
+  shouldRefetchChats: boolean;
+  setShouldRefetchChats: React.Dispatch<SetStateAction<boolean>>;
   connectSocket: (user: User) => void;
 }
 
@@ -18,6 +20,8 @@ const defaultSocketContextValue = {
   socket: io(ENDPOINT, { autoConnect: false }),
   chats: [],
   setChats: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+  shouldRefetchChats: false,
+  setShouldRefetchChats: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   connectSocket: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 };
 
@@ -30,6 +34,7 @@ interface SocketProviderProps {
 const SocketProvider = ({ children }: SocketProviderProps) => {
   const socketRef = useRef<Socket | null>(null);
   const [chats, setChats] = useState<Chat[]>([]);
+  const [shouldRefetchChats, setShouldRefetchChats] = useState<boolean>(false);
   const [receivedMessage, setReceivedMessage] = useState<Message | null>(null);
 
   const connectSocket = (user: User) => {
@@ -38,16 +43,24 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
 
     socketRef.current.emit("setup", user._id);
     socketRef.current.on("message received", (message: Message) => {
-      console.log("step 2");
-
       setChats((prevChats) => {
         return prevChats.map((chat) => {
+          const chatExists = prevChats.some((chat) => chat._id === message.chatId._id);
+
+          if (!chatExists) {
+            setShouldRefetchChats(true);
+          }
+
           // the message object is populated so
           // chatId is now a Chat in fact
           // in database indeed chatId is an id
           if (chat._id === message.chatId._id) {
             return { ...chat, lastMessage: message };
           }
+
+          // if the chat doesn't exist, we will update
+          // the chats state correctly after a refetch
+          // the must occur
           return chat;
         });
       });
@@ -91,7 +104,16 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket: socketRef.current, chats, setChats, connectSocket }}>
+    <SocketContext.Provider
+      value={{
+        socket: socketRef.current,
+        chats,
+        shouldRefetchChats,
+        setShouldRefetchChats,
+        setChats,
+        connectSocket,
+      }}
+    >
       {children}
     </SocketContext.Provider>
   );
