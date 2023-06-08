@@ -25,6 +25,7 @@ const ChatBody = forwardRef(
   ) => {
     const messageRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const [scrollToIndex, setScrollToIndex] = useState<number>(-1);
     const divRef = useRef<HTMLDivElement | null>(null);
     const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
 
@@ -60,9 +61,20 @@ const ChatBody = forwardRef(
 
     useImperativeHandle(ref, () => ({
       scrollToMessage: (index: number) => {
-        messageRefs.current[index]?.current?.scrollIntoView({ behavior: "smooth" });
+        setScrollToIndex(index);
       },
     }));
+
+    useEffect(() => {
+      if (scrollToIndex !== -1) {
+        const target = messageRefs.current[scrollToIndex]?.current;
+
+        if (target) {
+          target.scrollIntoView({ behavior: "auto" });
+        }
+        setScrollToIndex(-1);
+      }
+    }, [scrollToIndex, messages]);
 
     const renderMessage = (message: Message) => {
       switch (message.mode) {

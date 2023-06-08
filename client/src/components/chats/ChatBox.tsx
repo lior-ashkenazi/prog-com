@@ -26,8 +26,6 @@ interface ChatBodyHandle {
 const ChatBox = ({ user, chat }: ChatBoxProps) => {
   const socketRef = useRef<Socket | null>(null);
 
-  console.log(chat._id);
-
   const {
     data,
     isLoading: messagesIsLoading,
@@ -42,6 +40,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   const [typingText, setTypingText] = useState<string>("");
 
   const [searchWindowVisible, setSearchWindowVisible] = useState<boolean>(false);
+  const [messageToScrollTo, setMessageToScrollTo] = useState<number>(-1);
   const chatBodyRef = useRef<ChatBodyHandle | null>(null); // create a ref
 
   useEffect(() => {
@@ -77,6 +76,13 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     };
   }, [chat, user]);
 
+  useEffect(() => {
+    if (!searchWindowVisible && messageToScrollTo !== -1) {
+      chatBodyRef.current?.scrollToMessage(messageToScrollTo);
+      setMessageToScrollTo(-1);
+    }
+  }, [searchWindowVisible, messageToScrollTo]);
+
   const handleUserTyping = (isUserTyping: boolean) => {
     if (isUserTyping) {
       socketRef.current!.emit("typing", chat, user); //eslint-disable-line
@@ -87,7 +93,6 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
 
   const handleSendMessage = async (message: SendMessageType) => {
     const { message: populatedMessage } = await sendMessage(message).unwrap();
-    console.log(message);
 
     socketRef.current!.emit("new message", chat, populatedMessage); //eslint-disable-line
     setMessages((prev) => [...prev, populatedMessage]);
@@ -98,7 +103,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
 
     const index = messages.findIndex((message) => message._id === messageId);
     if (index !== -1) {
-      chatBodyRef.current?.scrollToMessage(index);
+      setMessageToScrollTo(index);
     }
   };
 

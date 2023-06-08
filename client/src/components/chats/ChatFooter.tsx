@@ -133,7 +133,7 @@ const ChatFooter = ({
         {renderInput()}
         <button
           type="submit"
-          className={`absolute -right-8 bottom-0`}
+          className={`absolute -right-8 bottom-0 cursor-pointer`}
           onClick={() => setOpenEmoji(false)}
           disabled={
             (mode === "text" && text === "") ||
@@ -145,14 +145,7 @@ const ChatFooter = ({
         >
           <IoSend
             style={{
-              color:
-                (mode === "text" && text === "") ||
-                (mode === "math" && math === "") ||
-                (mode === "code" && code === "") ||
-                sendMessageIsLoading ||
-                sendMessageIsError
-                  ? "#a5b4fc"
-                  : "#1e1b4b",
+              color: sendMessageIsLoading || sendMessageIsError ? "#a5b4fc" : "#1e1b4b",
             }}
           />
         </button>
