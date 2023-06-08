@@ -51,11 +51,13 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
             setShouldRefetchChats(true);
           }
 
+          console.log("we reach this code?");
+
           // the message object is populated so
           // chatId is now a Chat in fact
           // in database indeed chatId is an id
           if (chat._id === message.chatId._id) {
-            return { ...chat, lastMessage: message };
+            return { ...chat, lastMessageId: message };
           }
 
           // if the chat doesn't exist, we will update
@@ -77,17 +79,17 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
       // Sort chats by last message date
       setChats((prevChats) =>
         [...prevChats].sort((a, b) => {
-          if (!a.lastMessage && !b.lastMessage) {
+          if (!a.lastMessageId && !b.lastMessageId) {
             return -1; // If both don't have a last message, chat A takes precedence
-          } else if (!a.lastMessage) {
+          } else if (!a.lastMessageId) {
             return 1; // If only A doesn't have a last message, B takes precedence
-          } else if (!b.lastMessage) {
+          } else if (!b.lastMessageId) {
             return -1; // If only B doesn't have a last message, A takes precedence
           } else {
             // If both have last message, compare by last message date
             return (
-              new Date(b.lastMessage.createdAt).getTime() -
-              new Date(a.lastMessage.createdAt).getTime()
+              new Date(b.lastMessageId.createdAt).getTime() -
+              new Date(a.lastMessageId.createdAt).getTime()
             );
           }
         })

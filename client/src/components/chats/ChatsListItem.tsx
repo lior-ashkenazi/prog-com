@@ -4,8 +4,10 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, setChat, useAccessChatMutation } from "../../store";
 import { LoadingContext } from "../../context/LoadingContext";
 import { User } from "../../types/userTypes";
+import { Message } from "../../types/messageTypes";
 import { Chat } from "../../types/chatTypes";
 import { getShortFormatDate, getOtherUserId, getChatName, getChatAvatar } from "../../utils";
+import { languagesLowercaseToUppercaseMap } from "../../types/messageTypes";
 
 interface ChatsListItemProps {
   user: User;
@@ -41,9 +43,17 @@ const ChatsListItem = ({
     }
   };
 
+  const renderMessageContent = (message: Message) => {
+    if (message.mode === "math") return "Math message";
+    if (message.mode === "code" && message.language) {
+      return `Code message written in ${languagesLowercaseToUppercaseMap[message.language]}`;
+    }
+    return message.content;
+  };
+
   return (
     <button
-      className={`inline-block px-6 py-1 h-20 flex items-center justify-between hover:bg-gray-200 active:bg-gray-300 transition-colors rounded-t-sm border-b last:border-b-0 ${
+      className={`inline-block px-6 h-20 flex items-center justify-between hover:bg-gray-200 active:bg-gray-300 transition-colors rounded-t-sm border-b last:border-b-0 ${
         isClicked && "bg-gray-300 hover:bg-gray-300"
       }`}
       onClick={handleClick}
@@ -52,13 +62,15 @@ const ChatsListItem = ({
         <img src={getChatAvatar(user, chat)} alt="Chat Avatar" className="w-11 h-11 rounded-full" />
         <span className="flex flex-col text-left">
           <span className="font-semibold text-lg">{getChatName(user, chat)}</span>
-          <span className="text-sm text-opacity-60 text-black">Maybe last message</span>
+          <span className="text-sm text-opacity-60 text-black max-w-xs truncate ">
+            {chat?.lastMessageId && renderMessageContent(chat.lastMessageId)}
+          </span>
         </span>
       </div>
-      <span
-        className={`inline-block h-full mt-3 text-sm ${!chat?.updatedAt && "text-transparent"}`}
-      >
-        {/* {chat?.updatedAt ? getShortFormatDate(chat?.updatedAt) : "padding"} */}
+      <span className={`mb-4 text-sm ${!chat?.lastMessageId?.createdAt && "text-transparent"}`}>
+        {chat?.lastMessageId?.createdAt
+          ? getShortFormatDate(chat.lastMessageId.createdAt)
+          : "padding"}
       </span>
     </button>
   );

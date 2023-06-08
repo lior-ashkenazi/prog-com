@@ -79,7 +79,7 @@ const ChatBody = forwardRef(
     const renderMessage = (message: Message) => {
       switch (message.mode) {
         case "text":
-          return <span>{message.content}</span>;
+          return <span className="whitespace-normal break-words">{message.content}</span>;
         case "math":
           return <MathArea readOnly={true} math={message.content} />;
         case "code":

@@ -11,6 +11,8 @@ import { swift } from "@codemirror/legacy-modes/mode/swift";
 import { go } from "@codemirror/legacy-modes/mode/go";
 import { rust } from "@codemirror/legacy-modes/mode/rust";
 
+import { languagesLowercaseToUppercaseMap } from "../../types/messageTypes";
+
 const languagesStreamParserMap = {
   cpp: cpp,
   java: java,
@@ -25,22 +27,6 @@ const languagesStreamParserMap = {
   kotlin: kotlin,
   rust: rust,
   typescript: typescript,
-};
-
-const languagesDropdownMap = {
-  cpp: "C++",
-  java: "Java",
-  python: "Python",
-  c: "C",
-  csharp: "C#",
-  javascript: "JavaScript",
-  ruby: "Ruby",
-  swift: "Swift",
-  go: "Go",
-  scala: "Scala",
-  kotlin: "Kotlin",
-  rust: "Rust",
-  typescript: "TypeScript",
 };
 
 export type LanguageKeys = keyof typeof languagesStreamParserMap;
@@ -88,7 +74,9 @@ const CodeArea = ({
         }}
       >
         {readOnly && (
-          <span className="font-semibold">{languagesDropdownMap[selectedLanguage]}</span>
+          <span className="font-semibold">
+            {languagesLowercaseToUppercaseMap[selectedLanguage]}
+          </span>
         )}
         <CodeMirror
           value={code}
@@ -109,7 +97,7 @@ const CodeArea = ({
             }
             value={selectedLanguage}
           >
-            {Object.entries(languagesDropdownMap).map(([key, value]) => (
+            {Object.entries(languagesLowercaseToUppercaseMap).map(([key, value]) => (
               <option key={key} value={key}>
                 {value}
               </option>

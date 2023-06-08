@@ -22,7 +22,7 @@ const MessagesListItem = ({ message, handleSearchClick, searchQuery }: MessagesL
 
   return (
     <button
-      className="inline-block px-6 py-1 h-20 flex items-center justify-start rounded-t-sm border-b last:border-b-0"
+      className="inline-block px-6 h-20 flex items-center justify-start rounded-t-sm border-b last:border-b-0"
       onClick={() => handleSearchClick(message._id)}
     >
       <div className="flex flex-col items-start">

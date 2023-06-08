@@ -7,7 +7,7 @@ export type Chat = {
   participants: User[];
   isGroupChat: boolean;
   groupAdmin?: string;
-  lastMessage?: Message;
+  lastMessageId?: Message;
   avatar?: string;
   updatedAt?: Date;
 };

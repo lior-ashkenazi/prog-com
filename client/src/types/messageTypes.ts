@@ -28,6 +28,22 @@ export type MessageCodeLanguage =
   | "rust"
   | "typescript";
 
+export const languagesLowercaseToUppercaseMap = {
+  cpp: "C++",
+  java: "Java",
+  python: "Python",
+  c: "C",
+  csharp: "C#",
+  javascript: "JavaScript",
+  ruby: "Ruby",
+  swift: "Swift",
+  go: "Go",
+  scala: "Scala",
+  kotlin: "Kotlin",
+  rust: "Rust",
+  typescript: "TypeScript",
+};
+
 export type SendMessageType =
   | { mode: string; content: string; chatId: string; sender: string }
   | { mode: string; content: string; language: string; chatId: string; sender: string };
