@@ -11,12 +11,22 @@ import ChatsListSkeleton from "./ChatsListSkeleton";
 
 const ChatsList = () => {
   const user: User | null = useSelector((state) => (state as RootState).app.user);
-  const { data, isLoading: chatsIsLoading, isError: chatsIsError } = useFetchChatsQuery();
+  const {
+    data,
+    isLoading: chatsIsLoading,
+    isFetching: chatsIsFetching,
+    isError: chatsIsError,
+    refetch: refetchChats,
+  } = useFetchChatsQuery();
   const [selectedItem, setSelectedItem] = useState<number>();
 
   const handleClickedColor = (index: number) => setSelectedItem(index);
 
   const [chats, setChats] = useState<Chat[]>([]);
+
+  useEffect(() => {
+    refetchChats();
+  }, [refetchChats]);
 
   useEffect(() => {
     if (data?.chats) setChats(data?.chats);
@@ -40,7 +50,7 @@ const ChatsList = () => {
 
   return (
     <div className="flex flex-col">
-      {user && !chatsIsLoading ? (
+      {user && !chatsIsLoading && chatsIsFetching ? (
         renderList()
       ) : chatsIsError ? (
         <div className="inline-block px-6 py-1 h-20 flex items-center justify-between transition-colors rounded-t-sm text-red-600">
