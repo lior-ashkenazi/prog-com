@@ -64,7 +64,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     };
 
     const typingHandler = (otherUser: User) => {
-      otherUser._id !== user._id && setTypingText(otherUser.userName);
+      user._id !== otherUser._id && setTypingText(otherUser.userName);
     };
 
     const stopTypingHandler = () => {
@@ -90,17 +90,21 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   }, [searchWindowVisible, messageToScrollTo]);
 
   const handleUserTyping = (isUserTyping: boolean) => {
+    if (!socket) return;
+
     if (isUserTyping) {
-      socket && socket.emit("typing", chat, user); //eslint-disable-line
+      socket.emit("typing", chat, user); //eslint-disable-line
     } else {
-      socket && socket.emit("stop typing", chat, user); //eslint-disable-line
+      socket.emit("stop typing", chat, user); //eslint-disable-line
     }
   };
 
   const handleSendMessage = async (message: SendMessageType) => {
+    if (!socket) return;
+
     const { message: populatedMessage } = await sendMessage(message).unwrap();
 
-    socket && socket.emit("new message", chat, populatedMessage); //eslint-disable-line
+    socket.emit("new message", chat, populatedMessage); //eslint-disable-line
   };
 
   const handleSearchClick = (messageId: string) => {

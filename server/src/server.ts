@@ -84,19 +84,18 @@ io.on("connection", (socket) => {
     if (!chat.participants) return console.log("chat.participants not defined");
 
     chat.participants.forEach((user: IUser) => {
-      // if (user._id === newMessage.sender._id) return;
       io.to(user._id).emit("message received", newMessage);
     });
   });
 
   // Start typing
   socket.on("typing", (chat, user) => {
-    socket.in(chat._id).emit("typing", user);
+    io.to(chat._id).emit("typing", user);
   });
 
   // Stop typing
   socket.on("stop typing", (chat, user) => {
-    socket.in(chat._id).emit("stop typing", user);
+    io.to(chat._id).emit("stop typing", user);
   });
 
   socket.off("setup", (user) => {

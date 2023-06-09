@@ -54,14 +54,18 @@ const CodeArea = ({
     codeRef.current = code;
   }, [code]);
 
-  const debouncedHandleUserTyping = useRef(
-    debounce((isUserTyping: boolean) => handleUserTyping && handleUserTyping(isUserTyping), 500)
+  const debouncedUserTyping = useRef(
+    debounce(() => handleUserTyping && handleUserTyping(false), 500)
   ).current;
 
   const handleChange = (value: string) => {
-    debouncedHandleUserTyping(true);
     codeRef.current = value;
     codeRef.current === "" && setCode && setCode(codeRef.current);
+
+    if (handleUserTyping) {
+      handleUserTyping(true);
+      debouncedUserTyping();
+    }
   };
 
   return (
@@ -69,7 +73,7 @@ const CodeArea = ({
       <div
         className="w-full"
         onBlur={() => {
-          debouncedHandleUserTyping(false);
+          debouncedUserTyping();
           setCode && setCode(codeRef.current);
         }}
       >

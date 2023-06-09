@@ -14,20 +14,20 @@ const TextArea = ({ text, setText, handleUserTyping }: TextAreaProps) => {
     if (textRef.current) textRef.current.value = text;
   }, [text]);
 
-  const debouncedHandleUserTyping = useRef(
-    debounce((isUserTyping: boolean) => handleUserTyping(isUserTyping), 500)
+  const debouncedUserTyping = useRef(
+    debounce(() => handleUserTyping && handleUserTyping(false), 500)
   ).current;
 
   const handleBlur = () => {
-    debouncedHandleUserTyping(false);
+    debouncedUserTyping();
     setText(!textRef.current ? "" : textRef.current.value);
   };
 
   const handleChange = () => {
-    debouncedHandleUserTyping(true);
-    if (textRef.current && textRef.current.value === "") {
-      setText("");
-    }
+    textRef.current && textRef.current.value === "" && setText("");
+
+    handleUserTyping(true);
+    debouncedUserTyping();
   };
 
   return (

@@ -39,7 +39,6 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
 
   const connectSocket = (user: User) => {
     socketRef.current = io(ENDPOINT);
-    console.log(socketRef.current);
 
     socketRef.current.emit("setup", user);
     socketRef.current.on("message received", (message: Message) => {

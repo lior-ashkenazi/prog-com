@@ -17,7 +17,7 @@ const MathArea = ({ readOnly, math, setMath, handleUserTyping }: MathAreaProps) 
   const [key, setKey] = useState<number>(0);
 
   const debouncedUserTyping = useRef(
-    debounce(() => handleUserTyping && handleUserTyping(false), 1000)
+    debounce(() => handleUserTyping && handleUserTyping(false), 500)
   ).current;
 
   useEffect(() => {
