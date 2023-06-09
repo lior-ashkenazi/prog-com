@@ -26,7 +26,7 @@ const ChatSearchWindow = ({
   return (
     <>
       <div className="col-span-2 border-b">
-        <div className="px-4 flex gap-x-2 w-full">
+        <div className="p-3 flex gap-x-2 pr-8">
           <button onClick={() => setSearchWindowVisible(false)}>
             <HiArrowLeft
               size={28}
@@ -35,14 +35,12 @@ const ChatSearchWindow = ({
               }}
             />
           </button>
-          <div className="grow">
-            <SearchBar
-              searchQuery={searchQuery}
-              onChange={handleChangeSearchQuery}
-              mode="messages"
-              focus
-            />
-          </div>
+          <SearchBar
+            searchQuery={searchQuery}
+            onChange={handleChangeSearchQuery}
+            mode="messages"
+            focus
+          />
         </div>
       </div>
       <div className="col-span-2 overflow-y-auto">

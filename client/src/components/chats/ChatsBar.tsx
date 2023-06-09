@@ -1,22 +1,20 @@
 import { useState } from "react";
 
-import SearchBar from "./SearchBar";
+import ChatsBarHeader from "./ChatsBarHeader";
 import ChatsList from "./ChatsList";
 import SearchChatsList from "./SearchChatsList";
 
 const ChatsBar = () => {
-  const [searchInput, setSearchInput] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const handleChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setSearchInput(e.target.value);
+  const handleChangeSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setSearchQuery(e.target.value);
 
   return (
     <>
-      <div className="col-span-1 border-r border-b">
-        <SearchBar searchQuery={searchInput} onChange={handleChangeSearchInput} mode="chats" />
-      </div>
+      <ChatsBarHeader searchQuery={searchQuery} handleChangeSearchQuery={handleChangeSearchQuery} />
       <div className="col-span-1 overflow-y-auto border-r">
-        {!searchInput ? <ChatsList /> : <SearchChatsList searchQuery={searchInput} />}
+        {!searchQuery ? <ChatsList /> : <SearchChatsList searchQuery={searchQuery} />}
       </div>
     </>
   );

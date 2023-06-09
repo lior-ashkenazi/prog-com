@@ -17,7 +17,7 @@ const SearchBar = ({ searchQuery, onChange, mode, focus }: SearchBarProps) => {
   }, [focus]);
 
   return (
-    <div className="p-3 flex items-center justify-center">
+    <div className="grow flex justify-center">
       <input
         ref={inputRef}
         id="searchBar"
