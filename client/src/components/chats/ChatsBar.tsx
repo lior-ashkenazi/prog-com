@@ -12,7 +12,11 @@ const ChatsBar = () => {
 
   return (
     <>
-      <ChatsBarHeader searchQuery={searchQuery} handleChangeSearchQuery={handleChangeSearchQuery} />
+      <ChatsBarHeader
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        handleChangeSearchQuery={handleChangeSearchQuery}
+      />
       <div className="col-span-1 overflow-y-auto border-r">
         {!searchQuery ? <ChatsList /> : <SearchChatsList searchQuery={searchQuery} />}
       </div>

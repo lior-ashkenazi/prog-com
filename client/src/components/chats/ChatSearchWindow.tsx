@@ -37,6 +37,7 @@ const ChatSearchWindow = ({
           </button>
           <SearchBar
             searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
             onChange={handleChangeSearchQuery}
             mode="messages"
             focus
