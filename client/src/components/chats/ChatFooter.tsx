@@ -37,6 +37,12 @@ const ChatFooter = ({
   const [messageSent, setMessageSent] = useState<boolean>(false);
   const [openEmoji, setOpenEmoji] = useState<boolean>(false);
 
+  useEffect(() => {
+    setText("");
+    setMath("");
+    setCode("");
+  }, [chat._id]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
