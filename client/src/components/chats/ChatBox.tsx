@@ -57,7 +57,6 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   useEffect(() => {
     if (!socket) return;
 
-    socket.emit("setup", user);
     socket.emit("access chat", chat);
 
     const messageReceivedHandler = (message: Message) => {

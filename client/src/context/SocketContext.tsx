@@ -41,7 +41,7 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
     socketRef.current = io(ENDPOINT);
     console.log(socketRef.current);
 
-    socketRef.current.emit("setup", user._id);
+    socketRef.current.emit("setup", user);
     socketRef.current.on("message received", (message: Message) => {
       setChats((prevChats) => {
         return prevChats.map((chat) => {
