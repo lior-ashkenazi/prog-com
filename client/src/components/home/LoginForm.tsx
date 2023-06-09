@@ -48,6 +48,7 @@ const LoginForm = ({ onClickChangeForm, onSubmitForm }: LoginFormsProps) => {
 
   return (
     <form
+      id="loginForm"
       className="h-full flex flex-col justify-between gap-8"
       onSubmit={handleSubmit(onSubmitHandler)}
     >

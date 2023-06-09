@@ -58,6 +58,7 @@ const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) =
 
   return (
     <form
+      id="RegisterForm"
       className="h-full flex flex-col justify-between gap-8"
       onSubmit={handleSubmit(onSubmitHandler)}
     >
