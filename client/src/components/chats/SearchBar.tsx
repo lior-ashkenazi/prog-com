@@ -21,6 +21,7 @@ const SearchBar = ({ searchQuery, onChange, mode, focus }: SearchBarProps) => {
       <input
         ref={inputRef}
         id="searchBar"
+        autoComplete="off"
         className="p-2 w-full rounded border-2 bg-gray-200 focus:bg-gray-50 focus:outline-none focus:shadow-outline focus:border-indigo-400 transition-colors"
         value={searchQuery}
         onChange={onChange}
