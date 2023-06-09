@@ -78,6 +78,11 @@ io.on("connection", (socket) => {
     socket.on("stop typing", (chat, user) => {
         io.to(chat._id).emit("stop typing", user);
     });
+    // Leave chat
+    socket.on("leave chat", (chat) => {
+        socket.leave(chat._id);
+        console.log(`USER LEFT CHAT ${chat._id}`);
+    });
     socket.off("setup", (user) => {
         console.log("USER DISCONNECTED");
         socket.leave(user._id);

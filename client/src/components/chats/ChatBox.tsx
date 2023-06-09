@@ -75,6 +75,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
       socket.off("message received", messageReceivedHandler);
       socket.off("typing", typingHandler);
       socket.off("stop typing", stopTypingHandler);
+      socket.emit("leave chat", chat);
     };
   }, [chat, user, socket]);
 

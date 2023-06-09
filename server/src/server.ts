@@ -71,7 +71,7 @@ io.on("connection", (socket) => {
   });
 
   // Join chat
-  socket.on("access chat", (chat: IChat) => {
+  socket.on("access chat", (chat) => {
     socket.join(chat._id);
     console.log(`USER ACCESSED CHAT ${chat._id}`);
   });
@@ -96,6 +96,12 @@ io.on("connection", (socket) => {
   // Stop typing
   socket.on("stop typing", (chat, user) => {
     io.to(chat._id).emit("stop typing", user);
+  });
+
+  // Leave chat
+  socket.on("leave chat", (chat) => {
+    socket.leave(chat._id);
+    console.log(`USER LEFT CHAT ${chat._id}`);
   });
 
   socket.off("setup", (user) => {
