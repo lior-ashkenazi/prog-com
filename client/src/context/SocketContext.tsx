@@ -1,6 +1,8 @@
 import { createContext, useState, useRef, useEffect, SetStateAction } from "react";
+import { useSelector } from "react-redux";
 import { Socket, io } from "socket.io-client";
 
+import { RootState } from "../store";
 import { User } from "../types/userTypes";
 import { Message } from "../types/messageTypes";
 import { Chat } from "../types/chatTypes";
@@ -13,7 +15,6 @@ interface SocketContextState {
   setChats: React.Dispatch<SetStateAction<Chat[]>>;
   shouldRefetchChats: boolean;
   setShouldRefetchChats: React.Dispatch<SetStateAction<boolean>>;
-  connectSocket: (user: User) => void;
 }
 
 const defaultSocketContextValue = {
@@ -22,7 +23,6 @@ const defaultSocketContextValue = {
   setChats: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   shouldRefetchChats: false,
   setShouldRefetchChats: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-  connectSocket: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 };
 
 const SocketContext = createContext<SocketContextState>(defaultSocketContextValue);
@@ -33,45 +33,43 @@ interface SocketProviderProps {
 
 const SocketProvider = ({ children }: SocketProviderProps) => {
   const socketRef = useRef<Socket | null>(null);
+  const user: User | null = useSelector((state: RootState) => state.app.user);
   const [chats, setChats] = useState<Chat[]>([]);
   const [shouldRefetchChats, setShouldRefetchChats] = useState<boolean>(false);
   const [receivedMessage, setReceivedMessage] = useState<Message | null>(null);
 
-  const connectSocket = (user: User) => {
-    socketRef.current = io(ENDPOINT);
+  useEffect(() => {
+    if (user) {
+      socketRef.current = io(ENDPOINT);
+      socketRef.current.emit("setup", user);
 
-    socketRef.current.emit("setup", user);
-    socketRef.current.on("message received", (message: Message) => {
-      setChats((prevChats) => {
-        return prevChats.map((chat) => {
+      socketRef.current.on("message received", (message: Message) => {
+        setChats((prevChats) => {
           const chatExists = prevChats.some((chat) => chat._id === message.chatId._id);
 
           if (!chatExists) {
             setShouldRefetchChats(true);
           }
 
-          console.log("we reach this code?");
+          return prevChats.map((chat) => {
+            if (chat._id === message.chatId._id) {
+              return { ...chat, lastMessageId: message };
+            }
 
-          // the message object is populated so
-          // chatId is now a Chat in fact
-          // in database indeed chatId is an id
-          if (chat._id === message.chatId._id) {
-            return { ...chat, lastMessageId: message };
-          }
-
-          // if the chat doesn't exist, we will update
-          // the chats state correctly after a refetch
-          // the must occur
-          return chat;
+            return chat;
+          });
         });
+
+        setReceivedMessage(message);
       });
-      setReceivedMessage(message);
-    });
+    }
 
     return () => {
-      socketRef.current!.close(); //eslint-disable-line
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
     };
-  };
+  }, [user]);
 
   useEffect(() => {
     if (receivedMessage) {
@@ -96,14 +94,6 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
     }
   }, [receivedMessage]);
 
-  useEffect(() => {
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.close();
-      }
-    };
-  }, []);
-
   return (
     <SocketContext.Provider
       value={{
@@ -112,7 +102,6 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
         shouldRefetchChats,
         setShouldRefetchChats,
         setChats,
-        connectSocket,
       }}
     >
       {children}

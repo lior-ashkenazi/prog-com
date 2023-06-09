@@ -31,7 +31,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   } = useFetchMessagesQuery(chat._id);
   const [sendMessage, { isLoading: sendMessageIsLoading, isError: sendMessageIsError }] =
     useSendMessageMutation();
-  const { socket, connectSocket } = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [typingText, setTypingText] = useState<string>("");
@@ -39,10 +39,6 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   const [searchWindowVisible, setSearchWindowVisible] = useState<boolean>(false);
   const [messageToScrollTo, setMessageToScrollTo] = useState<number>(-1);
   const chatBodyRef = useRef<ChatBodyHandle | null>(null); // create a ref
-
-  useEffect(() => {
-    user && !socket && connectSocket(user);
-  }, [user, socket, connectSocket]);
 
   useEffect(() => {
     refetchMessages();
@@ -80,7 +76,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
       socket.off("typing", typingHandler);
       socket.off("stop typing", stopTypingHandler);
     };
-  }, [chat, user, socket, connectSocket]);
+  }, [chat, user, socket]);
 
   useEffect(() => {
     if (!searchWindowVisible && messageToScrollTo !== -1) {

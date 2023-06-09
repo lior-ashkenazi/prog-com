@@ -19,8 +19,7 @@ const ChatsList = () => {
     isError: chatsIsError,
     refetch: refetchChats,
   } = useFetchChatsQuery();
-  const { chats, setChats, shouldRefetchChats, setShouldRefetchChats, socket, connectSocket } =
-    useContext(SocketContext);
+  const { chats, setChats, shouldRefetchChats, setShouldRefetchChats } = useContext(SocketContext);
   const [selectedItem, setSelectedItem] = useState<string>("");
 
   const handleClickedColor = (id: string) => setSelectedItem(id);
@@ -35,10 +34,6 @@ const ChatsList = () => {
   useEffect(() => {
     if (data?.chats) setChats(data?.chats);
   }, [data, setChats]);
-
-  useEffect(() => {
-    user && !socket && connectSocket(user);
-  }, [user, socket, connectSocket]);
 
   const renderList = () =>
     chats.map(
