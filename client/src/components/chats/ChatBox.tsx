@@ -34,7 +34,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   const { socket } = useContext(SocketContext);
 
   const [messages, setMessages] = useState<Message[]>([]);
-  const [typingText, setTypingText] = useState<string>("");
+  const [typingUser, setTypingUser] = useState<string>("");
 
   const [searchWindowVisible, setSearchWindowVisible] = useState<boolean>(false);
   const [messageToScrollTo, setMessageToScrollTo] = useState<number>(-1);
@@ -60,11 +60,11 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     };
 
     const typingHandler = (otherUser: User) => {
-      user._id !== otherUser._id && setTypingText(otherUser.userName);
+      user._id !== otherUser._id && setTypingUser(otherUser.userName);
     };
 
     const stopTypingHandler = () => {
-      setTypingText("");
+      setTypingUser("");
     };
 
     socket.on("message received", messageReceivedHandler);
@@ -123,7 +123,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
                 user={user}
                 chat={chat}
                 setSearchWindowVisible={setSearchWindowVisible}
-                typingText={typingText}
+                typingText={typingUser}
               />
             </div>
             <div className="col-span-2 grid grid grid-rows-[400px_auto] overflow-y-auto">

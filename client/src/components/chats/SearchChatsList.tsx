@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState, useFetchUsersQuery } from "../../store";
@@ -15,9 +14,6 @@ const SearchChatsList = ({ searchQuery }: SearchChatsListProps) => {
   const user = useSelector((state) => (state as RootState).app.user);
 
   const { data, isLoading } = useFetchUsersQuery(searchQuery);
-  const [selectedItem, setSelectedItem] = useState<number>();
-
-  const handleClickedColor = (index: number) => setSelectedItem(index);
 
   const potentialChat = (user: User, index: number): Chat => {
     return { _id: index.toString(), chatName: "", participants: [user], isGroupChat: false };
@@ -25,15 +21,7 @@ const SearchChatsList = ({ searchQuery }: SearchChatsListProps) => {
 
   const renderList = () =>
     data?.users.map((user: User, index: number) => (
-      <ChatsListItem
-        key={index}
-        user={user}
-        chat={potentialChat(user, index)}
-        itemIndex={index}
-        isClicked={selectedItem === index}
-        handleClickedColor={handleClickedColor}
-        isSearch
-      />
+      <ChatsListItem key={index} user={user} chat={potentialChat(user, index)} isSearch />
     ));
 
   return (

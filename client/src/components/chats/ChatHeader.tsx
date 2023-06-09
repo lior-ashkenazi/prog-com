@@ -2,7 +2,7 @@ import { HiSearch } from "react-icons/hi";
 
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
-import { getChatAvatar, getChatName } from "../../utils";
+import { getChatAvatar, getChatIsTyping, getChatName } from "../../utils/usersUtils";
 
 interface ChatHeaderProps {
   user: User;
@@ -23,7 +23,7 @@ const ChatHeader = ({ user, chat, setSearchWindowVisible, typingText }: ChatHead
         <span className="flex flex-col text-left">
           <span className="font-medium">{getChatName(user, chat)}</span>
           <span className="text-xs text-opacity-60 text-gray-900">
-            {typingText && `${typingText} is typing...`}
+            {typingText && getChatIsTyping(typingText, chat)}
           </span>
         </span>
       </div>
