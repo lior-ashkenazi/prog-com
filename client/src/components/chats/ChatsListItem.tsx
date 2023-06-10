@@ -47,6 +47,9 @@ const ChatsListItem = ({
     socket.emit("access chat", chat);
 
     const typingHandler = (otherUser: User) => {
+      // note that user._id is the app's user
+      // when we use the item component as
+      // search item then user === otherUser
       chat._id === currentChat?._id &&
         user._id !== otherUser._id &&
         setTypingUser(otherUser.userName);

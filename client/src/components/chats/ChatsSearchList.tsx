@@ -3,14 +3,14 @@ import { useSelector } from "react-redux";
 import { RootState, useFetchUsersQuery } from "../../store";
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
-import ChatsListSkeleton from "./ChatsListSkeleton";
+import ListSkeleton from "./ListSkeleton";
 import ChatsListItem from "./ChatsListItem";
 
-interface SearchChatsListProps {
+interface ChatsSearchListProps {
   searchQuery: string;
 }
 
-const SearchChatsList = ({ searchQuery }: SearchChatsListProps) => {
+const ChatsSearchList = ({ searchQuery }: ChatsSearchListProps) => {
   const user = useSelector((state) => (state as RootState).app.user);
 
   const { data, isLoading } = useFetchUsersQuery(searchQuery);
@@ -25,8 +25,8 @@ const SearchChatsList = ({ searchQuery }: SearchChatsListProps) => {
     ));
 
   return (
-    <div className="flex flex-col">{!isLoading && user ? renderList() : <ChatsListSkeleton />}</div>
+    <div className="flex flex-col">{!isLoading && user ? renderList() : <ListSkeleton />}</div>
   );
 };
 
-export default SearchChatsList;
+export default ChatsSearchList;

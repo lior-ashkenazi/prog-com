@@ -1,17 +1,17 @@
 import { Message } from "../../types/messageTypes";
 import MessagesListItem from "./MessagesListItem";
 
-interface SearchMessagesListProps {
+interface MessagesSearchListProps {
   searchQuery: string;
   messages: Message[];
   handleSearchClick: (messageId: string) => void;
 }
 
-const SearchMessagesList = ({
+const MessagesSearchList = ({
   searchQuery,
   messages,
   handleSearchClick,
-}: SearchMessagesListProps) => {
+}: MessagesSearchListProps) => {
   const filteredMessages = messages.filter((message) =>
     message.mode === "text" ? message.content.includes(searchQuery) : false
   );
@@ -29,4 +29,4 @@ const SearchMessagesList = ({
   return <div className="flex flex-col">{searchQuery === "" ? "" : renderList()}</div>;
 };
 
-export default SearchMessagesList;
+export default MessagesSearchList;

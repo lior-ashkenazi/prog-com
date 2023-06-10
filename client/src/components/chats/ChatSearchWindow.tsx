@@ -5,7 +5,7 @@ import { HiArrowLeft } from "react-icons/hi";
 import { Message } from "../../types/messageTypes";
 
 import SearchBar from "./SearchBar";
-import SearchMessagesList from "./SearchMessagesList";
+import MessagesSearchList from "./MessagesSearchList";
 
 interface ChatSearchWindowProps {
   setSearchWindowVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,7 +46,7 @@ const ChatSearchWindow = ({
       </div>
       <div className="col-span-2 overflow-y-auto">
         {
-          <SearchMessagesList
+          <MessagesSearchList
             searchQuery={searchQuery}
             messages={messages}
             handleSearchClick={handleSearchClick}

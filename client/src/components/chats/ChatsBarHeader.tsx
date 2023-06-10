@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
 import SearchBar from "./SearchBar";
+import CreateGroupButton from "./CreateGroupButton";
+import CreateGroupModal from "./CreateGroupModal";
 
 interface ChatsBarHeaderProps {
   searchQuery: string;
@@ -14,6 +16,7 @@ const ChatsBarHeader = ({
   handleChangeSearchQuery,
 }: ChatsBarHeaderProps) => {
   const [buttonCollapse, setButtonCollapse] = useState<boolean>(true);
+  const [showCreateGroupModal, setShowCreateGroupModal] = useState<boolean>(false);
 
   useEffect(() => {
     searchQuery ? setButtonCollapse(true) : setButtonCollapse(false);
@@ -27,13 +30,14 @@ const ChatsBarHeader = ({
         onChange={handleChangeSearchQuery}
         mode="chats"
       />
-      <button
-        className={`shrink transition-transform origin-right ${
-          !buttonCollapse ? "scale-x-100 p-1 opacity-100 w-28" : "scale-x-0 opacity-0 w-0"
-        } bg-indigo-600 rounded-md text-white`}
-      >
-        {!buttonCollapse ? "Create Group" : ""}
-      </button>
+      <CreateGroupButton
+        buttonCollapse={buttonCollapse}
+        setShowCreateGroupButton={setShowCreateGroupModal}
+      />
+      <CreateGroupModal
+        showCreateGroupModal={showCreateGroupModal}
+        setShowCreateGroupModal={setShowCreateGroupModal}
+      />
     </div>
   );
 };

@@ -22,7 +22,6 @@
   "homepage": "https://github.com/lior-ashkenazi/ProgCom#readme",
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
-    "@types/colors": "^1.2.1",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.2",

@@ -7,7 +7,7 @@ import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
 
 import ChatsListItem from "./ChatsListItem";
-import ChatsListSkeleton from "./ChatsListSkeleton";
+import ListSkeleton from "./ListSkeleton";
 import { SocketContext } from "../../context/SocketContext";
 
 const ChatsList = () => {
@@ -59,7 +59,7 @@ const ChatsList = () => {
           Error with fetching chats.
         </div>
       ) : (
-        <ChatsListSkeleton />
+        <ListSkeleton />
       )}
     </div>
   );

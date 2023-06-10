@@ -32,7 +32,6 @@ const SearchBar = ({ searchQuery, setSearchQuery, onChange, mode, focus }: Searc
         type="text"
       ></input>
       <button className="absolute left-3 top-4" onClick={() => setSearchQuery("")}>
-        {" "}
         <BsXLg
           style={{
             color: "#312e81",
