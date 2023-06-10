@@ -80,7 +80,7 @@ const createGroupChat = asyncHandler(async (req: Request, res: Response): Promis
     chatName,
     participants,
     isGroupChat: true,
-    groupAdmin: (req as IAuthenticatedRequest).user,
+    groupAdmin: (req as IAuthenticatedRequest).user._id,
     avatar,
   });
   newGroupChat = await Chat.findOne({ _id: newGroupChat._id })

@@ -40,6 +40,10 @@ const appSlice = createSlice({
       .addMatcher(chatsEndpoints.endpoints.accessChat.matchFulfilled, (state, action) => {
         // accessChat returns an object with property "chat"
         state.chat = action.payload.chat;
+      })
+      .addMatcher(chatsEndpoints.endpoints.createGroupChat.matchFulfilled, (state, action) => {
+        // createGroupChat returns an object with property "chat"
+        state.chat = action.payload.chat;
       });
   },
 });

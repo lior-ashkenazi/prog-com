@@ -25,12 +25,7 @@ router.get("/", authMiddleware_1.default, chatsController_1.fetchChats);
 // @route		    POST /api/chats/groups
 // @access      Private
 router.post("/groups", [
-    (0, express_validator_1.check)("users")
-        .notEmpty()
-        .withMessage("Please add required fields")
-        .isArray({ min: 2 })
-        .withMessage("Received invalid fields")
-        .custom((value) => {
+    (0, express_validator_1.check)("participants").custom((value) => {
         value.forEach((user, i) => {
             if (!(0, express_validator_1.check)(user).isMongoId()) {
                 throw new Error(`Received invalid fields`);

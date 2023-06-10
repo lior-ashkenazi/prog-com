@@ -76,7 +76,7 @@ const createGroupChat = (0, express_async_handler_1.default)((req, res) => __awa
         chatName,
         participants,
         isGroupChat: true,
-        groupAdmin: req.user,
+        groupAdmin: req.user._id,
         avatar,
     });
     newGroupChat = yield chatModel_1.default.findOne({ _id: newGroupChat._id })

@@ -11,7 +11,7 @@ export type FetchChatsResponse = {
   chats: Chat[];
 };
 
-export type CreateGroupChatRequest = { chatName: string; users: string[] };
+export type CreateGroupChatRequest = { chatName: string; participants: string[] };
 export type CreateGroupChatResponse = {
   chat: Chat;
 };

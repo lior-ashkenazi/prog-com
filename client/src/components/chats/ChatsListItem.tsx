@@ -22,17 +22,10 @@ interface ChatsListItemProps {
   user: User;
   chat: Chat;
   isClicked?: boolean;
-  handleClickedColor?: (id: string) => void;
   isSearch: boolean;
 }
 
-const ChatsListItem = ({
-  user,
-  chat,
-  isClicked,
-  handleClickedColor,
-  isSearch,
-}: ChatsListItemProps) => {
+const ChatsListItem = ({ user, chat, isClicked, isSearch }: ChatsListItemProps) => {
   const currentChat: Chat | null = useSelector((state) => (state as RootState).app.chat);
   const { socket } = useContext(SocketContext);
   const { setChatBoxIsLoading } = useContext(LoadingContext);
@@ -70,7 +63,6 @@ const ChatsListItem = ({
   }, [chat, user, currentChat, isSearch, socket]);
 
   const handleClick = async () => {
-    handleClickedColor && handleClickedColor(chat._id);
     setChatBoxIsLoading(true);
 
     if (isSearch && user) {

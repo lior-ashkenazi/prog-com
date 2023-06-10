@@ -39,20 +39,15 @@ router.get("/", auth, fetchChats);
 router.post(
   "/groups",
   [
-    check("users")
-      .notEmpty()
-      .withMessage("Please add required fields")
-      .isArray({ min: 2 })
-      .withMessage("Received invalid fields")
-      .custom((value) => {
-        value.forEach((user: string, i: number) => {
-          if (!check(user).isMongoId()) {
-            throw new Error(`Received invalid fields`);
-          }
-        });
+    check("participants").custom((value) => {
+      value.forEach((user: string, i: number) => {
+        if (!check(user).isMongoId()) {
+          throw new Error(`Received invalid fields`);
+        }
+      });
 
-        return true;
-      }),
+      return true;
+    }),
     check("chatName", "Please add required fields").notEmpty(),
   ],
   auth,

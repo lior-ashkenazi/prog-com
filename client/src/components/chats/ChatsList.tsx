@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState, useFetchChatsQuery } from "../../store";
@@ -12,6 +12,7 @@ import { SocketContext } from "../../context/SocketContext";
 
 const ChatsList = () => {
   const user: User | null = useSelector((state) => (state as RootState).app.user);
+  const selectedChat: Chat | null = useSelector((state) => (state as RootState).app.chat);
   const {
     data,
     isLoading: chatsIsLoading,
@@ -20,10 +21,6 @@ const ChatsList = () => {
     refetch: refetchChats,
   } = useFetchChatsQuery();
   const { chats, setChats, shouldRefetchChats, setShouldRefetchChats } = useContext(SocketContext);
-  const [selectedItem, setSelectedItem] = useState<string>("");
-
-  const handleClickedColor = (id: string) => setSelectedItem(id);
-
   useEffect(() => {
     if (shouldRefetchChats) {
       refetchChats();
@@ -43,8 +40,7 @@ const ChatsList = () => {
             key={index}
             user={user}
             chat={chat}
-            isClicked={selectedItem === chat._id}
-            handleClickedColor={handleClickedColor}
+            isClicked={selectedChat?._id === chat._id}
             isSearch={false}
           />
         )

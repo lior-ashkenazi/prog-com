@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import Modal from "react-modal";
 
-import { RootState } from "../../store";
+import { BsArrowRightCircleFill } from "react-icons/bs";
+
+import { RootState, useCreateGroupChatMutation } from "../../store";
 
 import { User } from "../../types/userTypes";
 
@@ -23,13 +25,10 @@ const CreateGroupModal = ({
 }: CreateGroupModalProps) => {
   const user: User | null = useSelector((state) => (state as RootState).app.user);
 
+  const [createGroupChat] = useCreateGroupChatMutation();
   const [chatName, setChatName] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [participants, setParticipants] = useState<User[]>([]);
-
-  useEffect(() => {
-    user && handleAddParticipant(user);
-  }, [user]);
 
   const handleAddParticipant = (newParticipant: User) =>
     setParticipants((prevParticipants) => [...prevParticipants, newParticipant]);
@@ -39,13 +38,25 @@ const CreateGroupModal = ({
       prevParticipants.filter((user) => user !== removedParticipant)
     );
 
+  const handleCreateGroupChat = async () => {
+    if (!user) return;
+
+    await createGroupChat({
+      participants: participants.map((participant) => participant._id),
+      chatName,
+    }).unwrap();
+
+    setShowCreateGroupModal(false);
+  };
+
   const customStyles = {
     content: {
       width: "24rem",
       height: "max-content",
       margin: "0 auto",
       padding: 0,
-      borderWidth: "0px",
+      borderWidth: "0.5px",
+      borderTopColor: "rgb(79 70 229)",
       borderRadius: "0.375rem",
     },
     overlay: {
@@ -72,7 +83,21 @@ const CreateGroupModal = ({
           participants={participants}
           handleAddParticipant={handleAddParticipant}
         />
-        <div className="bg-green-600 h-16">Button</div>
+        <div className="bg-gray-100 p-4 flex items-center justify-center">
+          <button
+            className="rounded-full bg-white"
+            onClick={() => handleCreateGroupChat()}
+            disabled={!searchQuery}
+          >
+            <BsArrowRightCircleFill
+              style={{
+                color: !chatName ? "#a5b4fc" : "#312e81",
+                height: "3rem",
+                width: "3rem",
+              }}
+            />
+          </button>
+        </div>
       </div>
     </Modal>
   );
