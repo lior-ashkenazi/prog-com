@@ -27,7 +27,7 @@ const ChatHeader = ({ user, chat, setSearchWindowVisible, typingText }: ChatHead
           </span>
         </span>
       </div>
-      <button onClick={() => setSearchWindowVisible(true)}>
+      <button className="mr-4" onClick={() => setSearchWindowVisible(true)}>
         <HiSearch
           size={28}
           style={{

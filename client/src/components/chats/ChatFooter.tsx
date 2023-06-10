@@ -120,7 +120,7 @@ const ChatFooter = ({
       <div className="absolute top-0 left-0">
         <ModeButtons mode={mode} setMode={setMode} />
       </div>
-      <div className="relative mx-6 w-[55rem]">
+      <div className="relative ml-10 w-[55rem]">
         <button
           type="button"
           className={`absolute -left-7 top-1 ${mode !== "text" && "opacity-0"}`}

@@ -27,22 +27,6 @@ const ChatBody = forwardRef(
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const [scrollToIndex, setScrollToIndex] = useState<number>(-1);
     const divRef = useRef<HTMLDivElement | null>(null);
-    const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
-
-    useEffect(() => {
-      const checkOverflow = () => {
-        const div = divRef.current;
-        if (div) {
-          const overflow = div.offsetHeight < div.scrollHeight || div.offsetWidth < div.scrollWidth;
-          setIsOverflowing(overflow);
-        }
-      };
-
-      window.addEventListener("resize", checkOverflow);
-      checkOverflow();
-
-      return () => window.removeEventListener("resize", checkOverflow);
-    }, []);
 
     useEffect(() => {
       messageRefs.current = messageRefs.current.slice(0, messages.length);
@@ -106,8 +90,8 @@ const ChatBody = forwardRef(
       <div
         ref={divRef}
         className={`bg-[url('assets/random-shapes.svg')] bg-indigo-500 bg-[length:3.5rem_3.5rem] overflow-y-auto flex flex-col gap-y-1 p-4 ${
-          !isOverflowing && "border-r-8 border-r-gray-100"
-        } ${messagesIsLoading && "items-end"}`}
+          messagesIsLoading && "items-end"
+        }`}
       >
         {messagesIsLoading || messagesIsFetching ? (
           <Skeleton
