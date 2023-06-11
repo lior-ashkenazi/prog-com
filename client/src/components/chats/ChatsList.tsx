@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useCallback } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState, useFetchChatsQuery } from "../../store";
@@ -20,7 +20,8 @@ const ChatsList = () => {
     isError: chatsIsError,
     refetch: refetchChats,
   } = useFetchChatsQuery();
-  const { chats, setChats, shouldRefetchChats, setShouldRefetchChats } = useContext(SocketContext);
+  const { chats, setChats, shouldRefetchChats, setShouldRefetchChats, sortSignal, setSortSignal } =
+    useContext(SocketContext);
   useEffect(() => {
     if (shouldRefetchChats) {
       refetchChats();
@@ -28,9 +29,40 @@ const ChatsList = () => {
     }
   }, [refetchChats, shouldRefetchChats, setShouldRefetchChats]);
 
+  const sortChats = useCallback(() => {
+    setChats((prevChats) =>
+      [...prevChats].sort((a, b) => {
+        if (!a.lastMessageId && !b.lastMessageId) {
+          return -1; // If both don't have a last message, chat A takes precedence
+        } else if (!a.lastMessageId) {
+          return 1; // If only A doesn't have a last message, B takes precedence
+        } else if (!b.lastMessageId) {
+          return -1; // If only B doesn't have a last message, A takes precedence
+        } else {
+          // If both have last message, compare by last message date
+          return (
+            new Date(b.lastMessageId.createdAt).getTime() -
+            new Date(a.lastMessageId.createdAt).getTime()
+          );
+        }
+      })
+    );
+  }, [setChats]);
+
   useEffect(() => {
-    if (data?.chats) setChats(data?.chats);
-  }, [data, setChats]);
+    if (data?.chats) {
+      setChats(data?.chats);
+      sortChats();
+    }
+  }, [data, setChats, sortChats]);
+
+  useEffect(() => {
+    if (!sortSignal) return;
+
+    sortChats();
+
+    setSortSignal(false);
+  }, [sortSignal, setSortSignal, sortChats]);
 
   const renderList = () =>
     chats.map(

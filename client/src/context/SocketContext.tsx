@@ -15,6 +15,8 @@ interface SocketContextState {
   setChats: React.Dispatch<SetStateAction<Chat[]>>;
   shouldRefetchChats: boolean;
   setShouldRefetchChats: React.Dispatch<SetStateAction<boolean>>;
+  sortSignal: boolean;
+  setSortSignal: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const defaultSocketContextValue = {
@@ -23,6 +25,8 @@ const defaultSocketContextValue = {
   setChats: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
   shouldRefetchChats: false,
   setShouldRefetchChats: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+  sortSignal: false,
+  setSortSignal: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 };
 
 const SocketContext = createContext<SocketContextState>(defaultSocketContextValue);
@@ -36,7 +40,7 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
   const user: User | null = useSelector((state: RootState) => state.app.user);
   const [chats, setChats] = useState<Chat[]>([]);
   const [shouldRefetchChats, setShouldRefetchChats] = useState<boolean>(false);
-  const [receivedMessage, setReceivedMessage] = useState<Message | null>(null);
+  const [sortSignal, setSortSignal] = useState<boolean>(false);
 
   useEffect(() => {
     if (user) {
@@ -60,7 +64,7 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
           });
         });
 
-        setReceivedMessage(message);
+        setSortSignal(true);
       });
     }
 
@@ -71,29 +75,6 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
     };
   }, [user]);
 
-  useEffect(() => {
-    if (receivedMessage) {
-      // Sort chats by last message date
-      setChats((prevChats) =>
-        [...prevChats].sort((a, b) => {
-          if (!a.lastMessageId && !b.lastMessageId) {
-            return -1; // If both don't have a last message, chat A takes precedence
-          } else if (!a.lastMessageId) {
-            return 1; // If only A doesn't have a last message, B takes precedence
-          } else if (!b.lastMessageId) {
-            return -1; // If only B doesn't have a last message, A takes precedence
-          } else {
-            // If both have last message, compare by last message date
-            return (
-              new Date(b.lastMessageId.createdAt).getTime() -
-              new Date(a.lastMessageId.createdAt).getTime()
-            );
-          }
-        })
-      );
-    }
-  }, [receivedMessage]);
-
   return (
     <SocketContext.Provider
       value={{
@@ -102,6 +83,8 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
         shouldRefetchChats,
         setShouldRefetchChats,
         setChats,
+        sortSignal,
+        setSortSignal,
       }}
     >
       {children}
