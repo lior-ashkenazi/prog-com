@@ -28,9 +28,9 @@ interface ChatsListItemProps {
 const ChatsListItem = ({ user, chat, isClicked, isSearch }: ChatsListItemProps) => {
   const currentChat: Chat | null = useSelector((state) => (state as RootState).app.chat);
   const { socket } = useContext(SocketContext);
-  const { setChatBoxIsLoading } = useContext(LoadingContext);
   const dispatch: AppDispatch = useDispatch();
   const [accessChat] = useAccessChatMutation();
+  const { setChatBoxIsLoading } = useContext(LoadingContext);
 
   const [typingUser, setTypingUser] = useState<string>("");
 

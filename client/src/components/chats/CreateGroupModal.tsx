@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useSelector } from "react-redux";
 
 import { BsArrowRightCircleFill } from "react-icons/bs";
 
 import { RootState, useCreateGroupChatMutation } from "../../store";
+
+import { LoadingContext } from "../../context/LoadingContext";
 
 import { User } from "../../types/userTypes";
 
@@ -25,6 +27,9 @@ const CreateGroupModal = ({
   const user: User | null = useSelector((state) => (state as RootState).app.user);
 
   const [createGroupChat] = useCreateGroupChatMutation();
+
+  const { setChatBoxIsLoading } = useContext(LoadingContext);
+
   const [chatName, setChatName] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [participants, setParticipants] = useState<User[]>([]);
@@ -39,6 +44,8 @@ const CreateGroupModal = ({
 
   const handleCreateGroupChat = async () => {
     if (!user) return;
+
+    setChatBoxIsLoading(true);
 
     await createGroupChat({
       participants: participants.map((participant) => participant._id),
