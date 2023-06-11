@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -39,10 +39,18 @@ const ChatGroupModalAvatar = ({ user, chat }: ChatGroupModalAvatarProps) => {
     register: registerAvatar,
     handleSubmit: handleSubmitAvatar,
     formState: { errors: errorsAvatar, isSubmitting: isSubmittingAvatar },
+    reset: resetAvatar,
   } = useForm<ChatGroupAvatarValidationSchema>({
     resolver: zodResolver(chatGroupAvatarValidationSchema),
+    defaultValues: {
+      avatar: chat.avatar || "",
+    },
     mode: "onBlur",
   });
+
+  useEffect(() => {
+    resetAvatar({ avatar: chat.avatar || "" });
+  }, [resetAvatar, chat.avatar]);
 
   const onSubmitAvatarHandler: SubmitHandler<ChatGroupAvatarValidationSchema> = async (data) => {
     const { avatar } = data;
@@ -54,38 +62,57 @@ const ChatGroupModalAvatar = ({ user, chat }: ChatGroupModalAvatarProps) => {
 
   return (
     <div>
-      <div className="h-24 flex items-center justify-center">
-        <img src={getChatAvatar(user, chat)} alt="Chat Avatar" className="w-24 h-24 rounded-full" />
-        {user._id === chat.groupAdmin?._id ? (
-          <button onClick={() => setShowEditAvatar(true)} disabled={showEditAvatar}>
-            <BsPencilFill style={{ color: showEditAvatar ? "#f3f4f6" : "#9ca3af" }} />
+      <div className="h-36 flex items-center justify-center">
+        <div className="relative">
+          <img
+            src={getChatAvatar(user, chat)}
+            alt="Chat Avatar"
+            className="w-32 h-32 rounded-full"
+          />
+          <button
+            className="absolute -right-5 bottom-1/2 translate-y-1/2"
+            onClick={() => setShowEditAvatar(true)}
+            disabled={(chat.groupAdmin && chat.groupAdmin._id !== user._id) || showEditAvatar}
+          >
+            <BsPencilFill
+              style={{
+                color:
+                  (chat.groupAdmin && chat.groupAdmin._id !== user._id) || showEditAvatar
+                    ? "#f3f4f6"
+                    : "#9ca3af",
+                height: "1rem",
+                width: "1rem",
+              }}
+            />
           </button>
-        ) : (
-          ""
-        )}
+        </div>
       </div>
       <form
-        className="p-2 h-12 flex items-center justify-center"
+        className="mt-2 h-8 flex items-center justify-center"
         onSubmit={handleSubmitAvatar(onSubmitAvatarHandler)}
       >
         {showEditAvatar && (
-          <div className="relative flex items-center justify-center w-3/4">
+          <div className="relative flex flex-col items-center justify-center w-3/4">
             <input
               id="Group Chat Avatar"
               autoComplete="off"
               className={`px-1 py-0.5 w-full rounded border-2 bg-gray-200 focus:bg-gray-50 focus:outline-none focus:shadow-outline focus:border-indigo-400 transition-colors ${
                 errorsAvatar.avatar && "border-red-500"
               }`}
-              value={chat.avatar}
-              placeholder="Enter group name"
+              placeholder="Enter group avatar"
               type="text"
               {...registerAvatar("avatar")}
             ></input>
-            <span className="absolute -right-11 flex items-center justify-center">
-              {" "}
+            <span
+              className={`text-xs ${errorsAvatar.avatar ? "text-red-500" : "text-transparent"}`}
+            >
+              {errorsAvatar.avatar ? errorsAvatar.avatar.message : "padding"}
+            </span>
+            <span className="absolute -right-10 bottom-5 flex items-center justify-center">
               <button
                 onClick={() => {
                   setShowEditAvatar(false);
+                  resetAvatar({ avatar: chat.avatar || "" });
                 }}
               >
                 <BsX style={{ color: "#9ca3af", height: "1.2rem", width: "1.2rem" }} />

@@ -44,7 +44,7 @@ export const chatsEndpoints = apiSlice.injectEndpoints({
         body: chatDetails,
       }),
       invalidatesTags: (_result, _error, chatDetails) => {
-        if (chatDetails.chatName) {
+        if (chatDetails.chatName || chatDetails.avatar) {
           return [{ type: "Chats" }];
         }
         return [];

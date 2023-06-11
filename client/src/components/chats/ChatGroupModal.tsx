@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -12,16 +12,11 @@ import { AppDispatch, setChat, useUpdateGroupChatMutation } from "../../store";
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
 
-import { getChatAvatar, getChatName } from "../../utils";
+import { getChatName } from "../../utils";
 
 import ModalWrapper from "./ModalWrapper";
 import ChatGroupModalAvatar from "./ChatGroupModalAvatar";
-
-const chatGroupNameValidationSchema = z.object({
-  chatName: z.string().min(1, { message: "Group name is required" }),
-});
-
-type ChatGroupNameValidationSchema = z.infer<typeof chatGroupNameValidationSchema>;
+import ChatGroupModalName from "./ChatGroupModalName";
 
 interface ChatGroupModalProps {
   user: User;
@@ -36,15 +31,10 @@ const ChatGroupModal = ({
   showChatGroupModal,
   setShowChatGroupModal,
 }: ChatGroupModalProps) => {
-  const dispatch: AppDispatch = useDispatch();
-
-  const [updateGroupChat] = useUpdateGroupChatMutation();
-
-  const [showEditName, setShowEditName] = useState<boolean>(false);
-
   const children = (
     <>
       <ChatGroupModalAvatar user={user} chat={chat} />
+      <ChatGroupModalName user={user} chat={chat} />
     </>
   );
   return (

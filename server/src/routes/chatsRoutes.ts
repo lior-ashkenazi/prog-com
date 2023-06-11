@@ -39,21 +39,21 @@ router.get("/", auth, fetchChats);
 router.post(
   "/groups",
   [
-    check("participants").custom((value) => {
-      value.forEach((user: string, i: number) => {
-        if (!check(user).isMongoId()) {
-          throw new Error(`Received invalid fields`);
-        }
-      });
-
-      return true;
-    }),
-    check("chatName", "Please add required fields").notEmpty(),
-    check("avatar")
+    check("participants")
       .notEmpty()
       .withMessage("Please add required fields")
-      .isURL()
-      .withMessage("Received invalid fields"),
+      .isArray()
+      .withMessage("Received invalid fields")
+      .custom((value) => {
+        value.forEach((user: string, i: number) => {
+          if (!check(user).isMongoId()) {
+            throw new Error(`Received invalid fields`);
+          }
+        });
+
+        return true;
+      }),
+    check("chatName", "Please add required fields").notEmpty(),
   ],
   auth,
   validationErrorHandler,
@@ -73,7 +73,7 @@ router.put(
       .withMessage("Received invalid fields"),
     oneOf(
       [
-        check("users")
+        check("participants")
           .isArray({ min: 1 })
           .withMessage("Received invalid fields")
           .custom((value) => {
@@ -85,8 +85,13 @@ router.put(
             return true;
           }),
         check("chatName", "Please add required fields").notEmpty(),
+        check("avatar")
+          .notEmpty()
+          .withMessage("Please add required fields")
+          .isURL()
+          .withMessage("Received invalid fields"),
       ],
-      { message: "At least one of chatName or users must be provided" }
+      { message: "Please add required fields" }
     ),
   ],
   auth,

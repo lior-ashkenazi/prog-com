@@ -25,7 +25,12 @@ router.get("/", authMiddleware_1.default, chatsController_1.fetchChats);
 // @route		    POST /api/chats/groups
 // @access      Private
 router.post("/groups", [
-    (0, express_validator_1.check)("participants").custom((value) => {
+    (0, express_validator_1.check)("participants")
+        .notEmpty()
+        .withMessage("Please add required fields")
+        .isArray()
+        .withMessage("Received invalid fields")
+        .custom((value) => {
         value.forEach((user, i) => {
             if (!(0, express_validator_1.check)(user).isMongoId()) {
                 throw new Error(`Received invalid fields`);
@@ -34,11 +39,6 @@ router.post("/groups", [
         return true;
     }),
     (0, express_validator_1.check)("chatName", "Please add required fields").notEmpty(),
-    (0, express_validator_1.check)("avatar")
-        .notEmpty()
-        .withMessage("Please add required fields")
-        .isURL()
-        .withMessage("Received invalid fields"),
 ], authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.createGroupChat);
 // @desc		    Update a group chat
 // @route		    PUT /api/chats/groups
@@ -50,7 +50,7 @@ router.put("/groups", [
         .isMongoId()
         .withMessage("Received invalid fields"),
     (0, express_validator_1.oneOf)([
-        (0, express_validator_1.check)("users")
+        (0, express_validator_1.check)("participants")
             .isArray({ min: 1 })
             .withMessage("Received invalid fields")
             .custom((value) => {
@@ -62,6 +62,11 @@ router.put("/groups", [
             return true;
         }),
         (0, express_validator_1.check)("chatName", "Please add required fields").notEmpty(),
-    ], { message: "At least one of chatName or users must be provided" }),
+        (0, express_validator_1.check)("avatar")
+            .notEmpty()
+            .withMessage("Please add required fields")
+            .isURL()
+            .withMessage("Received invalid fields"),
+    ], { message: "Please add required fields" }),
 ], authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.updateGroupChat);
 exports.default = router;
