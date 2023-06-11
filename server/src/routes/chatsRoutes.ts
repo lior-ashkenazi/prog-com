@@ -49,6 +49,11 @@ router.post(
       return true;
     }),
     check("chatName", "Please add required fields").notEmpty(),
+    check("avatar")
+      .notEmpty()
+      .withMessage("Please add required fields")
+      .isURL()
+      .withMessage("Received invalid fields"),
   ],
   auth,
   validationErrorHandler,

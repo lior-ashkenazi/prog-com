@@ -9,7 +9,7 @@ const CreateGroupNameInput = ({ chatName, setChatName }: CreateGroupNameInputPro
       <span className="font-medium text-xl my-auto">Group Name:</span>
       <div className="grow flex justify-center relative">
         <input
-          id="createGroupModelName"
+          id="Create Group Modal Name"
           autoComplete="off"
           className="px-2 py-1.5 w-full rounded border-2 bg-gray-200 focus:bg-gray-50 focus:outline-none focus:shadow-outline focus:border-indigo-400 transition-colors"
           value={chatName}

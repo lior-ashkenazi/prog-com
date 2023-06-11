@@ -18,7 +18,10 @@ export type CreateGroupChatResponse = {
 
 export type UpdateGroupChatRequest = {
   chatId: string;
-} & ({ chatName?: string; participants: string[] } | { chatName: string; participants?: string[] });
+  chatName?: string;
+  participants?: string[];
+  avatar?: string;
+};
 export type UpdateGroupChatResponse = {
   chat: Chat;
 };

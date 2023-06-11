@@ -34,6 +34,11 @@ router.post("/groups", [
         return true;
     }),
     (0, express_validator_1.check)("chatName", "Please add required fields").notEmpty(),
+    (0, express_validator_1.check)("avatar")
+        .notEmpty()
+        .withMessage("Please add required fields")
+        .isURL()
+        .withMessage("Received invalid fields"),
 ], authMiddleware_1.default, errorMiddleware_1.validationErrorHandler, chatsController_1.createGroupChat);
 // @desc		    Update a group chat
 // @route		    PUT /api/chats/groups

@@ -6,7 +6,7 @@ export type Chat = {
   chatName: string;
   participants: User[];
   isGroupChat: boolean;
-  groupAdmin?: string;
+  groupAdmin?: User;
   lastMessageId?: Message;
   avatar?: string;
   updatedAt?: Date;

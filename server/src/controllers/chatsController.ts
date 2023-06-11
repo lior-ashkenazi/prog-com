@@ -91,7 +91,7 @@ const createGroupChat = asyncHandler(async (req: Request, res: Response): Promis
 });
 
 const updateGroupChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { chatId, chatName, participants } = req.body;
+  const { chatId, chatName, participants, avatar } = req.body;
 
   const chat: IChat | null = await Chat.findById(chatId);
 
@@ -112,6 +112,7 @@ const updateGroupChat = asyncHandler(async (req: Request, res: Response): Promis
 
   chat.chatName = chatName || chat.chatName;
   chat.participants = participants || chat.participants;
+  chat.avatar = avatar || chat.avatar;
 
   await chat.save();
 

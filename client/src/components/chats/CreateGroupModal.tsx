@@ -11,7 +11,7 @@ import CreateGroupNameInput from "./CreateGroupNameInput";
 import CreateGroupSearchBar from "./CreateGroupSearchBar";
 import CreateGroupSearchList from "./CreateGroupSearchList";
 import CreateGroupParticipants from "./CreateGroupParticipants";
-import ModalWrapper from "./Modal";
+import ModalWrapper from "./ModalWrapper";
 
 interface CreateGroupModalProps {
   showCreateGroupModal: boolean;

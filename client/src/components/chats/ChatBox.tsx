@@ -3,9 +3,9 @@ import { useEffect, useState, useContext, useRef } from "react";
 import { useFetchMessagesQuery, useSendMessageMutation } from "../../store";
 import { SocketContext } from "../../context/SocketContext";
 
-import ChatHeader from "./ChatHeader";
-import ChatBody from "./ChatBody";
-import ChatFooter from "./ChatFooter";
+import ChatBoxHeader from "./ChatBoxHeader";
+import ChatBody from "./ChatBoxBody";
+import ChatBoxFooter from "./ChatBoxFooter";
 
 import { User } from "../../types/userTypes";
 import { Message, SendMessageType } from "../../types/messageTypes";
@@ -119,7 +119,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
         {!searchWindowVisible ? (
           <>
             <div className="col-span-2">
-              <ChatHeader
+              <ChatBoxHeader
                 user={user}
                 chat={chat}
                 setSearchWindowVisible={setSearchWindowVisible}
@@ -135,7 +135,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
                 messagesIsFetching={messagesIsFetching}
                 messagesIsError={messagesIsError}
               />
-              <ChatFooter
+              <ChatBoxFooter
                 user={user}
                 chat={chat}
                 handleSendMessage={handleSendMessage}

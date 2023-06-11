@@ -86,7 +86,7 @@ const createGroupChat = (0, express_async_handler_1.default)((req, res) => __awa
 }));
 exports.createGroupChat = createGroupChat;
 const updateGroupChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { chatId, chatName, participants } = req.body;
+    const { chatId, chatName, participants, avatar } = req.body;
     const chat = yield chatModel_1.default.findById(chatId);
     if (!chat) {
         res.status(404);
@@ -102,6 +102,7 @@ const updateGroupChat = (0, express_async_handler_1.default)((req, res) => __awa
     }
     chat.chatName = chatName || chat.chatName;
     chat.participants = participants || chat.participants;
+    chat.avatar = avatar || chat.avatar;
     yield chat.save();
     const updatedChat = yield chatModel_1.default.findById(chat._id)
         .populate("participants", "-password")

@@ -108,7 +108,7 @@ const ChatsListItem = ({ user, chat, isClicked, isSearch }: ChatsListItemProps) 
       <div className="flex items-center justify-center gap-x-6">
         <img src={getChatAvatar(user, chat)} alt="Chat Avatar" className="w-11 h-11 rounded-full" />
         <span className="flex flex-col text-left">
-          <span className="font-semibold text-lg">{getChatName(user, chat)}</span>
+          <span className="font-semibold text-lg truncate">{getChatName(user, chat)}</span>
           <span className="text-sm text-opacity-60 text-black max-w-xs truncate ">
             {renderItemContent()}
           </span>

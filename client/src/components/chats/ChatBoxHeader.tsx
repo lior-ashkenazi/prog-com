@@ -1,32 +1,41 @@
+import { useState } from "react";
+
 import { HiSearch } from "react-icons/hi";
 
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
 import { getChatAvatar, getChatIsTyping, getChatName } from "../../utils/usersUtils";
 
-interface ChatHeaderProps {
+import ChatGroupModal from "./ChatGroupModal";
+
+interface ChatBoxHeaderProps {
   user: User;
   chat: Chat;
   setSearchWindowVisible: React.Dispatch<React.SetStateAction<boolean>>;
   typingText: string;
 }
 
-const ChatHeader = ({ user, chat, setSearchWindowVisible, typingText }: ChatHeaderProps) => {
+const ChatBoxHeader = ({ user, chat, setSearchWindowVisible, typingText }: ChatBoxHeaderProps) => {
+  const [showChatModal, setShowChatModal] = useState<boolean>(false);
+
   return (
     <div className="p-4 flex justify-between">
-      <div className="flex items-center justify-center gap-x-4">
+      <button
+        className="flex items-center justify-center gap-x-4"
+        onClick={() => setShowChatModal(true)}
+      >
         <img
           src={getChatAvatar(user, chat)}
           alt="Header Avatar"
           className="w-10 h-10 rounded-full"
         />
         <span className="flex flex-col text-left">
-          <span className="font-medium">{getChatName(user, chat)}</span>
+          <span className="font-medium truncate">{getChatName(user, chat)}</span>
           <span className="text-xs text-opacity-60 text-gray-900">
             {typingText && getChatIsTyping(typingText, chat)}
           </span>
         </span>
-      </div>
+      </button>
       <button className="mr-4" onClick={() => setSearchWindowVisible(true)}>
         <HiSearch
           size={28}
@@ -35,8 +44,16 @@ const ChatHeader = ({ user, chat, setSearchWindowVisible, typingText }: ChatHead
           }}
         />
       </button>
+      {chat.isGroupChat && (
+        <ChatGroupModal
+          user={user}
+          chat={chat}
+          showChatGroupModal={showChatModal}
+          setShowChatGroupModal={setShowChatModal}
+        />
+      )}
     </div>
   );
 };
 
-export default ChatHeader;
+export default ChatBoxHeader;

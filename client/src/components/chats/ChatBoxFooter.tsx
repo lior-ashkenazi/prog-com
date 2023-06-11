@@ -12,7 +12,7 @@ import CodeArea, { LanguageKeys } from "./CodeArea";
 import TextEmojiPicker from "./TextEmojiPicker";
 import ModeButtons from "./ModeButtons";
 
-interface ChatFooterProps {
+interface ChatBoxFooterProps {
   user: User;
   chat: Chat;
   handleSendMessage: (message: SendMessageType) => Promise<void>;
@@ -21,14 +21,14 @@ interface ChatFooterProps {
   handleUserTyping: (isUserTyping: boolean) => void;
 }
 
-const ChatFooter = ({
+const ChatBoxFooter = ({
   user,
   chat,
   handleSendMessage,
   sendMessageIsLoading,
   sendMessageIsError,
   handleUserTyping,
-}: ChatFooterProps) => {
+}: ChatBoxFooterProps) => {
   const [mode, setMode] = useState<MessageModes>("text");
   const [text, setText] = useState<string>("");
   const [math, setMath] = useState<string>("");
@@ -160,4 +160,4 @@ const ChatFooter = ({
   );
 };
 
-export default ChatFooter;
+export default ChatBoxFooter;
