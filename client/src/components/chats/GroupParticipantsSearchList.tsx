@@ -1,20 +1,20 @@
 import { useFetchUsersQuery } from "../../store";
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
-import CreateGroupSearchItem from "./CreateGroupSearchItem";
+import GroupParticipantsSearchItem from "./GroupParticipantsSearchItem";
 import ListSkeleton from "./ListSkeleton";
 
-interface CreateGroupSearchListProps {
+interface GroupParticipantsSearchListProps {
   searchQuery: string;
   participants: User[];
   handleAddParticipant: (newParticipant: User) => void;
 }
 
-const CreateGroupSearchList = ({
+const GroupParticipantsSearchList = ({
   searchQuery,
   participants,
   handleAddParticipant,
-}: CreateGroupSearchListProps) => {
+}: GroupParticipantsSearchListProps) => {
   const { data, isLoading, isFetching } = useFetchUsersQuery(searchQuery);
 
   const potentialChat = (user: User, index: number): Chat => {
@@ -25,7 +25,7 @@ const CreateGroupSearchList = ({
     !searchQuery
       ? ""
       : data?.users.map((user: User, index: number) => (
-          <CreateGroupSearchItem
+          <GroupParticipantsSearchItem
             key={index}
             user={user}
             chat={potentialChat(user, index)}
@@ -41,4 +41,4 @@ const CreateGroupSearchList = ({
   );
 };
 
-export default CreateGroupSearchList;
+export default GroupParticipantsSearchList;

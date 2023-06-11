@@ -3,19 +3,19 @@ import { getChatAvatar, getChatName } from "../../utils";
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
 
-interface CreateGroupSearchItemProps {
+interface GroupParticipantsSearchItemProps {
   user: User;
   chat: Chat;
   isHighlighted: boolean;
   handleAddParticipant: (newParticipant: User) => void;
 }
 
-const CreateGroupSearchItem = ({
+const GroupParticipantsSearchItem = ({
   user,
   chat,
   isHighlighted,
   handleAddParticipant,
-}: CreateGroupSearchItemProps) => {
+}: GroupParticipantsSearchItemProps) => {
   return (
     <button
       className={`inline-block px-6 h-16 flex items-center justify-between hover:bg-gray-200 active:bg-gray-300 transition-colors rounded-t-sm border-b last:border-b-0 ${
@@ -32,4 +32,4 @@ const CreateGroupSearchItem = ({
   );
 };
 
-export default CreateGroupSearchItem;
+export default GroupParticipantsSearchItem;

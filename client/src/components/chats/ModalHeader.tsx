@@ -19,7 +19,9 @@ const ModalHeader = ({ setShowModal, headerTitle }: ModalHeaderProps) => {
           }}
         />
       </button>
-      <h2 className="grow text-3xl text-center text-white font-medium mr-5">{headerTitle}</h2>
+      <h2 className="grow text-4xl text-center text-white font-medium mr-5 truncate">
+        {headerTitle}
+      </h2>
     </div>
   );
 };

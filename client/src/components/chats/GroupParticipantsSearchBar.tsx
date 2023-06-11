@@ -1,11 +1,14 @@
 import { BsXLg } from "react-icons/bs";
 
-interface CreateGroupSearchBarProps {
+interface GroupParticipantsSearchBarProps {
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const CreateGroupSearchBar = ({ searchQuery, setSearchQuery }: CreateGroupSearchBarProps) => {
+const GroupParticipantsSearchBar = ({
+  searchQuery,
+  setSearchQuery,
+}: GroupParticipantsSearchBarProps) => {
   return (
     <div className="grow flex justify-center relative bg-gray-100 px-3 pb-1 border-b">
       <input
@@ -28,4 +31,4 @@ const CreateGroupSearchBar = ({ searchQuery, setSearchQuery }: CreateGroupSearch
   );
 };
 
-export default CreateGroupSearchBar;
+export default GroupParticipantsSearchBar;

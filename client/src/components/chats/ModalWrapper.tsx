@@ -8,6 +8,7 @@ interface ModalWrapperProps {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   headerTitle: string;
+  handleAfterClose: () => void;
 }
 
 const ModalWrapper = ({
@@ -16,6 +17,7 @@ const ModalWrapper = ({
   showModal,
   setShowModal,
   headerTitle,
+  handleAfterClose,
 }: ModalWrapperProps) => {
   const customStyles = {
     content: {
@@ -33,7 +35,12 @@ const ModalWrapper = ({
   };
 
   return (
-    <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)} style={customStyles}>
+    <Modal
+      isOpen={showModal}
+      onRequestClose={() => setShowModal(false)}
+      onAfterClose={handleAfterClose}
+      style={customStyles}
+    >
       <ModalHeader setShowModal={setShowModal} headerTitle={headerTitle} />
       <div className="flex">
         <div className="bg-gray-100 w-96">{children}</div>

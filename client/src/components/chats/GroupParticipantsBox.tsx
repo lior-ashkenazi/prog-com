@@ -2,15 +2,15 @@ import { User } from "../../types/userTypes";
 
 import CreateGroupParticipantsItem from "./CreateGroupParticipantsItem";
 
-interface CreateGroupParticipantsProps {
+interface GroupParticipantsBoxProps {
   participants: User[];
   handleRemoveParticipant: (removedParticipant: User) => void;
 }
 
-const CreateGroupParticipants = ({
+const GroupParticipantsBox = ({
   participants,
   handleRemoveParticipant,
-}: CreateGroupParticipantsProps) => {
+}: GroupParticipantsBoxProps) => {
   const renderList = () =>
     participants.map((participant) => (
       <CreateGroupParticipantsItem
@@ -24,4 +24,4 @@ const CreateGroupParticipants = ({
   );
 };
 
-export default CreateGroupParticipants;
+export default GroupParticipantsBox;

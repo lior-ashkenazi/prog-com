@@ -10,9 +10,9 @@ import { LoadingContext } from "../../context/LoadingContext";
 import { User } from "../../types/userTypes";
 
 import CreateGroupNameInput from "./CreateGroupNameInput";
-import CreateGroupSearchBar from "./CreateGroupSearchBar";
-import CreateGroupSearchList from "./CreateGroupSearchList";
-import CreateGroupParticipants from "./CreateGroupParticipants";
+import GroupParticipantsSearchBar from "./GroupParticipantsSearchBar";
+import GroupParticipantsSearchList from "./GroupParticipantsSearchList";
+import GroupParticipantsBox from "./GroupParticipantsBox";
 import ModalWrapper from "./ModalWrapper";
 
 interface CreateGroupModalProps {
@@ -33,6 +33,12 @@ const CreateGroupModal = ({
   const [chatName, setChatName] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [participants, setParticipants] = useState<User[]>([]);
+
+  const handleAfterClose = () => {
+    setChatName("");
+    setSearchQuery("");
+    setParticipants([]);
+  };
 
   const handleAddParticipant = (newParticipant: User) =>
     setParticipants((prevParticipants) => [...prevParticipants, newParticipant]);
@@ -58,12 +64,12 @@ const CreateGroupModal = ({
   const children = (
     <>
       <CreateGroupNameInput chatName={chatName} setChatName={setChatName} />
-      <CreateGroupSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <CreateGroupParticipants
+      <GroupParticipantsSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <GroupParticipantsBox
         participants={participants}
         handleRemoveParticipant={handleRemoveParticipant}
       />
-      <CreateGroupSearchList
+      <GroupParticipantsSearchList
         searchQuery={searchQuery}
         participants={participants}
         handleAddParticipant={handleAddParticipant}
@@ -72,7 +78,7 @@ const CreateGroupModal = ({
         <button
           className="rounded-full bg-white"
           onClick={() => handleCreateGroupChat()}
-          disabled={!searchQuery}
+          disabled={!chatName}
         >
           <BsArrowRightCircleFill
             style={{
@@ -91,6 +97,7 @@ const CreateGroupModal = ({
       showModal={showCreateGroupModal}
       setShowModal={setShowCreateGroupModal}
       headerTitle="Create Group"
+      handleAfterClose={handleAfterClose}
     >
       {children}
     </ModalWrapper>
