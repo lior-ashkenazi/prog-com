@@ -44,7 +44,7 @@ const ModalWrapper = ({
       <ModalHeader setShowModal={setShowModal} headerTitle={headerTitle} />
       <div className="flex">
         <div className="bg-gray-100 w-96">{children}</div>
-        {extendedChildren && <div className="transition-transform origin-left w-96">ha</div>}
+        {extendedChildren && <div className="border-l w-96">{extendedChildren}</div>}
       </div>
     </Modal>
   );

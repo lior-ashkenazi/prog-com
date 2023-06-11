@@ -10,7 +10,7 @@ const GroupParticipantsSearchBar = ({
   setSearchQuery,
 }: GroupParticipantsSearchBarProps) => {
   return (
-    <div className="grow flex justify-center relative bg-gray-100 px-3 pb-1 border-b">
+    <div className="grow flex justify-center relative bg-gray-100 px-3 py-2 border-b">
       <input
         id="CreateGroupSearchInput"
         autoComplete="off"
@@ -20,7 +20,7 @@ const GroupParticipantsSearchBar = ({
         placeholder={"Search by username"}
         type="text"
       ></input>
-      <button className="absolute left-6 top-4" onClick={() => setSearchQuery("")}>
+      <button className="absolute left-6 top-6" onClick={() => setSearchQuery("")}>
         <BsXLg
           style={{
             color: "#312e81",

@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
 
@@ -7,6 +9,7 @@ import ModalWrapper from "./ModalWrapper";
 import ChatGroupModalAvatar from "./ChatGroupModalAvatar";
 import ChatGroupModalName from "./ChatGroupModalName";
 import ChatGroupModalParticipants from "./ChatGroupModalParticipants";
+import AddParticipantsWindow from "./AddParticipantsWindow";
 
 interface ChatGroupModalProps {
   user: User;
@@ -21,6 +24,12 @@ const ChatGroupModal = ({
   showChatGroupModal,
   setShowChatGroupModal,
 }: ChatGroupModalProps) => {
+  const [openAddParticipantsWindow, setOpenAddParticipantsWindow] = useState<boolean>(false);
+
+  useEffect(() => setOpenAddParticipantsWindow(false), [chat]);
+
+  const handleAfterClose = () => setOpenAddParticipantsWindow(false);
+
   const children = (
     <>
       <ChatGroupModalAvatar user={user} chat={chat} />
@@ -29,6 +38,7 @@ const ChatGroupModal = ({
         user={user}
         chat={chat}
         setShowChatGroupModal={setShowChatGroupModal}
+        setOpenAddParticipantsWindow={setOpenAddParticipantsWindow}
       />
     </>
   );
@@ -37,6 +47,15 @@ const ChatGroupModal = ({
       showModal={showChatGroupModal}
       setShowModal={setShowChatGroupModal}
       headerTitle={getChatName(user, chat)}
+      extendedChildren={
+        openAddParticipantsWindow && (
+          <AddParticipantsWindow
+            chat={chat}
+            setOpenAddParticipantsWindow={setOpenAddParticipantsWindow}
+          />
+        )
+      }
+      handleAfterClose={handleAfterClose}
     >
       {children}
     </ModalWrapper>

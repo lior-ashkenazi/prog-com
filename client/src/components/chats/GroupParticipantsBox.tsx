@@ -5,11 +5,13 @@ import CreateGroupParticipantsItem from "./CreateGroupParticipantsItem";
 interface GroupParticipantsBoxProps {
   participants: User[];
   handleRemoveParticipant: (removedParticipant: User) => void;
+  isLong?: boolean;
 }
 
 const GroupParticipantsBox = ({
   participants,
   handleRemoveParticipant,
+  isLong,
 }: GroupParticipantsBoxProps) => {
   const renderList = () =>
     participants.map((participant) => (
@@ -20,7 +22,13 @@ const GroupParticipantsBox = ({
     ));
 
   return (
-    <div className="flex flex-wrap gap-2 h-32 p-4 border-b overflow-y-auto">{renderList()}</div>
+    <div
+      className={`bg-gray-100 flex flex-wrap gap-2 ${
+        isLong ? "h-40" : "h-32"
+      } p-4 border-b overflow-y-auto`}
+    >
+      {renderList()}
+    </div>
   );
 };
 

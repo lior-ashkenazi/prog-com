@@ -7,13 +7,17 @@ import ListSkeleton from "./ListSkeleton";
 interface GroupParticipantsSearchListProps {
   searchQuery: string;
   participants: User[];
+  existingParticipants?: User[];
   handleAddParticipant: (newParticipant: User) => void;
+  isLong?: boolean;
 }
 
 const GroupParticipantsSearchList = ({
   searchQuery,
   participants,
+  existingParticipants,
   handleAddParticipant,
+  isLong,
 }: GroupParticipantsSearchListProps) => {
   const { data, isLoading, isFetching } = useFetchUsersQuery(searchQuery);
 
@@ -29,13 +33,18 @@ const GroupParticipantsSearchList = ({
             key={index}
             user={user}
             chat={potentialChat(user, index)}
-            isHighlighted={participants.some((participant) => participant._id === user._id)}
+            isHighlighted={
+              existingParticipants?.some((participant) => participant._id === user._id) ||
+              participants.some((participant) => participant._id === user._id)
+            }
             handleAddParticipant={handleAddParticipant}
           />
         ));
 
   return (
-    <div className="flex flex-col h-72 bg-gray-100 overflow-y-auto border-b">
+    <div
+      className={`flex flex-col ${isLong ? "h-80" : "h-72"} bg-gray-100 overflow-y-auto border-b`}
+    >
       {!isLoading && !isFetching ? renderList() : <ListSkeleton />}
     </div>
   );
