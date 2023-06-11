@@ -1,14 +1,3 @@
-import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-import { BsPencilFill, BsX, BsCheck2 } from "react-icons/bs";
-
-import { AppDispatch, setChat, useUpdateGroupChatMutation } from "../../store";
-
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
 
@@ -31,10 +20,16 @@ const ChatGroupModal = ({
   showChatGroupModal,
   setShowChatGroupModal,
 }: ChatGroupModalProps) => {
+  // const renderList = () => chat.participants.map((participant)=>)
+
   const children = (
     <>
       <ChatGroupModalAvatar user={user} chat={chat} />
       <ChatGroupModalName user={user} chat={chat} />
+      {/* <div>
+        <h3>Participants</h3>
+        <div className="flex flex-wrap gap-2 h-32 p-4 border-b overflow-y-auto">{renderList()}</div>
+      </div> */}
     </>
   );
   return (

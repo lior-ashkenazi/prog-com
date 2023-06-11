@@ -18,7 +18,7 @@ const CreateGroupSearchItem = ({
 }: CreateGroupSearchItemProps) => {
   return (
     <button
-      className={`inline-block px-6 h-20 flex items-center justify-between hover:bg-gray-200 active:bg-gray-300 transition-colors rounded-t-sm border-b last:border-b-0 ${
+      className={`inline-block px-6 h-16 flex items-center justify-between hover:bg-gray-200 active:bg-gray-300 transition-colors rounded-t-sm border-b last:border-b-0 ${
         isHighlighted && "bg-gray-300 hover:bg-gray-300"
       }`}
       disabled={isHighlighted}

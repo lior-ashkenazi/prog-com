@@ -35,7 +35,7 @@ const CreateGroupSearchList = ({
         ));
 
   return (
-    <div className="flex flex-col py-1 gap-y-1 h-72 bg-gray-100 overflow-y-auto border-b">
+    <div className="flex flex-col h-72 bg-gray-100 overflow-y-auto border-b">
       {!isLoading && !isFetching ? renderList() : <ListSkeleton />}
     </div>
   );
