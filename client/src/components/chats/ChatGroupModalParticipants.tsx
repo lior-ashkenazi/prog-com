@@ -46,8 +46,9 @@ const ChatGroupModalParticipants = ({
 
   return (
     <div>
-      <div className="border-b-2 border-indigo-600">
+      <div className="border-b-2 pb-1 flex items-center justify-between">
         <h3 className="pt-2 pb-1 px-4 text-xl font-semibold">Participants</h3>
+        {chat.groupAdmin && chat.groupAdmin._id === user._id && <button></button>}
       </div>
       <div className="flex flex-col h-80 overflow-y-auto">{renderList()}</div>
     </div>

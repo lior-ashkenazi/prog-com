@@ -69,7 +69,10 @@ const ChatGroupModalParticipantsItem = ({
       className="w-full inline-block px-6 py-2 h-14 flex items-center justify-between hover:bg-gray-200 active:bg-gray-300 transition-colors rounded-t-sm border-b last:border-b-0"
       onClick={() => handleClick()}
       disabled={
-        isRemoveButtonHovered || isCancelRemoveButtonHovered || isValidateRemoveButtonHovered
+        participant._id === user._id ||
+        isRemoveButtonHovered ||
+        isCancelRemoveButtonHovered ||
+        isValidateRemoveButtonHovered
       }
     >
       <div className="flex items-center justify-between w-full">

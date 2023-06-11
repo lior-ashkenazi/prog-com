@@ -58,7 +58,7 @@ const ChatGroupModalName = ({ user, chat }: ChatGroupModalNameProps) => {
   };
 
   return (
-    <div className="h-16 flex items-center justify-center">
+    <div className="h-16 pb-6 flex items-center justify-center border-b-4 border-indigo-600">
       {!showEditName ? (
         <div>
           <span className="relative font-medium text-3xl truncate">
@@ -83,7 +83,7 @@ const ChatGroupModalName = ({ user, chat }: ChatGroupModalNameProps) => {
         </div>
       ) : (
         <form
-          className="bg-green 500 flex items-center justify-center"
+          className="flex items-center justify-center"
           onSubmit={handleSubmitName(onSubmitNameHandler)}
         >
           {showEditName && (
@@ -91,7 +91,7 @@ const ChatGroupModalName = ({ user, chat }: ChatGroupModalNameProps) => {
               <input
                 id="Group Chat Avatar"
                 autoComplete="off"
-                className={`font-semibold text-3xl px-2 py-1 w-full rounded-sm bg-gray-100 focus:outline-none border-b-4 border-indigo-400 transition-colors ${
+                className={`font-semibold text-2xl px-2 py-1 w-full rounded-sm bg-gray-100 focus:outline-none border-b-4 border-indigo-400 transition-colors ${
                   errorsName.chatName && "border-red-500"
                 }`}
                 placeholder="Enter group name"
