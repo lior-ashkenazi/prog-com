@@ -82,7 +82,11 @@ const ChatsList = () => {
       });
 
       socket.on("updated group chat", () => setShouldRefetchChats(true));
-      socket.on("admin removal", () => setShouldRefetchChats(true));
+      socket.on(
+        "admin removal",
+        (_, removedParticipant: User) =>
+          removedParticipant._id === user._id && setShouldRefetchChats(true)
+      ); // eslint-disable-line @typescript-eslint/no-unused-vars
     }
   }, [user, socketConnected, socket]);
 

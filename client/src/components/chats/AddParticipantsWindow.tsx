@@ -58,7 +58,9 @@ const AddParticipantsWindow = ({
     };
 
     const { chat: updatedGroupChat } = await updateGroupChat(request).unwrap();
+
     socket.emit("updated group chat", updatedGroupChat);
+
     dispatch(setChat(updatedGroupChat));
   };
 

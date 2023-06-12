@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { useDispatch } from "react-redux";
 
+import { SocketContext } from "../../context/SocketContext";
 import { HiPlus } from "react-icons/hi";
 
 import { AppDispatch, setChat, useUpdateGroupChatMutation } from "../../store";
@@ -22,17 +24,26 @@ const ChatGroupModalParticipants = ({
   setShowChatGroupModal,
   setOpenAddParticipantsWindow,
 }: ChatGroupModalParticipantsProps) => {
+  const { socket, socketConnected } = useContext(SocketContext);
   const dispatch: AppDispatch = useDispatch();
   const [updateGroupChat] = useUpdateGroupChatMutation();
 
   const handleRemoveParticipant = async (removeParticipant: User) => {
+    if (!socketConnected || !socket) return;
+
     const request = {
       chatId: chat._id,
       participants: chat.participants
         .filter((participant) => participant._id !== removeParticipant._id)
         .map((participant) => participant._id),
     };
+
+    const previousChat = chat;
+
     const { chat: updatedGroupChat } = await updateGroupChat(request).unwrap();
+
+    socket.emit("admin removal", previousChat, removeParticipant);
+
     dispatch(setChat(updatedGroupChat));
   };
 

@@ -72,10 +72,10 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
     const updatedGroupChatHandler = (updatedGroupChat: Chat) =>
       chat && chat._id === updatedGroupChat._id && dispatch(setChat(updatedGroupChat));
 
-    const adminRemovalHandler = (updatedGroupChat: Chat, removedUser: User) => {
+    const adminRemovalHandler = (updatedGroupChat: Chat, removedParticipant: User) => {
       if (!chat || chat._id !== updatedGroupChat._id) return;
 
-      if (removedUser._id === user._id) {
+      if (removedParticipant._id === user._id) {
         socket.emit("leave chat", chat);
         dispatch(setChat(null));
       }

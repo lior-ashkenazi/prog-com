@@ -103,9 +103,9 @@ io.on("connection", (socket) => {
   });
 
   // Admin removal
-  socket.on("admin removal", (updatedGroupChat, removedUser) => {
-    updatedGroupChat.participants.forEach((user: IUser) => {
-      io.to(user._id).emit("admin removal", updatedGroupChat, removedUser);
+  socket.on("admin removal", (chat, removedUser) => {
+    chat.participants.forEach((user: IUser) => {
+      io.to(user._id).emit("admin removal", chat, removedUser);
     });
   });
 
