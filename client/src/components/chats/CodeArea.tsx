@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { debounce } from "lodash";
 
 import CodeMirror from "@uiw/react-codemirror";
@@ -10,6 +10,10 @@ import { ruby } from "@codemirror/legacy-modes/mode/ruby";
 import { swift } from "@codemirror/legacy-modes/mode/swift";
 import { go } from "@codemirror/legacy-modes/mode/go";
 import { rust } from "@codemirror/legacy-modes/mode/rust";
+
+import { BsArrowsFullscreen } from "react-icons/bs";
+
+import Modal from "react-modal";
 
 import { languagesLowercaseToUppercaseMap } from "../../types/messageTypes";
 
@@ -57,6 +61,8 @@ const CodeArea = ({
   const debouncedUserTyping = useRef(
     debounce(() => handleUserTyping && handleUserTyping(false), 500)
   ).current;
+
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleChange = (value: string) => {
     codeRef.current = value;
@@ -109,6 +115,52 @@ const CodeArea = ({
           </select>
         </div>
       )}
+      {!readOnly && (
+        <button
+          type="button"
+          className="absolute right-1 bottom-1"
+          onClick={() => setShowModal(true)}
+        >
+          <BsArrowsFullscreen style={{ color: "#6b7280" }} />
+        </button>
+      )}
+      <Modal
+        isOpen={showModal}
+        onRequestClose={() => setShowModal(false)}
+        style={{
+          content: {
+            width: "36rem",
+            height: "36rem",
+            margin: "0 auto",
+            padding: 0,
+            borderWidth: "0px",
+            borderTopColor: "rgb(79 70 229)",
+            borderRadius: "0.375rem",
+          },
+          overlay: {
+            backgroundColor: "rgb(0, 0, 0, 0.6)",
+          },
+        }}
+      >
+        <div
+          className="w-full"
+          onBlur={() => {
+            debouncedUserTyping();
+            setCode && setCode(codeRef.current);
+          }}
+        >
+          <CodeMirror
+            value={code}
+            height="36rem"
+            width="36rem"
+            theme="dark"
+            readOnly={readOnly}
+            extensions={[StreamLanguage.define(languagesStreamParserMap[selectedLanguage])]}
+            onChange={handleChange}
+            className="rounded-md border-0 outline-none overflow-auto"
+          />
+        </div>
+      </Modal>
     </div>
   );
 };
