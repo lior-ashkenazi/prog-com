@@ -18,6 +18,7 @@ const saltRounds = 10;
 const userSchema = new mongoose_1.Schema({
     userName: {
         type: String,
+        minLength: 1,
         required: true,
         unique: true,
     },
@@ -32,6 +33,7 @@ const userSchema = new mongoose_1.Schema({
     },
     avatar: {
         type: String,
+        minLength: 1,
         required: true,
     },
 }, { timestamps: true });

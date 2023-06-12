@@ -40,6 +40,7 @@ const chatSchema: Schema = new Schema<IChat>(
     },
     avatar: {
       type: String,
+      minLength: 1,
       required: false,
     },
   },

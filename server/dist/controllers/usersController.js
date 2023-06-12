@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchUsers = exports.logoutUser = exports.authUser = exports.loginUser = exports.registerUser = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const userModel_1 = __importDefault(require("../models/userModel"));
+const profileModel_1 = __importDefault(require("../models/profileModel"));
 const generateToken_1 = require("../utils/generateToken");
 const registerUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userName, email, password } = req.body;
@@ -35,6 +36,13 @@ const registerUser = (0, express_async_handler_1.default)((req, res) => __awaite
         password,
     });
     if (newUser) {
+        const newProfile = yield profileModel_1.default.create({
+            user: newUser._id,
+        });
+        if (!newProfile) {
+            res.status(500);
+            throw new Error("Profile creation failed");
+        }
         const payload = {
             user: {
                 _id: newUser._id,

@@ -35,6 +35,7 @@ const messageSchema: Schema = new Schema<IMessage>(
     sender: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     content: {
       type: String,

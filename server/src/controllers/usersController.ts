@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
 import User, { IUser } from "../models/userModel";
+import Profile, { IProfile } from "../models/profileModel";
 import { generateToken } from "../utils/generateToken";
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
@@ -30,6 +31,15 @@ const registerUser = asyncHandler(async (req: Request, res: Response): Promise<v
   });
 
   if (newUser) {
+    const newProfile: IProfile = await Profile.create({
+      user: newUser._id,
+    });
+
+    if (!newProfile) {
+      res.status(500);
+      throw new Error("Profile creation failed");
+    }
+
     const payload = {
       user: {
         _id: newUser._id,

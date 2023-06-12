@@ -15,6 +15,7 @@ const userSchema: Schema = new Schema<IUser>(
   {
     userName: {
       type: String,
+      minLength: 1,
       required: true,
       unique: true,
     },
@@ -29,6 +30,7 @@ const userSchema: Schema = new Schema<IUser>(
     },
     avatar: {
       type: String,
+      minLength: 1,
       required: true,
     },
   },

@@ -30,6 +30,7 @@ const chatSchema = new mongoose_1.Schema({
     },
     avatar: {
         type: String,
+        minLength: 1,
         required: false,
     },
 }, { timestamps: true });

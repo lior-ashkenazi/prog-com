@@ -12,6 +12,7 @@ const socket_io_1 = require("socket.io");
 const errorMiddleware_1 = require("./middleware/errorMiddleware");
 // Routes
 const usersRoutes_1 = __importDefault(require("./routes/usersRoutes"));
+const profileRoutes_1 = __importDefault(require("./routes/profileRoutes"));
 const chatsRoutes_1 = __importDefault(require("./routes/chatsRoutes"));
 const messagesRoutes_1 = __importDefault(require("./routes/messagesRoutes"));
 dotenv_1.default.config();
@@ -21,6 +22,7 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // Define Routes
 app.use("/api/users", usersRoutes_1.default);
+app.use("/api/profile", profileRoutes_1.default);
 app.use("/api/chats", chatsRoutes_1.default);
 app.use("/api/messages", messagesRoutes_1.default);
 const __dirname$ = path_1.default.resolve();
