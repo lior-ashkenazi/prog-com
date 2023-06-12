@@ -1,9 +1,10 @@
-import { useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState, useFetchChatsQuery } from "../../store";
 
 import { User } from "../../types/userTypes";
+import { Message } from "../../types/messageTypes";
 import { Chat } from "../../types/chatTypes";
 
 import ChatsListItem from "./ChatsListItem";
@@ -20,14 +21,11 @@ const ChatsList = () => {
     isError: chatsIsError,
     refetch: refetchChats,
   } = useFetchChatsQuery();
-  const { chats, setChats, shouldRefetchChats, setShouldRefetchChats, sortSignal, setSortSignal } =
-    useContext(SocketContext);
-  useEffect(() => {
-    if (shouldRefetchChats) {
-      refetchChats();
-      setShouldRefetchChats(false);
-    }
-  }, [refetchChats, shouldRefetchChats, setShouldRefetchChats]);
+  const { socket, socketConnected } = useContext(SocketContext);
+
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [shouldRefetchChats, setShouldRefetchChats] = useState<boolean>(false);
+  const [shouldSort, setShouldSort] = useState<boolean>(false);
 
   const sortChats = useCallback(() => {
     setChats((prevChats) =>
@@ -50,6 +48,38 @@ const ChatsList = () => {
   }, [setChats]);
 
   useEffect(() => {
+    if (user && socketConnected && socket) {
+      socket.emit("setup", user);
+      socket.on("message received", (message: Message) => {
+        setChats((prevChats) => {
+          const chatExists = prevChats.some((chat) => chat._id === message.chatId._id);
+
+          if (!chatExists) {
+            setShouldRefetchChats(true);
+          }
+
+          return prevChats.map((chat) => {
+            if (chat._id === message.chatId._id) {
+              return { ...chat, lastMessageId: message };
+            }
+
+            return chat;
+          });
+        });
+
+        setShouldSort(true);
+      });
+    }
+  }, [user, socketConnected, socket]);
+
+  useEffect(() => {
+    if (shouldRefetchChats) {
+      refetchChats();
+      setShouldRefetchChats(false);
+    }
+  }, [refetchChats, shouldRefetchChats, setShouldRefetchChats]);
+
+  useEffect(() => {
     if (data?.chats) {
       setChats(data?.chats);
       sortChats();
@@ -57,12 +87,12 @@ const ChatsList = () => {
   }, [data, setChats, sortChats]);
 
   useEffect(() => {
-    if (!sortSignal) return;
+    if (!shouldSort) return;
 
     sortChats();
 
-    setSortSignal(false);
-  }, [sortSignal, setSortSignal, sortChats]);
+    setShouldSort(false);
+  }, [shouldSort, setShouldSort, sortChats]);
 
   const renderList = () =>
     chats.map(

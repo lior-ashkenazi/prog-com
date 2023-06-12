@@ -31,7 +31,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   } = useFetchMessagesQuery(chat._id);
   const [sendMessage, { isLoading: sendMessageIsLoading, isError: sendMessageIsError }] =
     useSendMessageMutation();
-  const { socket } = useContext(SocketContext);
+  const { socket, socketConnected } = useContext(SocketContext);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [typingUser, setTypingUser] = useState<string>("");
@@ -51,7 +51,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   }, [data]);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socketConnected || !socket) return;
 
     socket.emit("access chat", chat);
 
@@ -77,7 +77,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
       socket.off("stop typing", stopTypingHandler);
       socket.emit("leave chat", chat);
     };
-  }, [chat, user, socket]);
+  }, [chat, user, socketConnected, socket]);
 
   useEffect(() => {
     if (!searchWindowVisible && messageToScrollTo !== -1) {
@@ -87,7 +87,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   }, [searchWindowVisible, messageToScrollTo]);
 
   const handleUserTyping = (isUserTyping: boolean) => {
-    if (!socket) return;
+    if (!socketConnected || !socket) return;
 
     if (isUserTyping) {
       socket.emit("typing", chat, user); //eslint-disable-line
@@ -97,7 +97,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   };
 
   const handleSendMessage = async (message: SendMessageType) => {
-    if (!socket) return;
+    if (!socketConnected || !socket) return;
 
     const { message: populatedMessage } = await sendMessage(message).unwrap();
 
