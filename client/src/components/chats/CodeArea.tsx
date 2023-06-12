@@ -69,7 +69,7 @@ const CodeArea = ({
   };
 
   return (
-    <div className="flex relative">
+    <div className="flex relative mb-1">
       <div
         className="w-full"
         onBlur={() => {
@@ -84,7 +84,7 @@ const CodeArea = ({
         )}
         <CodeMirror
           value={code}
-          height={readOnly ? "auto" : "120px"}
+          height={readOnly ? "auto" : "8rem"}
           theme="dark"
           readOnly={readOnly}
           extensions={[StreamLanguage.define(languagesStreamParserMap[selectedLanguage])]}

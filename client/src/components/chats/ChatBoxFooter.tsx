@@ -108,7 +108,7 @@ const ChatBoxFooter = ({
   return (
     <form
       id="messageForm"
-      className="pt-7 pb-5 px-8 flex flex-col relative justify-center"
+      className="pt-7 pb-5 px-8 flex flex-col relative items-center justify-center"
       onSubmit={handleSubmit}
     >
       <TextEmojiPicker openEmoji={openEmoji} text={text} setText={setText} />
@@ -120,7 +120,7 @@ const ChatBoxFooter = ({
       <div className="absolute top-0 left-0">
         <ModeButtons mode={mode} setMode={setMode} />
       </div>
-      <div className="relative ml-10 w-[55rem]">
+      <div className="relative w-11/12">
         <button
           type="button"
           className={`absolute -left-7 top-1 ${mode !== "text" && "opacity-0"}`}

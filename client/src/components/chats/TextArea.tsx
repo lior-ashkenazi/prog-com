@@ -34,7 +34,7 @@ const TextArea = ({ text, setText, handleUserTyping }: TextAreaProps) => {
     <textarea
       ref={textRef}
       placeholder="Type a message."
-      className="h-28 py-2 px-3 w-full rounded-md border-0 outline-none resize-none"
+      className="h-32 py-2 px-3 w-full rounded-md border-0 outline-none resize-none"
       onBlur={handleBlur}
       onChange={handleChange}
     />

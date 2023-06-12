@@ -96,17 +96,19 @@ const ChatBody = forwardRef(
         }`}
       >
         {messagesIsLoading || messagesIsFetching ? (
-          <Skeleton
-            width={500}
-            height={50}
-            count={6}
-            style={{
-              opacity: 0.9,
-              marginBottom: "0.5rem",
-            }}
-          />
+          <div className="flex items-center justify-center">
+            <Skeleton
+              width={600}
+              height={50}
+              count={6}
+              style={{
+                opacity: 0.9,
+                marginBottom: "0.5rem",
+              }}
+            />
+          </div>
         ) : messagesIsError ? (
-          <div className="m-0.5 text-xs text-opacity-70 text-black text-right bg-red-600">
+          <div className="w-full flex items-center justify-center m-0.5 text-xs text-opacity-70 text-black text-right bg-red-600">
             There was problem fetching messages.
           </div>
         ) : (
