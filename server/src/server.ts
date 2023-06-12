@@ -80,9 +80,6 @@ io.on("connection", (socket) => {
   socket.on("new message", (chat, newMessage) => {
     // newMessage is a IMessage that is populated
     // so newMessage.chat is well defined
-
-    if (!chat.participants) return console.log("chat.participants not defined");
-
     chat.participants.forEach((user: IUser) => {
       io.to(user._id).emit("message received", newMessage);
     });
@@ -96,6 +93,20 @@ io.on("connection", (socket) => {
   // Stop typing
   socket.on("stop typing", (chat, user) => {
     io.to(chat._id).emit("stop typing", user);
+  });
+
+  // Updated group chat
+  socket.on("updated group chat", (updatedGroupChat) => {
+    updatedGroupChat.participants.forEach((user: IUser) => {
+      io.to(user._id).emit("updated group chat", updatedGroupChat);
+    });
+  });
+
+  // Admin removal
+  socket.on("admin removal", (updatedGroupChat, removedUser) => {
+    updatedGroupChat.participants.forEach((user: IUser) => {
+      io.to(user._id).emit("admin removal", updatedGroupChat, removedUser);
+    });
   });
 
   // Leave chat

@@ -1,11 +1,9 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { GiExitDoor } from "react-icons/gi";
 import { BsX, BsCheck2 } from "react-icons/bs";
 
 import { useAccessChatMutation } from "../../store";
-
-import { LoadingContext } from "../../context/LoadingContext";
 
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
@@ -28,7 +26,6 @@ const ChatGroupModalParticipantsItem = ({
   setShowChatGroupModal,
 }: ChatGroupModalParticipantsItemProps) => {
   const [accessChat] = useAccessChatMutation();
-  const { setChatBoxIsLoading } = useContext(LoadingContext);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isButtonHovered, setIsButtonHovered] = useState<boolean>(false);
@@ -52,13 +49,12 @@ const ChatGroupModalParticipantsItem = ({
     }
   }, [removeButtonClicked]);
 
-  const handleClick = async () => {
+  const handleAccessChat = async () => {
     if (participant._id === user._id) return;
-    setChatBoxIsLoading(true);
-
-    await accessChat(participant._id).unwrap();
 
     setShowChatGroupModal(false);
+
+    await accessChat(participant._id).unwrap();
   };
 
   return (
@@ -67,7 +63,7 @@ const ChatGroupModalParticipantsItem = ({
       onMouseEnter={() => setIsButtonHovered(true)}
       onMouseLeave={() => setIsButtonHovered(false)}
       className="w-full inline-block px-6 py-2 h-14 flex items-center justify-between hover:bg-gray-200 active:bg-gray-300 transition-colors rounded-t-sm border-b last:border-b-0"
-      onClick={() => handleClick()}
+      onClick={() => handleAccessChat()}
       disabled={
         participant._id === user._id ||
         isRemoveButtonHovered ||

@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext, useRef } from "react";
+import { useDispatch } from "react-redux";
 
-import { useFetchMessagesQuery, useSendMessageMutation } from "../../store";
+import { AppDispatch, setChat, useFetchMessagesQuery, useSendMessageMutation } from "../../store";
 import { SocketContext } from "../../context/SocketContext";
 
 import ChatBoxHeader from "./ChatBoxHeader";
@@ -31,6 +32,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
   } = useFetchMessagesQuery(chat._id);
   const [sendMessage, { isLoading: sendMessageIsLoading, isError: sendMessageIsError }] =
     useSendMessageMutation();
+  const dispatch: AppDispatch = useDispatch();
   const { socket, socketConnected } = useContext(SocketContext);
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -67,9 +69,23 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
       setTypingUser("");
     };
 
+    const updatedGroupChatHandler = (updatedGroupChat: Chat) =>
+      chat && chat._id === updatedGroupChat._id && dispatch(setChat(updatedGroupChat));
+
+    const adminRemovalHandler = (updatedGroupChat: Chat, removedUser: User) => {
+      if (!chat || chat._id !== updatedGroupChat._id) return;
+
+      if (removedUser._id === user._id) {
+        socket.emit("leave chat", chat);
+        dispatch(setChat(null));
+      }
+    };
+
     socket.on("message received", messageReceivedHandler);
     socket.on("typing", typingHandler);
     socket.on("stop typing", stopTypingHandler);
+    socket.on("updated group chat", updatedGroupChatHandler);
+    socket.on("admin removal", adminRemovalHandler);
 
     return () => {
       socket.off("message received", messageReceivedHandler);
@@ -77,7 +93,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
       socket.off("stop typing", stopTypingHandler);
       socket.emit("leave chat", chat);
     };
-  }, [chat, user, socketConnected, socket]);
+  }, [chat, user, socketConnected, socket, dispatch]);
 
   useEffect(() => {
     if (!searchWindowVisible && messageToScrollTo !== -1) {

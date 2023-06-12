@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { Socket } from "socket.io-client";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,9 +27,16 @@ type ChatGroupAvatarValidationSchema = z.infer<typeof chatGroupAvatarValidationS
 interface ChatGroupModalAvatarProps {
   user: User;
   chat: Chat;
+  socket: Socket | null;
+  socketConnected: boolean;
 }
 
-const ChatGroupModalAvatar = ({ user, chat }: ChatGroupModalAvatarProps) => {
+const ChatGroupModalAvatar = ({
+  user,
+  chat,
+  socket,
+  socketConnected,
+}: ChatGroupModalAvatarProps) => {
   const dispatch: AppDispatch = useDispatch();
 
   const [updateGroupChat] = useUpdateGroupChatMutation();
@@ -53,9 +61,12 @@ const ChatGroupModalAvatar = ({ user, chat }: ChatGroupModalAvatarProps) => {
   }, [resetAvatar, chat.avatar]);
 
   const onSubmitAvatarHandler: SubmitHandler<ChatGroupAvatarValidationSchema> = async (data) => {
+    if (!socketConnected || !socket) return;
+
     const { avatar } = data;
     const request = { chatId: chat._id, avatar };
     const { chat: updatedGroupChat } = await updateGroupChat(request).unwrap();
+    socket.emit("updated group chat", updatedGroupChat);
     setShowEditAvatar(false);
     dispatch(setChat(updatedGroupChat));
   };

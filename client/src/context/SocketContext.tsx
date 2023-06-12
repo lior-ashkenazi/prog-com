@@ -31,8 +31,8 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
   useEffect(() => {
     if (user) {
       socketRef.current = io(ENDPOINT);
-      setSocketConnected(true);
       socketRef.current.emit("setup", user);
+      setSocketConnected(true);
     }
 
     return () => {

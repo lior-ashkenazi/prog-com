@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+
+import { SocketContext } from "../../context/SocketContext";
 
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
@@ -24,6 +26,8 @@ const ChatGroupModal = ({
   showChatGroupModal,
   setShowChatGroupModal,
 }: ChatGroupModalProps) => {
+  const { socket, socketConnected } = useContext(SocketContext);
+
   const [openAddParticipantsWindow, setOpenAddParticipantsWindow] = useState<boolean>(false);
 
   useEffect(() => setOpenAddParticipantsWindow(false), [chat]);
@@ -32,8 +36,18 @@ const ChatGroupModal = ({
 
   const children = (
     <>
-      <ChatGroupModalAvatar user={user} chat={chat} />
-      <ChatGroupModalName user={user} chat={chat} />
+      <ChatGroupModalAvatar
+        user={user}
+        chat={chat}
+        socket={socket}
+        socketConnected={socketConnected}
+      />
+      <ChatGroupModalName
+        user={user}
+        chat={chat}
+        socket={socket}
+        socketConnected={socketConnected}
+      />
       <ChatGroupModalParticipants
         user={user}
         chat={chat}
@@ -52,6 +66,8 @@ const ChatGroupModal = ({
           <AddParticipantsWindow
             chat={chat}
             setOpenAddParticipantsWindow={setOpenAddParticipantsWindow}
+            socket={socket}
+            socketConnected={socketConnected}
           />
         )
       }

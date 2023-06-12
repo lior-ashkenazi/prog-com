@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { Socket } from "socket.io-client";
 
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { AiOutlineArrowLeft } from "react-icons/ai";
@@ -16,11 +17,15 @@ import GroupParticipantsSearchList from "./GroupParticipantsSearchList";
 interface AddParticipantsWindowProps {
   chat: Chat;
   setOpenAddParticipantsWindow: React.Dispatch<React.SetStateAction<boolean>>;
+  socket: Socket | null;
+  socketConnected: boolean;
 }
 
 const AddParticipantsWindow = ({
   chat,
   setOpenAddParticipantsWindow,
+  socket,
+  socketConnected,
 }: AddParticipantsWindowProps) => {
   const dispatch: AppDispatch = useDispatch();
   const [updateGroupChat] = useUpdateGroupChatMutation();
@@ -41,7 +46,9 @@ const AddParticipantsWindow = ({
       prevParticipants.filter((user) => user !== removedParticipant)
     );
 
-  const handleClick = async () => {
+  const handleConfirmAddParticipants = async () => {
+    if (!socketConnected || !socket) return;
+
     const request = {
       chatId: chat._id,
       participants: [
@@ -51,7 +58,7 @@ const AddParticipantsWindow = ({
     };
 
     const { chat: updatedGroupChat } = await updateGroupChat(request).unwrap();
-
+    socket.emit("updated group chat", updatedGroupChat);
     dispatch(setChat(updatedGroupChat));
   };
 
@@ -85,7 +92,7 @@ const AddParticipantsWindow = ({
       <div className="bg-gray-100 p-4 flex items-center justify-center">
         <button
           className="rounded-full bg-white"
-          onClick={() => handleClick()}
+          onClick={() => handleConfirmAddParticipants()}
           disabled={newParticipants.length === 0}
         >
           <BsFillCheckCircleFill

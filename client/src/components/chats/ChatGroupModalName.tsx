@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { Socket } from "socket.io-client";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,9 +24,11 @@ type ChatGroupNameValidationSchema = z.infer<typeof chatGroupNameValidationSchem
 interface ChatGroupModalNameProps {
   user: User;
   chat: Chat;
+  socket: Socket | null;
+  socketConnected: boolean;
 }
 
-const ChatGroupModalName = ({ user, chat }: ChatGroupModalNameProps) => {
+const ChatGroupModalName = ({ user, chat, socket, socketConnected }: ChatGroupModalNameProps) => {
   const dispatch: AppDispatch = useDispatch();
 
   const [updateGroupChat] = useUpdateGroupChatMutation();
@@ -50,9 +53,12 @@ const ChatGroupModalName = ({ user, chat }: ChatGroupModalNameProps) => {
   }, [resetName, user, chat]);
 
   const onSubmitNameHandler: SubmitHandler<ChatGroupNameValidationSchema> = async (data) => {
+    if (!socketConnected || !socket) return;
+
     const { chatName } = data;
     const request = { chatId: chat._id, chatName };
     const { chat: updatedGroupChat } = await updateGroupChat(request).unwrap();
+    socket.emit("updated group chat", updatedGroupChat);
     setShowEditName(false);
     dispatch(setChat(updatedGroupChat));
   };

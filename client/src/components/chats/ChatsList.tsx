@@ -24,7 +24,7 @@ const ChatsList = () => {
   const { socket, socketConnected } = useContext(SocketContext);
 
   const [chats, setChats] = useState<Chat[]>([]);
-  const [shouldRefetchChats, setShouldRefetchChats] = useState<boolean>(false);
+  const [shouldRefetchChats, setShouldRefetchChats] = useState<boolean>();
   const [shouldSort, setShouldSort] = useState<boolean>(false);
 
   const sortChats = useCallback(() => {
@@ -48,8 +48,19 @@ const ChatsList = () => {
   }, [setChats]);
 
   useEffect(() => {
+    refetchChats();
+    shouldRefetchChats && setShouldRefetchChats(false);
+  }, [refetchChats, shouldRefetchChats, setShouldRefetchChats]);
+
+  useEffect(() => {
+    if (data?.chats) {
+      setChats(data?.chats);
+      sortChats();
+    }
+  }, [data, setChats, sortChats]);
+
+  useEffect(() => {
     if (user && socketConnected && socket) {
-      socket.emit("setup", user);
       socket.on("message received", (message: Message) => {
         setChats((prevChats) => {
           const chatExists = prevChats.some((chat) => chat._id === message.chatId._id);
@@ -69,22 +80,11 @@ const ChatsList = () => {
 
         setShouldSort(true);
       });
+
+      socket.on("updated group chat", () => setShouldRefetchChats(true));
+      socket.on("admin removal", () => setShouldRefetchChats(true));
     }
   }, [user, socketConnected, socket]);
-
-  useEffect(() => {
-    if (shouldRefetchChats) {
-      refetchChats();
-      setShouldRefetchChats(false);
-    }
-  }, [refetchChats, shouldRefetchChats, setShouldRefetchChats]);
-
-  useEffect(() => {
-    if (data?.chats) {
-      setChats(data?.chats);
-      sortChats();
-    }
-  }, [data, setChats, sortChats]);
 
   useEffect(() => {
     if (!shouldSort) return;

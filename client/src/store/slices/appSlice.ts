@@ -22,8 +22,11 @@ const appSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
-    setChat: (state, action: PayloadAction<Chat>) => {
-      state.chat = action.payload;
+    setChat: {
+      reducer: (state, action: PayloadAction<Chat | null>) => {
+        state.chat = action.payload;
+      },
+      prepare: (chat: Chat | null) => ({ payload: chat }),
     },
   },
   extraReducers: (builder) => {
