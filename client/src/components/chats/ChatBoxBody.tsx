@@ -134,7 +134,7 @@ const ChatBody = forwardRef(
                     }`}
                   >
                     {chat.isGroupChat && message.sender._id !== user._id && (
-                      <span className="pb-0.5 text-indigo-600 font-bold text-left truncate">
+                      <span className="pb-0.5 text-indigo-800 font-bold text-left truncate">
                         {message.sender.userName}
                       </span>
                     )}
