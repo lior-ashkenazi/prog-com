@@ -5,6 +5,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 import { User } from "../../types/userTypes";
 import { Message } from "../../types/messageTypes";
+import { Chat } from "../../types/chatTypes";
 
 import MathArea from "./MathArea";
 import CodeArea, { LanguageKeys } from "./CodeArea";
@@ -12,6 +13,7 @@ import { getMessageHour, getShortFormatDate } from "../../utils";
 
 interface ChatBodyProps {
   user: User;
+  chat: Chat;
   messages: Message[];
   messagesIsLoading: boolean;
   messagesIsFetching: boolean;
@@ -20,7 +22,7 @@ interface ChatBodyProps {
 
 const ChatBody = forwardRef(
   (
-    { user, messages, messagesIsLoading, messagesIsFetching, messagesIsError }: ChatBodyProps,
+    { user, chat, messages, messagesIsLoading, messagesIsFetching, messagesIsError }: ChatBodyProps,
     ref
   ) => {
     const messageRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
@@ -127,14 +129,19 @@ const ChatBody = forwardRef(
                   }`}
                 >
                   <div
-                    className={`p-3 rounded-md max-w-xl ${
+                    className={`p-3 rounded-md max-w-xl flex flex-col ${
                       user._id === message.sender._id ? "bg-emerald-200" : "bg-amber-200"
                     }`}
                   >
+                    {chat.isGroupChat && message.sender._id !== user._id && (
+                      <span className="pb-0.5 text-indigo-600 font-bold text-left truncate">
+                        {message.sender.userName}
+                      </span>
+                    )}
                     {renderMessage(message)}
-                    <div className="m-0.5 text-xs text-opacity-70 text-black text-right">
+                    <span className="m-0.5 text-xs text-opacity-70 text-black text-right">
                       {getMessageHour(message.createdAt)}
-                    </div>
+                    </span>
                   </div>
                 </div>
               </div>

@@ -146,6 +146,7 @@ const ChatBox = ({ user, chat }: ChatBoxProps) => {
               <ChatBody
                 ref={chatBodyRef}
                 user={user}
+                chat={chat}
                 messages={messages}
                 messagesIsLoading={messagesIsLoading}
                 messagesIsFetching={messagesIsFetching}
