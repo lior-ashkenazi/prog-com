@@ -53,12 +53,12 @@ const CreateGroupModal = ({
 
     setChatBoxIsLoading(true);
 
+    setShowCreateGroupModal(false);
+
     await createGroupChat({
       participants: participants.map((participant) => participant._id),
       chatName,
     }).unwrap();
-
-    setShowCreateGroupModal(false);
   };
 
   const children = (

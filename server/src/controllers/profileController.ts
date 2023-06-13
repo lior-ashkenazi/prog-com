@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { Schema } from "mongoose";
 
+import User, { IUser } from "../models/userModel";
 import Profile, { IProfile } from "../models/profileModel";
 
 import { IAuthenticatedRequest } from "../middleware/authMiddleware";
 
 const fetchProfile = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { user } = req.body;
+  const { userId } = req.params;
 
-  const profile: IProfile | null = await Profile.findOne({ user });
+  const profile: IProfile | null = await Profile.findOne({ user: userId });
 
   if (!profile) {
     res.status(404);
@@ -20,7 +20,14 @@ const fetchProfile = asyncHandler(async (req: Request, res: Response): Promise<v
 });
 
 const updateProfile = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const { user, occupation, workplace, education, github, linkedin } = req.body;
+  const { user, avatar, occupation, workplace, education, github, linkedin } = req.body;
+
+  const profileUser: IUser | null = await User.findById(user);
+
+  if (!profileUser) {
+    res.status(404);
+    throw new Error("Resource not found");
+  }
 
   const profile: IProfile | null = await Profile.findOne({ user });
 
@@ -34,6 +41,7 @@ const updateProfile = asyncHandler(async (req: Request, res: Response): Promise<
     throw new Error("Unauthorized user");
   }
 
+  profileUser.avatar = avatar || profileUser.avatar;
   profile.occupation = occupation || profile.occupation;
   profile.workplace = workplace || profile.workplace;
   profile.education = education || profile.education;
@@ -42,9 +50,7 @@ const updateProfile = asyncHandler(async (req: Request, res: Response): Promise<
 
   await profile.save();
 
-  const updatedProfile = await Profile.findById(profile._id)
-    .populate("user", "-password")
-    .populate("groupAdmin", "-password");
+  const updatedProfile = await Profile.findById(profile._id).populate("user", "-password");
 
   res.json({ chat: updatedProfile });
 });

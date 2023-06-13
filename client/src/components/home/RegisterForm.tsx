@@ -109,6 +109,7 @@ const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) =
               className={`w-full p-2 rounded border-2 border-gray-600 ${
                 errors.password && "border-red-500"
               } appearance-none focus:bg-gray-200 focus:outline-none focus:shadow-outline transition-colors`}
+              autoComplete="off"
               placeholder="Enter Password"
               type="password"
               id="registerPassword"
@@ -127,6 +128,7 @@ const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) =
               className={`w-full p-2 rounded border-2 border-gray-600 ${
                 errors.confirmPassword && "border-red-500"
               } appearance-none focus:bg-gray-200 focus:outline-none focus:shadow-outline transition-colors`}
+              autoComplete="off"
               placeholder="Re-enter Password"
               type="password"
               id="confirmPassword"

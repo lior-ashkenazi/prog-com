@@ -14,10 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateProfile = exports.fetchProfile = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 const profileModel_1 = __importDefault(require("../models/profileModel"));
 const fetchProfile = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { user } = req.body;
-    const profile = yield profileModel_1.default.findOne({ user });
+    const { userId } = req.params;
+    const profile = yield profileModel_1.default.findOne({ user: userId });
     if (!profile) {
         res.status(404);
         throw new Error("Resource not found");
@@ -26,7 +27,12 @@ const fetchProfile = (0, express_async_handler_1.default)((req, res) => __awaite
 }));
 exports.fetchProfile = fetchProfile;
 const updateProfile = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { user, occupation, workplace, education, github, linkedin } = req.body;
+    const { user, avatar, occupation, workplace, education, github, linkedin } = req.body;
+    const profileUser = yield userModel_1.default.findById(user);
+    if (!profileUser) {
+        res.status(404);
+        throw new Error("Resource not found");
+    }
     const profile = yield profileModel_1.default.findOne({ user });
     if (!profile) {
         res.status(404);
@@ -36,15 +42,14 @@ const updateProfile = (0, express_async_handler_1.default)((req, res) => __await
         res.status(403);
         throw new Error("Unauthorized user");
     }
+    profileUser.avatar = avatar || profileUser.avatar;
     profile.occupation = occupation || profile.occupation;
     profile.workplace = workplace || profile.workplace;
     profile.education = education || profile.education;
     profile.github = github || profile.github;
     profile.linkedin = linkedin || profile.linkedin;
     yield profile.save();
-    const updatedProfile = yield profileModel_1.default.findById(profile._id)
-        .populate("user", "-password")
-        .populate("groupAdmin", "-password");
+    const updatedProfile = yield profileModel_1.default.findById(profile._id).populate("user", "-password");
     res.json({ chat: updatedProfile });
 }));
 exports.updateProfile = updateProfile;

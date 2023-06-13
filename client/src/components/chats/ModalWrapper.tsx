@@ -8,7 +8,7 @@ interface ModalWrapperProps {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   headerTitle: string;
-  handleAfterClose: () => void;
+  handleAfterClose?: () => void;
 }
 
 const ModalWrapper = ({
@@ -40,6 +40,7 @@ const ModalWrapper = ({
       onRequestClose={() => setShowModal(false)}
       onAfterClose={handleAfterClose}
       style={customStyles}
+      ariaHideApp={false}
     >
       <ModalHeader setShowModal={setShowModal} headerTitle={headerTitle} />
       <div className="flex">

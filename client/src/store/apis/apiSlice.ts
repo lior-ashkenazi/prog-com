@@ -3,7 +3,7 @@ import { RootState } from "../index";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  tagTypes: ["Users", "Messages", "Chats"],
+  tagTypes: ["Users", "Messages", "Chats", "Profile"],
   baseQuery: fetchBaseQuery({
     baseUrl: "/api",
     prepareHeaders: (headers, { getState }) => {

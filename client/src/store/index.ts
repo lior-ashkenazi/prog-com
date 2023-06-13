@@ -6,6 +6,7 @@ import appReducer from "./slices/appSlice";
 
 import { apiSlice } from "./apis/apiSlice";
 import { usersEndpoints } from "./apis/usersEndpoints";
+import { profileEndpoints } from "./apis/profileEndpoints";
 import { messagesEndpoints } from "./apis/messagesEndpoints";
 import { chatsEndpoints } from "./apis/chatsEndpoints";
 
@@ -58,6 +59,7 @@ export const {
   useAuthUserQuery,
   useFetchUsersQuery,
 } = usersEndpoints;
+export const { useFetchProfileQuery, useUpdateProfileMutation } = profileEndpoints;
 export const { useSendMessageMutation, useFetchMessagesQuery } = messagesEndpoints;
 export const {
   useAccessChatMutation,
