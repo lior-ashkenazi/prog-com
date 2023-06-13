@@ -1,6 +1,11 @@
 import { User } from "../types/userTypes";
 import { Chat } from "../types/chatTypes";
 
+const getOtherUser = (user: User, chat: Chat) => {
+  if (chat.participants.length === 1) return chat.participants[0];
+  return user._id === chat.participants[0]._id ? chat.participants[1] : chat.participants[0];
+};
+
 const getOtherUserAttribute = (user: User, chat: Chat, attr: "_id" | "userName" | "avatar") => {
   if (chat.participants.length === 1) return chat.participants[0][attr];
   return user._id === chat.participants[0]._id
@@ -28,4 +33,4 @@ const getChatIsTyping = (typingText: string, chat: Chat) => {
   return `${chat.isGroupChat ? typingText + " " : ""}is typing...`;
 };
 
-export { getOtherUserId, getChatName, getChatAvatar, getChatIsTyping };
+export { getOtherUser, getOtherUserId, getChatName, getChatAvatar, getChatIsTyping };

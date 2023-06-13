@@ -68,6 +68,7 @@ const ProfileModalFields = ({ user, profileUser }: ProfileModalFieldsProps) => {
       <ProfileModalFieldsItem
         key={index}
         user={user}
+        profileUser={profileUser}
         profile={profile}
         field={field}
         editFields={editFields}

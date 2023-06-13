@@ -8,6 +8,7 @@ import { isKeyOfProfile } from "../../store/apis/types/profileEndpointsTypes";
 
 interface ProfileModalFieldsItemProps {
   user: User;
+  profileUser: User;
   profile: Profile;
   field: string;
   editFields: { [key: string]: boolean } | undefined;
@@ -23,6 +24,8 @@ interface ProfileModalFieldsItemProps {
 }
 
 const ProfileModalFieldsItem = ({
+  user,
+  profileUser,
   profile,
   field,
   editFields,
@@ -82,7 +85,7 @@ const ProfileModalFieldsItem = ({
           field !== "user" && <span className="w-48 truncate">{profile[field]}</span>
         )}
       </span>
-      {!(editFields && editFields[field]) && (
+      {!(editFields && editFields[field]) && user._id == profileUser._id && (
         <button
           onClick={() =>
             setEditFields(

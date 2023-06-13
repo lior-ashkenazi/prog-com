@@ -29,7 +29,7 @@ const ProfileModal = ({
     <ModalWrapper
       showModal={showProfileModal}
       setShowModal={setShowProfileModal}
-      headerTitle={user.userName}
+      headerTitle={profileUser.userName}
     >
       {children}
     </ModalWrapper>

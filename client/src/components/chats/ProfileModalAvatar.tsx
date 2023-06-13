@@ -57,7 +57,7 @@ const ProfileAvatarModal = ({ user, profileUser }: ProfileAvatarModalProps) => {
     <div>
       <div className="h-36 flex items-center justify-center">
         <div className="relative">
-          <img src={user.avatar} alt="Chat Avatar" className="w-32 h-32 rounded-full" />
+          <img src={profileUser.avatar} alt="Chat Avatar" className="w-32 h-32 rounded-full" />
           <button
             className="absolute -right-5 bottom-1/2 translate-y-1/2"
             onClick={() => setShowEditAvatar(true)}

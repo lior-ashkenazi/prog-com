@@ -4,9 +4,10 @@ import { HiSearch } from "react-icons/hi";
 
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
-import { getChatAvatar, getChatIsTyping, getChatName } from "../../utils/usersUtils";
+import { getChatAvatar, getChatIsTyping, getChatName, getOtherUser } from "../../utils/usersUtils";
 
 import ChatGroupModal from "./ChatGroupModal";
+import ProfileModal from "./ProfileModal";
 
 interface ChatBoxHeaderProps {
   user: User;
@@ -44,12 +45,19 @@ const ChatBoxHeader = ({ user, chat, setSearchWindowVisible, typingText }: ChatB
           }}
         />
       </button>
-      {chat.isGroupChat && (
+      {chat.isGroupChat ? (
         <ChatGroupModal
           user={user}
           chat={chat}
           showChatGroupModal={showChatModal}
           setShowChatGroupModal={setShowChatModal}
+        />
+      ) : (
+        <ProfileModal
+          user={user}
+          profileUser={getOtherUser(user, chat)}
+          showProfileModal={showChatModal}
+          setShowProfileModal={setShowChatModal}
         />
       )}
     </div>
