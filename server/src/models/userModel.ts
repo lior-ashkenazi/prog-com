@@ -2,6 +2,8 @@ import { Document, Schema, model, Model } from "mongoose";
 import bcrypt from "bcrypt";
 
 export interface IUser extends Document {
+  googleId: string;
+  githubId: string;
   userName: string;
   email: string;
   password: string;
@@ -13,6 +15,18 @@ const saltRounds = 10;
 
 const userSchema: Schema = new Schema<IUser>(
   {
+    googleId: {
+      type: String,
+      minLength: 1,
+      required: false,
+      unique: true,
+    },
+    githubId: {
+      type: String,
+      minLength: 1,
+      required: false,
+      unique: true,
+    },
     userName: {
       type: String,
       minLength: 1,
@@ -26,7 +40,7 @@ const userSchema: Schema = new Schema<IUser>(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
     },
     avatar: {
       type: String,

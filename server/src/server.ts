@@ -1,7 +1,9 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import connectDB from "./config/db";
 import dotenv from "dotenv";
 import path from "path";
+import passport from "passport";
+import cors from "cors";
 
 import { Server } from "socket.io";
 
@@ -13,6 +15,7 @@ import { errorHandler, notFound } from "./middleware/errorMiddleware";
 
 // Routes
 import usersRouter from "./routes/usersRoutes";
+import authRouter from "./routes/authRoutes";
 import profileRouter from "./routes/profileRoutes";
 import chatsRouter from "./routes/chatsRoutes";
 import messagesRouter from "./routes/messagesRoutes";
@@ -24,10 +27,12 @@ const app: Express = express();
 connectDB();
 
 // Init Middleware
+app.use(cors());
 app.use(express.json());
 
 // Define Routes
 app.use("/api/users", usersRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/chats", chatsRouter);
 app.use("/api/messages", messagesRouter);
