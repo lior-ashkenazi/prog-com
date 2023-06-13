@@ -3,8 +3,6 @@ import { useEffect, useState, useMemo } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-import { BsPencilFill } from "react-icons/bs";
-
 import { useFetchProfileQuery, useUpdateProfileMutation } from "../../store";
 
 import { User } from "../../types/userTypes";

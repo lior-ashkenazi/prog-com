@@ -52,7 +52,7 @@ const MathArea = ({ readOnly, math, setMath, handleUserTyping }: MathAreaProps) 
         key={key}
         latex={mathRef.current}
         config={{ autoCommands: "pi theta sqrt sum" }}
-        className="h-32 py-10 px-3 w-full rounded-md border-0 outline-none text-justify overflow-x-auto"
+        className="h-32 py-11 px-5 w-full rounded-md border-0 outline-none text-justify overflow-x-auto"
         onChange={handleChange}
       />
     </div>

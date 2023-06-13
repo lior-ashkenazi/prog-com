@@ -108,8 +108,8 @@ const ChatBody = forwardRef(
             />
           </div>
         ) : messagesIsError ? (
-          <div className="w-full flex items-center justify-center m-0.5 text-xs text-opacity-70 text-black text-right bg-red-600">
-            There was problem fetching messages.
+          <div className="flex items-center justify-center m-0.5 text-xs text-opacity-70 text-black text-right bg-red-600">
+            There was a problem fetching messages.
           </div>
         ) : (
           messages &&
