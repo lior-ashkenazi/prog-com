@@ -41,7 +41,7 @@ const registerUser = (0, express_async_handler_1.default)((req, res) => __awaite
         });
         if (!newProfile) {
             res.status(500);
-            throw new Error("Profile creation failed");
+            throw new Error("Server error");
         }
         const payload = {
             user: {

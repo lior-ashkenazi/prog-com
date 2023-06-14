@@ -37,7 +37,7 @@ const registerUser = asyncHandler(async (req: Request, res: Response): Promise<v
 
     if (!newProfile) {
       res.status(500);
-      throw new Error("Profile creation failed");
+      throw new Error("Server error");
     }
 
     const payload = {

@@ -7,11 +7,13 @@ const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("./config/db"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
+const cors_1 = __importDefault(require("cors"));
 const socket_io_1 = require("socket.io");
 // Error handling
 const errorMiddleware_1 = require("./middleware/errorMiddleware");
 // Routes
 const usersRoutes_1 = __importDefault(require("./routes/usersRoutes"));
+const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const profileRoutes_1 = __importDefault(require("./routes/profileRoutes"));
 const chatsRoutes_1 = __importDefault(require("./routes/chatsRoutes"));
 const messagesRoutes_1 = __importDefault(require("./routes/messagesRoutes"));
@@ -19,9 +21,11 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 (0, db_1.default)();
 // Init Middleware
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // Define Routes
 app.use("/api/users", usersRoutes_1.default);
+app.use("/api/auth", authRoutes_1.default);
 app.use("/api/profile", profileRoutes_1.default);
 app.use("/api/chats", chatsRoutes_1.default);
 app.use("/api/messages", messagesRoutes_1.default);

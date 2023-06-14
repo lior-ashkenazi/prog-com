@@ -17,7 +17,7 @@ const ChatsPageHeader = () => {
 
   return (
     <div className="bg-indigo-800 px-3 py-2 flex justify-between drop-shadow-md">
-      <h1 className="font-mono text-2xl text-gray-50 font-semibold tracking-tighter drop-shadow-sm ">
+      <h1 className="font-orbitron text-2xl text-gray-50 font-semibold tracking-tighter drop-shadow-sm">
         ProgCom
       </h1>
       <div className="flex items-center justify-between gap-x-6">

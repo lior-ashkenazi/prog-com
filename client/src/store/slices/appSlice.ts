@@ -4,6 +4,7 @@ import { chatsEndpoints } from "../apis/chatsEndpoints";
 
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
+import { authEndpoints } from "../apis/authEndpoints";
 
 interface AppState {
   user: User | null;
@@ -35,6 +36,12 @@ const appSlice = createSlice({
         state.user = action.payload.user;
       })
       .addMatcher(usersEndpoints.endpoints.loginUser.matchFulfilled, (state, action) => {
+        state.user = action.payload.user;
+      })
+      .addMatcher(authEndpoints.endpoints.googleAuth.matchFulfilled, (state, action) => {
+        state.user = action.payload.user;
+      })
+      .addMatcher(authEndpoints.endpoints.githubAuth.matchFulfilled, (state, action) => {
         state.user = action.payload.user;
       })
       .addMatcher(usersEndpoints.endpoints.authUser.matchFulfilled, (state, action) => {

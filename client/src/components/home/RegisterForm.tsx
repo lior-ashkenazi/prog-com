@@ -63,7 +63,7 @@ const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) =
       onSubmit={handleSubmit(onSubmitHandler)}
     >
       <div>
-        <h2 className="text-6xl font-medium mb-6">Sign up</h2>
+        <h2 className="font-orbitron text-6xl font-medium mb-6">SIGN UP</h2>
         <div className="flex flex-col justify-between">
           <div>
             <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="userName">

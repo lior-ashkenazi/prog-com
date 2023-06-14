@@ -16,6 +16,18 @@ const mongoose_1 = require("mongoose");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const saltRounds = 10;
 const userSchema = new mongoose_1.Schema({
+    googleId: {
+        type: String,
+        minLength: 1,
+        required: false,
+        unique: true,
+    },
+    githubId: {
+        type: String,
+        minLength: 1,
+        required: false,
+        unique: true,
+    },
     userName: {
         type: String,
         minLength: 1,
@@ -29,7 +41,7 @@ const userSchema = new mongoose_1.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: false,
     },
     avatar: {
         type: String,

@@ -2,11 +2,18 @@ import { Request, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import { Schema } from "mongoose";
 import { verify } from "jsonwebtoken";
+import { OAuth2Client, TokenPayload as GoogleTokenPayload } from "google-auth-library";
 
 import { ITokenPayload } from "../utils/generateToken";
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 export interface IAuthenticatedRequest extends Request {
   user: { _id: Schema.Types.ObjectId };
+}
+
+export interface IGoogleAuthenticatedRequest extends Request {
+  user: GoogleTokenPayload;
 }
 
 const auth = asyncHandler(
@@ -38,4 +45,25 @@ const auth = asyncHandler(
   }
 );
 
+const verifyGoogleToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: req.body.idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload) {
+      return res.status(401).send("Unauthorized request");
+    }
+
+    (req as IGoogleAuthenticatedRequest).user = payload;
+    next();
+  } catch (error) {
+    return res.status(401).send("Unauthorized request");
+  }
+};
+
 export default auth;
+export { verifyGoogleToken };

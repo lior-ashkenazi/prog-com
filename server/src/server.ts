@@ -2,7 +2,6 @@ import express, { Express } from "express";
 import connectDB from "./config/db";
 import dotenv from "dotenv";
 import path from "path";
-import passport from "passport";
 import cors from "cors";
 
 import { Server } from "socket.io";

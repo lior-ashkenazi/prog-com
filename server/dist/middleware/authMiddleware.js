@@ -12,8 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.verifyGoogleToken = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const jsonwebtoken_1 = require("jsonwebtoken");
+const google_auth_library_1 = require("google-auth-library");
+const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const auth = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.header("Authorization")) {
         res.status(202);
@@ -38,4 +41,22 @@ const auth = (0, express_async_handler_1.default)((req, res, next) => __awaiter(
         }
     });
 }));
+const verifyGoogleToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const ticket = yield client.verifyIdToken({
+            idToken: req.body.idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        if (!payload) {
+            return res.status(401).send("Unauthorized request");
+        }
+        req.user = payload;
+        next();
+    }
+    catch (error) {
+        return res.status(401).send("Unauthorized request");
+    }
+});
+exports.verifyGoogleToken = verifyGoogleToken;
 exports.default = auth;

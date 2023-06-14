@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { usersEndpoints } from "../apis/usersEndpoints";
+import { authEndpoints } from "../apis/authEndpoints";
 
 interface AuthState {
   token: string | null;
@@ -33,6 +34,18 @@ const authSlice = createSlice({
         localStorage.setItem("prog-com-jwt", token);
       })
       .addMatcher(usersEndpoints.endpoints.loginUser.matchFulfilled, (state, action) => {
+        const token = action.payload.token;
+        state.token = token;
+        state.isAuthenticated = true;
+        localStorage.setItem("prog-com-jwt", token);
+      })
+      .addMatcher(authEndpoints.endpoints.googleAuth.matchFulfilled, (state, action) => {
+        const token = action.payload.token;
+        state.token = token;
+        state.isAuthenticated = true;
+        localStorage.setItem("prog-com-jwt", token);
+      })
+      .addMatcher(authEndpoints.endpoints.githubAuth.matchFulfilled, (state, action) => {
         const token = action.payload.token;
         state.token = token;
         state.isAuthenticated = true;

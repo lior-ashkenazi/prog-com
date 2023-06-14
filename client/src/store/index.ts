@@ -9,6 +9,7 @@ import { usersEndpoints } from "./apis/usersEndpoints";
 import { profileEndpoints } from "./apis/profileEndpoints";
 import { messagesEndpoints } from "./apis/messagesEndpoints";
 import { chatsEndpoints } from "./apis/chatsEndpoints";
+import { authEndpoints } from "./apis/authEndpoints";
 
 const store = configureStore({
   reducer: {
@@ -53,12 +54,8 @@ export default store;
 export { setToken, removeToken } from "./slices/authSlice";
 export { setUser, setChat } from "./slices/appSlice";
 
-export const {
-  useRegisterUserMutation,
-  useLoginUserMutation,
-  useAuthUserQuery,
-  useFetchUsersQuery,
-} = usersEndpoints;
+export const { useRegisterUserMutation, useLoginUserMutation, useFetchUsersQuery } = usersEndpoints;
+export const { useAuthUserQuery, useGoogleAuthMutation, useGithubAuthMutation } = authEndpoints;
 export const { useFetchProfileQuery, useUpdateProfileMutation } = profileEndpoints;
 export const { useSendMessageMutation, useFetchMessagesQuery } = messagesEndpoints;
 export const {
