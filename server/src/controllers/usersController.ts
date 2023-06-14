@@ -108,7 +108,7 @@ const authUser = asyncHandler(async (req: Request, res: Response): Promise<void>
 });
 
 const logoutUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  res.status(200);
+  res.status(200).json({ message: "Logout successful" });
 });
 
 const fetchUsers = asyncHandler(async (req: Request, res: Response): Promise<void> => {

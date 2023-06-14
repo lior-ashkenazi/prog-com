@@ -102,7 +102,7 @@ const authUser = (0, express_async_handler_1.default)((req, res) => __awaiter(vo
 }));
 exports.authUser = authUser;
 const logoutUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(200);
+    res.status(200).json({ message: "Logout successful" });
 }));
 exports.logoutUser = logoutUser;
 const fetchUsers = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

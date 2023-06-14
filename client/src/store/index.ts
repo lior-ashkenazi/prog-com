@@ -54,7 +54,12 @@ export default store;
 export { setToken, removeToken } from "./slices/authSlice";
 export { setUser, setChat } from "./slices/appSlice";
 
-export const { useRegisterUserMutation, useLoginUserMutation, useFetchUsersQuery } = usersEndpoints;
+export const {
+  useRegisterUserMutation,
+  useLoginUserMutation,
+  useFetchUsersQuery,
+  useLogoutUserMutation,
+} = usersEndpoints;
 export const { useAuthUserQuery, useGoogleAuthMutation, useGithubAuthMutation } = authEndpoints;
 export const { useFetchProfileQuery, useUpdateProfileMutation } = profileEndpoints;
 export const { useSendMessageMutation, useFetchMessagesQuery } = messagesEndpoints;

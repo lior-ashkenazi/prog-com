@@ -57,7 +57,7 @@ const authSlice = createSlice({
       .addMatcher(usersEndpoints.endpoints.logoutUser.matchFulfilled, (state) => {
         state.token = null;
         state.isAuthenticated = false;
-        localStorage.remove("prog-com-jwt");
+        localStorage.removeItem("prog-com-jwt");
       });
   },
 });

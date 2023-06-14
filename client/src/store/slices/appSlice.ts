@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { usersEndpoints } from "../apis/usersEndpoints";
+import { authEndpoints } from "../apis/authEndpoints";
 import { chatsEndpoints } from "../apis/chatsEndpoints";
 
 import { User } from "../../types/userTypes";
 import { Chat } from "../../types/chatTypes";
-import { authEndpoints } from "../apis/authEndpoints";
 
 interface AppState {
   user: User | null;
@@ -20,8 +20,11 @@ const appSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User>) => {
-      state.user = action.payload;
+    setUser: {
+      reducer: (state, action: PayloadAction<User | null>) => {
+        state.user = action.payload;
+      },
+      prepare: (user: User | null) => ({ payload: user }),
     },
     setChat: {
       reducer: (state, action: PayloadAction<Chat | null>) => {
@@ -54,6 +57,10 @@ const appSlice = createSlice({
       .addMatcher(chatsEndpoints.endpoints.createGroupChat.matchFulfilled, (state, action) => {
         // createGroupChat returns an object with property "chat"
         state.chat = action.payload.chat;
+      })
+      .addMatcher(usersEndpoints.endpoints.logoutUser.matchFulfilled, (state) => {
+        state.chat = null;
+        state.user = null;
       });
   },
 });

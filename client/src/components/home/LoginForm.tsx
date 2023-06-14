@@ -51,14 +51,10 @@ const LoginForm = ({ onClickChangeForm, onSubmitForm }: LoginFormsProps) => {
 
   const onSubmitGoogleHandler = async (credentialResponse: CredentialResponse) => {
     try {
-      console.log("step 1");
       await googleAuth({ idToken: credentialResponse.credential as string }).unwrap();
-      console.log("step 2");
 
       onSubmitForm();
     } catch (error) {
-      console.log(error);
-
       if (error && typeof error === "object" && isServerError(error)) {
         const msg = error.data.message;
         if (error.data.message.startsWith("Username")) {

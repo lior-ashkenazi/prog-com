@@ -22,8 +22,8 @@ export type AuthUserResponse = {
   token: string;
 };
 
-export type LogoutUserResponse = void;
 export type LogoutUserRequest = void;
+export type LogoutUserResponse = { message: string };
 
 export type FetchUsersRequest = string;
 export type FetchUsersResponse = { users: User[] };
