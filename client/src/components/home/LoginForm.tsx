@@ -77,20 +77,27 @@ const LoginForm = ({ onClickChangeForm, onSubmitForm }: LoginFormsProps) => {
       onSubmit={handleSubmit(onSubmitHandler)}
     >
       <div>
-        <h2 className="font-orbitron text-6xl font-medium mb-6">LOG IN</h2>
+        <h2 className="font-orbitron text-6xl text-indigo-900 text-center font-medium mb-6">
+          LOG IN
+        </h2>
         <div className="w-full flex flex-col items-center justify-center">
           <GoogleLogin onSuccess={onSubmitGoogleHandler} />
-          <span>Or with bla bla bla</span>
+          <div className="w-full flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5">
+            <p className="text-center font-semibold text-gray-400 mx-4 mb-0">OR</p>
+          </div>
         </div>
         <div className="flex flex-col justify-between">
           <div>
-            <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="userName">
+            <label
+              className="font-semibold text-xl text-indigo-900 inline-block mb-0.5"
+              htmlFor="userName"
+            >
               Username or Email
             </label>
             <input
-              className={`w-full p-2 rounded border-2 border-gray-600 ${
+              className={`w-full p-2 rounded border-2 border-indigo-600 ${
                 errors.usernameOrEmail && "border-red-500"
-              } appearance-none focus:bg-gray-200 focus:outline-none focus:shadow-outline transition-colors`}
+              } appearance-none focus:bg-indigo-200 focus:outline-none focus:shadow-outline transition-colors`}
               placeholder="Enter Username or Email"
               type="text"
               id="userName"
@@ -104,13 +111,16 @@ const LoginForm = ({ onClickChangeForm, onSubmitForm }: LoginFormsProps) => {
           </div>
 
           <div>
-            <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="loginPassword">
+            <label
+              className="font-semibold text-xl text-indigo-900 inline-block mb-0.5"
+              htmlFor="loginPassword"
+            >
               Password
             </label>
             <input
-              className={`w-full p-2 rounded border-2 border-gray-600 ${
+              className={`w-full p-2 rounded border-2 border-indigo-600 ${
                 errors.password && "border-red-500"
-              } appearance-none focus:bg-gray-200 focus:outline-none focus:shadow-outline transition-colors`}
+              } appearance-none focus:bg-indigo-200 focus:outline-none focus:shadow-outline transition-colors`}
               autoComplete="off"
               placeholder="Enter Password"
               type="password"

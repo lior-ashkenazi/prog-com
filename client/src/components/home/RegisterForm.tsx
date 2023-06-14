@@ -63,16 +63,21 @@ const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) =
       onSubmit={handleSubmit(onSubmitHandler)}
     >
       <div>
-        <h2 className="font-orbitron text-6xl font-medium mb-6">SIGN UP</h2>
+        <h2 className="font-orbitron text-6xl text-indigo-900 text-center font-medium mb-6">
+          SIGN UP
+        </h2>
         <div className="flex flex-col justify-between">
           <div>
-            <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="userName">
+            <label
+              className="font-semibold text-xl text-indigo-900 inline-block mb-0.5"
+              htmlFor="userName"
+            >
               Username
             </label>
             <input
-              className={`w-full p-2 rounded border-2 border-gray-600 ${
+              className={`w-full p-2 rounded border-2 border-indigo-600 ${
                 errors.userName && "border-red-500"
-              } appearance-none focus:bg-gray-200 focus:outline-none focus:shadow-outline transition-colors`}
+              } appearance-none focus:bg-indigo-200 focus:outline-none focus:shadow-outline transition-colors`}
               placeholder="Enter Username"
               type="text"
               id="userName"
@@ -84,13 +89,16 @@ const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) =
           </div>
 
           <div>
-            <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="email">
+            <label
+              className="font-semibold text-xl text-indigo-900 inline-block mb-0.5"
+              htmlFor="email"
+            >
               Email
             </label>
             <input
-              className={`w-full p-2 rounded border-2 border-gray-600 ${
+              className={`w-full p-2 rounded border-2 border-indigo-600 ${
                 errors.email && "border-red-500"
-              } appearance-none focus:bg-gray-200 focus:outline-none focus:shadow-outline transition-colors`}
+              } appearance-none focus:bg-indigo-200 focus:outline-none focus:shadow-outline transition-colors`}
               placeholder="Enter Email"
               type="text"
               id="email"
@@ -102,13 +110,16 @@ const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) =
           </div>
 
           <div>
-            <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="registerPassword">
+            <label
+              className="font-semibold text-xl text-indigo-900 inline-block mb-0.5"
+              htmlFor="registerPassword"
+            >
               Password
             </label>
             <input
-              className={`w-full p-2 rounded border-2 border-gray-600 ${
+              className={`w-full p-2 rounded border-2 border-indigo-600 ${
                 errors.password && "border-red-500"
-              } appearance-none focus:bg-gray-200 focus:outline-none focus:shadow-outline transition-colors`}
+              } appearance-none focus:bg-indigo-200 focus:outline-none focus:shadow-outline transition-colors`}
               autoComplete="off"
               placeholder="Enter Password"
               type="password"
@@ -121,13 +132,16 @@ const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) =
           </div>
 
           <div>
-            <label className="font-semibold text-xl inline-block mb-0.5" htmlFor="confirmPassword">
+            <label
+              className="font-semibold text-xl text-indigo-900 inline-block mb-0.5"
+              htmlFor="confirmPassword"
+            >
               Confirm Password
             </label>
             <input
-              className={`w-full p-2 rounded border-2 border-gray-600 ${
+              className={`w-full p-2 rounded border-2 border-indigo-600 ${
                 errors.confirmPassword && "border-red-500"
-              } appearance-none focus:bg-gray-200 focus:outline-none focus:shadow-outline transition-colors`}
+              } appearance-none focus:bg-indigo-200 focus:outline-none focus:shadow-outline transition-colors`}
               autoComplete="off"
               placeholder="Re-enter Password"
               type="password"
