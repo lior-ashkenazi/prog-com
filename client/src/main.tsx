@@ -10,8 +10,8 @@ import {
 import store from "./store/index.ts";
 import "./index.css";
 import App from "./App.tsx";
-import HomePage from "./pages/HomePage.tsx";
-import ChatsPage from "./pages/ChatsPage.tsx";
+import HomePage from "./pages/home/HomePage.tsx";
+import ChatsPage from "./pages/chats/ChatsPage.tsx";
 
 const router = createMemoryRouter(
   createRoutesFromElements(

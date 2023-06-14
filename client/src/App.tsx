@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { RootState, useAuthUserQuery } from "./store";
-import HomeSpinner from "./components/home/HomeSpinner";
+import HomeSpinner from "./pages/home/HomeSpinner";
 
 const App = () => {
   const navigate = useNavigate();
