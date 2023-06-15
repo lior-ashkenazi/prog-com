@@ -23,6 +23,7 @@ A MERN stack chat app - written in TypeScript using Socket.IO - designed for pro
 * LaTeX-rendered math expressions in chat implemented with react-mathquill (wrapper for MathQuill)
 * Code snippets in chat implemeneted with @uiw/react-codemirror (wrapper for CodeMirror) giving programming interface with syntax highlighting of 13 programming langugaes
 * Forms done with Zod including validation
+* Message dates are rendered with the help of Day.js
 * Google 0Auth support with react-oauth
 * CSS done with Tailwind CSS
 
