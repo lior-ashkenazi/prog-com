@@ -11,6 +11,8 @@ import { messagesEndpoints } from "./apis/messagesEndpoints";
 import { chatsEndpoints } from "./apis/chatsEndpoints";
 import { authEndpoints } from "./apis/authEndpoints";
 
+const NODE_ENV = import.meta.env.VITE_NODE_ENV as string;
+
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
@@ -18,7 +20,7 @@ const store = configureStore({
     app: appReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
-  devTools: true,
+  devTools: NODE_ENV === "development",
 });
 
 setupListeners(store.dispatch);

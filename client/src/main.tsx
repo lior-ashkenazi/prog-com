@@ -12,6 +12,11 @@ import "./index.css";
 import App from "./App.tsx";
 import HomePage from "./pages/home/HomePage.tsx";
 import ChatsPage from "./pages/chats/ChatsPage.tsx";
+import { disableReactDevTools } from "@fvilers/disable-react-devtools";
+
+const NODE_ENV = import.meta.env.VITE_NODE_ENV as string;
+
+if (NODE_ENV === "production") disableReactDevTools();
 
 const router = createMemoryRouter(
   createRoutesFromElements(
