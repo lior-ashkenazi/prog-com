@@ -170,7 +170,7 @@ const RegisterForm = ({ onClickChangeForm, onSubmitForm }: RegisterFormsProps) =
           type="submit"
           disabled={isSubmitting}
         >
-          Create an account
+          {isSubmitting ? "Creating an account..." : "Create an account"}
         </button>
       </div>
       <div className="flex justify-center">

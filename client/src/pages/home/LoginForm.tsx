@@ -1,8 +1,8 @@
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
-
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
 import { useLoginUserMutation, isServerError, useGoogleAuthMutation } from "../../store";
 
 const loginFormValidationSchema = z.object({
@@ -136,7 +136,7 @@ const LoginForm = ({ onClickChangeForm, onSubmitForm }: LoginFormsProps) => {
           type="submit"
           disabled={isSubmitting}
         >
-          Log in
+          {isSubmitting ? "Logging in..." : "Log in"}
         </button>
       </div>
       <div className="flex justify-center">
