@@ -96,7 +96,7 @@ const ChatBody = forwardRef(
         }`}
       >
         {messagesIsLoading || messagesIsFetching ? (
-          <div className="flex items-center justify-center">
+          <div className="w-full flex items-center justify-center">
             <Skeleton
               width={600}
               height={50}
