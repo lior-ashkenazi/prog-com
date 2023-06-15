@@ -118,7 +118,7 @@ const CodeArea = ({
       {!readOnly && (
         <button
           type="button"
-          className="absolute right-4 bottom-4"
+          className="absolute right-5 bottom-5"
           onClick={() => setShowModal(true)}
         >
           <BsArrowsFullscreen style={{ color: "#6b7280" }} />
