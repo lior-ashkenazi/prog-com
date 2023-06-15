@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 
 export interface IUser extends Document {
   googleId: string;
-  githubId: string;
   userName: string;
   email: string;
   password: string;
@@ -20,12 +19,7 @@ const userSchema: Schema = new Schema<IUser>(
       minLength: 1,
       required: false,
       unique: true,
-    },
-    githubId: {
-      type: String,
-      minLength: 1,
-      required: false,
-      unique: true,
+      sparse: true,
     },
     userName: {
       type: String,

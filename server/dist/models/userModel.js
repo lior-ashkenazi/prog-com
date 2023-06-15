@@ -21,12 +21,7 @@ const userSchema = new mongoose_1.Schema({
         minLength: 1,
         required: false,
         unique: true,
-    },
-    githubId: {
-        type: String,
-        minLength: 1,
-        required: false,
-        unique: true,
+        sparse: true,
     },
     userName: {
         type: String,
