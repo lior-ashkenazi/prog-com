@@ -103,7 +103,7 @@ const ChatBody = forwardRef(
               count={6}
               style={{
                 opacity: 0.9,
-                marginBottom: "0.5rem",
+                marginBottom: "0.63rem",
               }}
             />
           </div>
