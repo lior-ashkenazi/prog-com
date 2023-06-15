@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/dist/server.js",
-    "server": "concurrently \"tsc -w -p server\" \"nodemon server/dist/server.js\"",
+    "build": "tsc -p server",
+    "server": "concurrently \"npm run build -- --watch\" \"nodemon server/dist/server.js\"",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "echo \"Error: no test specified\" && exit 1"
