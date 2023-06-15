@@ -5,7 +5,13 @@ import { useRegisterUserMutation, isServerError } from "../../store";
 
 const registerFormValidationSchema = z
   .object({
-    userName: z.string().min(1, { message: "Username is required" }),
+    userName: z
+      .string()
+      .min(1, { message: "Username is required" })
+      .max(200, { message: "Username exceeded 200 characters" })
+      .refine((userName) => !/\s/.test(userName), {
+        message: "Username cannot contain whitespace characters",
+      }),
     email: z
       .string()
       .min(1, { message: "Email is required" })
