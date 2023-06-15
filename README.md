@@ -3,7 +3,7 @@
 
 ![image](https://github.com/lior-ashkenazi/progcom/assets/72506071/cc69932c-b523-44ba-88db-9b95a5e0af27)
 
-A MERN stack chat app - written in TypeScript using Socket.IO - designed for programmers where users can chat with each other and in groups with the built-in features of sharing LaTeX-rendered math expressions and code snippets with syntax highlighting.
+A MERN stack chat app - written in TypeScript using Socket.IO - designed for programmers where users can chat with each other one-on-one and in groups with the built-in features of sharing LaTeX-rendered math expressions and code snippets with syntax highlighting.
 
 ## Features ##
 ### Server ###
