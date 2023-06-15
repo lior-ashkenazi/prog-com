@@ -19,7 +19,7 @@ A MERN stack chat app - written in TypeScript using Socket.IO - designed for pro
 ### Client ###
 * Deployment with Vite
 * Redux Toolkit and Redux Toolkit Query for managing global states and communicating with server
-* Socket.IO for establishing socket connections in order to trigger and handle events
+* Socket.IO for establishing socket connections in order to trigger and handle events for real-time chats and nofitications
 * LaTeX-rendered math expressions in chat implemented with react-mathquill (wrapper for MathQuill)
 * Code snippets in chat implemeneted with @uiw/react-codemirror (wrapper for CodeMirror) giving programming interface with syntax highlighting of 13 programming langugaes
 * Forms done with Zod including validation
