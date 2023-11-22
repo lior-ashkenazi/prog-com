@@ -2,6 +2,12 @@
 * ***Live Demo***: https://progcom.onrender.com/
 
 ![image](https://github.com/lior-ashkenazi/progcom/assets/72506071/cc69932c-b523-44ba-88db-9b95a5e0af27)
+![image](https://github.com/lior-ashkenazi/progcom/assets/72506071/de22f93a-4629-4cb8-b1fe-1855b554bfae)
+![image](https://github.com/lior-ashkenazi/progcom/assets/72506071/cb034661-98b4-494e-abaf-ff711e9067c7)
+![image](https://github.com/lior-ashkenazi/progcom/assets/72506071/a6544a35-602c-48f5-8d6c-d3f1e69d509c)
+![image](https://github.com/lior-ashkenazi/progcom/assets/72506071/20011636-4a3c-4658-a6c4-ee5a25559420)
+![image](https://github.com/lior-ashkenazi/progcom/assets/72506071/bcd8f48b-45f8-4237-8ff7-be25ffe050c5)
+![image](https://github.com/lior-ashkenazi/progcom/assets/72506071/9919e8ae-6f1b-4909-a299-28e682391dc1)
 
 A MERN stack chat app - written in TypeScript using Socket.IO - designed for programmers where users can chat with each other one-on-one and in groups with the built-in features of sharing LaTeX-rendered math expressions and code snippets with syntax highlighting.
 
